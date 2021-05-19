@@ -37,4 +37,8 @@
     <style name="Theme.RapierTech.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.RapierTech.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="splashTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
 </resources>
