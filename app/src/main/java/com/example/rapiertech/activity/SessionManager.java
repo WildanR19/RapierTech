@@ -1,4 +1,4 @@
-package com.example.rapiertech;
+package com.example.rapiertech.activity;
 
 import android.content.Context;
 import android.content.SharedPreferences;

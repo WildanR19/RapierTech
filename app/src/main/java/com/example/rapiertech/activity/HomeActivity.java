@@ -1,11 +1,14 @@
-package com.example.rapiertech;
+package com.example.rapiertech.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.rapiertech.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
@@ -23,6 +26,10 @@ public class HomeActivity extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
 
     SessionManager sessionManager;
+
+    TextView name, email;
+    ImageView image;
+    View headerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,16 +57,25 @@ public class HomeActivity extends AppCompatActivity {
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
-//                .setDrawerLayout(drawer)
+                .setOpenableLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
+        // menu logout
         navigationView.getMenu().findItem(R.id.nav_logout).setOnMenuItemClickListener(menuItem -> {
             logout();
             return true;
         });
+
+        headerView = navigationView.getHeaderView(0);
+        name = headerView.findViewById(R.id.nameNavHeader);
+        email = headerView.findViewById(R.id.emailNavHeader);
+        image = headerView.findViewById(R.id.imageNavHeader);
+
+        name.setText(sessionManager.getUserDetail().get(SessionManager.NAME));
+        email.setText(sessionManager.getUserDetail().get(SessionManager.EMAIL));
     }
 
     private void moveToLogin() {

@@ -1,10 +1,12 @@
 package com.example.rapiertech.api;
 
+import com.example.rapiertech.model.department.Department;
 import com.example.rapiertech.model.login.Login;
 
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
 
 public interface ApiInterface {
@@ -14,4 +16,7 @@ public interface ApiInterface {
             @Field("email") String email,
             @Field("password") String password
     );
+
+    @GET("department")
+    Call<Department> departmentRetrieveData();
 }

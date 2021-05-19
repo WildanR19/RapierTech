@@ -16,4 +16,6 @@
     <string name="add_data">Add Data</string>
     <string name="logout">Logout</string>
     <string name="login_btn">LOGIN</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
 </resources>
