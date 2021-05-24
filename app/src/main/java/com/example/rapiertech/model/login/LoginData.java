@@ -13,6 +13,9 @@ public class LoginData {
 	@SerializedName("email")
 	private String email;
 
+	@SerializedName("role_id")
+	private String roleId;
+
 	public void setUserId(String userId){
 		this.userId = userId;
 	}
@@ -36,4 +39,9 @@ public class LoginData {
 	public String getEmail(){
 		return email;
 	}
+
+	public void setRoleId(String roleId) { this.roleId = roleId; }
+
+	public String getRoleId() { return roleId; }
+
 }

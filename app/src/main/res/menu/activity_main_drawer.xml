@@ -10,17 +10,69 @@
             android:icon="@drawable/ic_dashboard"
             android:title="@string/menu_home" />
         <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Department" />
+            android:id="@+id/nav_profile"
+            android:title="Profile"
+            android:icon="@drawable/ic_profile"/>
+    </group>
+
+    <item
+        android:title="HR">
+
+        <menu>
+
+            <item
+                android:id="@+id/nav_employee"
+                android:icon="@drawable/ic_user"
+                android:title="Employee" />
+            <item
+                android:id="@+id/nav_department"
+                android:icon="@drawable/ic_department"
+                android:title="Department" />
+            <item
+                android:id="@+id/nav_job"
+                android:icon="@drawable/ic_job"
+                android:title="Job" />
+            <item
+                android:id="@+id/nav_leave"
+                android:icon="@drawable/ic_leave"
+                android:title="Leave" />
+            <item
+                android:id="@+id/nav_payslip"
+                android:icon="@drawable/ic_payslip"
+                android:title="Payslip" />
+            <item
+                android:id="@+id/nav_attendance"
+                android:icon="@drawable/ic_attendance"
+                android:title="Attendance" />
+
+        </menu>
+    </item>
+
+    <item
+        android:title="Work">
+        <menu>
+
+            <item
+                android:id="@+id/nav_project"
+                android:icon="@drawable/ic_project"
+                android:title="Project" />
+            <item
+                android:id="@+id/nav_goal"
+                android:icon="@drawable/ic_goal"
+                android:title="Goal" />
+
+        </menu>
+    </item>
+
+    <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="@string/menu_slideshow" />
+            android:id="@+id/nav_holiday"
+            android:title="Holiday"
+            android:icon="@drawable/ic_holiday"/>
+
         <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_logout"
             android:title="@string/logout" />
-
     </group>
 </menu>
