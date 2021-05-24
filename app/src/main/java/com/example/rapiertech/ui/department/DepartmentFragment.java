@@ -1,15 +1,15 @@
-package com.example.rapiertech.ui.gallery;
+package com.example.rapiertech.ui.department;
 
 import android.os.Bundle;
+
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.rapiertech.R;
 import com.example.rapiertech.adapter.AdapterData;
@@ -25,23 +25,62 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class GalleryFragment extends Fragment {
+/**
+ * A simple {@link Fragment} subclass.
+ * Use the {@link DepartmentFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
+public class DepartmentFragment extends Fragment {
+
+    // TODO: Rename parameter arguments, choose names that match
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
+
+    // TODO: Rename and change types of parameters
+    private String mParam1;
+    private String mParam2;
+
+    public DepartmentFragment() {
+        // Required empty public constructor
+    }
 
     private RecyclerView rvData;
     private RecyclerView.Adapter adData;
     private RecyclerView.LayoutManager lmData;
     private List<DepartmentData> listData = new ArrayList<>();
 
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_gallery, container, false);
+    public static DepartmentFragment newInstance(String param1, String param2) {
+        DepartmentFragment fragment = new DepartmentFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
-        rvData = root.findViewById(R.id.rvDataGalery);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
+        }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View root = inflater.inflate(R.layout.fragment_department, container, false);
+
+        rvData = root.findViewById(R.id.rvDataDepartment);
         lmData = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         rvData.setLayoutManager(lmData);
 
         retrieveData();
-
         return root;
+
     }
 
     private void retrieveData() {
@@ -68,5 +107,14 @@ public class GalleryFragment extends Fragment {
         });
     }
 
-
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        //Set title of this fragment
+        if (getActivity() != null)
+        {
+            getActivity().setTitle("Department");
+        }
+    }
 }

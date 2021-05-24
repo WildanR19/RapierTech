@@ -3,10 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".ui.gallery.GalleryFragment">
+    android:padding="8dp"
+    tools:context=".ui.department.DepartmentFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvDataGalery"
+        android:id="@+id/rvDataDepartment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:listitem="@layout/card_item" >
