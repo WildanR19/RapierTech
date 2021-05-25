@@ -66,9 +66,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         email.setText(sessionManager.getUserDetail().get(SessionManager.EMAIL));
 
         //initial Fragment
-        HomeFragment homeFragment = new HomeFragment();
-//        DepartmentFragment departmentFragment = new DepartmentFragment();
-        setMyFragment(homeFragment);
+//        HomeFragment homeFragment = new HomeFragment();
+        DepartmentFragment departmentFragment = new DepartmentFragment();
+        setMyFragment(departmentFragment);
     }
 
     private void setMyFragment(Fragment fragment) {

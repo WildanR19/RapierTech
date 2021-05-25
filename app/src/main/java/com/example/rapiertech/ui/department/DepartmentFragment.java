@@ -33,18 +33,18 @@ import retrofit2.Response;
 
 public class DepartmentFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public DepartmentFragment() {
-        // Required empty public constructor
-    }
+//    // TODO: Rename parameter arguments, choose names that match
+//    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+//    private static final String ARG_PARAM1 = "param1";
+//    private static final String ARG_PARAM2 = "param2";
+//
+//    // TODO: Rename and change types of parameters
+//    private String mParam1;
+//    private String mParam2;
+//
+//    public DepartmentFragment() {
+//        // Required empty public constructor
+//    }
 
     private RecyclerView rvData;
     private RecyclerView.Adapter adData;
@@ -56,23 +56,23 @@ public class DepartmentFragment extends Fragment {
     private EditText etName;
     private String name;
 
-    public static DepartmentFragment newInstance(String param1, String param2) {
-        DepartmentFragment fragment = new DepartmentFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+//    public static DepartmentFragment newInstance(String param1, String param2) {
+//        DepartmentFragment fragment = new DepartmentFragment();
+//        Bundle args = new Bundle();
+//        args.putString(ARG_PARAM1, param1);
+//        args.putString(ARG_PARAM2, param2);
+//        fragment.setArguments(args);
+//        return fragment;
+//    }
+//
+//    @Override
+//    public void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        if (getArguments() != null) {
+//            mParam1 = getArguments().getString(ARG_PARAM1);
+//            mParam2 = getArguments().getString(ARG_PARAM2);
+//        }
+//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -136,8 +136,8 @@ public class DepartmentFragment extends Fragment {
     }
 
     private void createData() {
-        ApiInterface aiData = ApiClient.getClient().create(ApiInterface.class);
-        Call<Department> createdata = aiData.departmentCreateData(name);
+        ApiInterface apiData = ApiClient.getClient().create(ApiInterface.class);
+        Call<Department> createdata = apiData.departmentCreateData(name);
 
         createdata.enqueue(new Callback<Department>() {
             @Override
@@ -163,8 +163,8 @@ public class DepartmentFragment extends Fragment {
 
         loadingData.setVisibility(View.VISIBLE);
 
-        ApiInterface aiData = ApiClient.getClient().create(ApiInterface.class);
-        Call<Department> showdata = aiData.departmentRetrieveData();
+        ApiInterface apiData = ApiClient.getClient().create(ApiInterface.class);
+        Call<Department> showdata = apiData.departmentRetrieveData();
 
         showdata.enqueue(new Callback<Department>() {
             @Override

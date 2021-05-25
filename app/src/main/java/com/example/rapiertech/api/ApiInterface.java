@@ -29,6 +29,13 @@ public interface ApiInterface {
             @Field("name") String name
     );
 
+    @FormUrlEncoded
+    @POST("department/edit/{id}")
+    Call<Department> departmentUpdateData(
+            @Path("id") int deptId,
+            @Field("name") String name
+    );
+
     @DELETE("department/delete/{id}")
     Call<Department> departmentDeleteData(@Path("id") int deptId);
 

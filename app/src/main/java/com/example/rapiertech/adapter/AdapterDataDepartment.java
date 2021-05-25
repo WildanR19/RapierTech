@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -30,12 +31,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class AdapterDataDepartment extends RecyclerView.Adapter<AdapterDataDepartment.HolderData>{
-    private Context ctx;
+    private Context context;
     private List<DepartmentData> listDept;
+    private String name;
 
-    public AdapterDataDepartment(Context ctx, List<DepartmentData> listDept) {
-        this.ctx = ctx;
+    public AdapterDataDepartment(Context context, List<DepartmentData> listDept) {
+        this.context = context;
         this.listDept = listDept;
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -56,11 +59,13 @@ public class AdapterDataDepartment extends RecyclerView.Adapter<AdapterDataDepar
         holder.totalDept.setText(String.valueOf(dd.getTotal()) + " Employee");
         if (dd.getTotal() == 0){
             holder.totalDept.setBackgroundResource(R.drawable.bg_total_empty);
+        } else {
+            holder.totalDept.setBackgroundResource(R.drawable.bg_total);
         }
         holder.menuPopup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PopupMenu popupMenu = new PopupMenu(ctx, v);
+                PopupMenu popupMenu = new PopupMenu(context, v);
                 popupMenu.getMenuInflater().inflate(R.menu.home, popupMenu.getMenu());
                 popupMenu.show();
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -69,12 +74,39 @@ public class AdapterDataDepartment extends RecyclerView.Adapter<AdapterDataDepar
                         switch (item.getItemId())
                         {
                             case R.id.action_edit:
-                                Toast.makeText(ctx, "Edit Clicked", Toast.LENGTH_SHORT).show();
+                                AlertDialog.Builder editDialog = new AlertDialog.Builder(context);
+                                LayoutInflater inflater = LayoutInflater.from(context);
+                                View view = inflater.inflate(R.layout.add_dialog, null);
+
+                                EditText etName = view.findViewById(R.id.add_name);
+                                etName.setText(dd.getName());
+
+                                editDialog.setView(view)
+                                        .setTitle(R.string.add_title_dialog)
+                                        .setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                name = etName.getText().toString();
+                                                updateData(dd.getId());
+                                                dialog.dismiss();
+//                                                notifyItemChanged(position);
+//                                                notifyDataSetChanged();
+                                            }
+                                        })
+                                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                            }
+                                        });
+
+                                AlertDialog alertDialog = editDialog.create();
+                                alertDialog.show();
                                 break;
 
                             case R.id.action_delete:
-                                AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
-                                builder.setMessage("Are you sure?")
+                                AlertDialog.Builder deleteDialog = new AlertDialog.Builder(context);
+                                deleteDialog.setMessage("Are you sure?")
                                         .setCancelable(true)
                                         .setPositiveButton(R.string.alert_delete, new DialogInterface.OnClickListener() {
                                             @Override
@@ -92,7 +124,7 @@ public class AdapterDataDepartment extends RecyclerView.Adapter<AdapterDataDepar
                                                 dialog.dismiss();
                                             }
                                         });
-                                builder.show();
+                                deleteDialog.show();
                                 break;
                         }
                         return true;
@@ -102,18 +134,40 @@ public class AdapterDataDepartment extends RecyclerView.Adapter<AdapterDataDepar
         });
     }
 
-    private void deleteData(int id) {
-        ApiInterface aiData = ApiClient.getClient().create(ApiInterface.class);
-        Call<Department> deletedata = aiData.departmentDeleteData(id);
-        deletedata.enqueue(new Callback<Department>() {
+    private void updateData(int id) {
+        ApiInterface apiData = ApiClient.getClient().create(ApiInterface.class);
+        Call<Department> updatedata = apiData.departmentUpdateData(id, name);
+        updatedata.enqueue(new Callback<Department>() {
             @Override
             public void onResponse(Call<Department> call, Response<Department> response) {
-                Toast.makeText(ctx, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                if (response.body() != null && response.isSuccessful() && response.body().isStatus()){
+                    String message = response.body().getMessage();
+
+                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(context, "!! "+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
             public void onFailure(Call<Department> call, Throwable t) {
-                Toast.makeText(ctx, "Cannot connect server"+t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Cannot connect server"+t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void deleteData(int id) {
+        ApiInterface apiData = ApiClient.getClient().create(ApiInterface.class);
+        Call<Department> deletedata = apiData.departmentDeleteData(id);
+        deletedata.enqueue(new Callback<Department>() {
+            @Override
+            public void onResponse(Call<Department> call, Response<Department> response) {
+                Toast.makeText(context, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<Department> call, Throwable t) {
+                Toast.makeText(context, "Cannot connect server"+t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
