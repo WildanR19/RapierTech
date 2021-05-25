@@ -10,6 +10,9 @@ public class DepartmentData {
 	@SerializedName("id")
 	private int id;
 
+	@SerializedName("total")
+	private int total;
+
 	public void setName(String name){
 		this.name = name;
 	}
@@ -24,5 +27,13 @@ public class DepartmentData {
 
 	public int getId(){
 		return id;
+	}
+
+	public int getTotal() {
+		return total;
+	}
+
+	public void setTotal(int total) {
+		this.total = total;
 	}
 }

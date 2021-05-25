@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.rapiertech.R;
-import com.example.rapiertech.adapter.AdapterData;
+import com.example.rapiertech.adapter.AdapterDataDepartment;
 import com.example.rapiertech.api.ApiClient;
 import com.example.rapiertech.api.ApiInterface;
 import com.example.rapiertech.model.department.Department;
@@ -92,7 +92,7 @@ public class DepartmentFragment extends Fragment {
             public void onResponse(Call<Department> call, Response<Department> response) {
                 if (response.body() != null && response.isSuccessful() && response.body().isStatus()){
                     listData = response.body().getData();
-                    adData = new AdapterData(getActivity(), listData);
+                    adData = new AdapterDataDepartment(getActivity(), listData);
                     rvData.setAdapter(adData);
                     adData.notifyDataSetChanged();
                 }else{

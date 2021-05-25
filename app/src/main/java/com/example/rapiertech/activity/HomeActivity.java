@@ -12,7 +12,9 @@ import android.widget.Toast;
 import com.example.rapiertech.R;
 import com.example.rapiertech.ui.department.DepartmentFragment;
 import com.example.rapiertech.ui.home.HomeFragment;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -52,14 +54,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-//        FloatingActionButton fab = findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
+
         drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -78,8 +73,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         email.setText(sessionManager.getUserDetail().get(SessionManager.EMAIL));
 
         //initial Fragment
-        HomeFragment homeFragment = new HomeFragment();
-        setMyFragment(homeFragment);
+//        HomeFragment homeFragment = new HomeFragment();
+        DepartmentFragment departmentFragment = new DepartmentFragment();
+        setMyFragment(departmentFragment);
     }
 
     private void setMyFragment(Fragment fragment) {
@@ -107,12 +103,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         Toast.makeText(HomeActivity.this, "Logout Success", Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.home, menu);
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.home, menu);
+//        return true;
+//    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -130,6 +126,16 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_department:
                 DepartmentFragment departmentFragment = new DepartmentFragment();
                 setMyFragment(departmentFragment);
+
+                FloatingActionButton fab = findViewById(R.id.fab);
+                fab.setVisibility(View.VISIBLE);
+                fab.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show();
+                    }
+                });
                 break;
             case R.id.nav_logout:
                 logout();
