@@ -1,6 +1,7 @@
 package com.example.rapiertech.adapter;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,14 +12,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.rapiertech.R;
+import com.example.rapiertech.api.ApiClient;
+import com.example.rapiertech.api.ApiInterface;
+import com.example.rapiertech.model.department.Department;
 import com.example.rapiertech.model.department.DepartmentData;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class AdapterDataDepartment extends RecyclerView.Adapter<AdapterDataDepartment.HolderData>{
     private Context ctx;
@@ -64,22 +73,49 @@ public class AdapterDataDepartment extends RecyclerView.Adapter<AdapterDataDepar
                                 break;
 
                             case R.id.action_delete:
-                                Toast.makeText(ctx, "Delete Clicked", Toast.LENGTH_SHORT).show();
-                                String temp = listDept.get(position).getName();
-                                deleteItem(position);
+                                AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+                                builder.setMessage("Are you sure?")
+                                        .setCancelable(true)
+                                        .setPositiveButton(R.string.alert_delete, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                deleteData(dd.getId());
+                                                dialog.dismiss();
+                                                listDept.remove(position);
+                                                notifyItemRemoved(position);
+                                                notifyItemRangeChanged(position, listDept.size());
+                                            }
+                                        })
+                                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                            }
+                                        });
+                                builder.show();
                                 break;
                         }
-                        return false;
+                        return true;
                     }
                 });
             }
         });
     }
 
-    private void deleteItem(int position) {
-        listDept.remove(position);
-        notifyItemRemoved(position);
-        notifyItemRangeChanged(position, listDept.size());
+    private void deleteData(int id) {
+        ApiInterface aiData = ApiClient.getClient().create(ApiInterface.class);
+        Call<Department> deletedata = aiData.departmentDeleteData(id);
+        deletedata.enqueue(new Callback<Department>() {
+            @Override
+            public void onResponse(Call<Department> call, Response<Department> response) {
+                Toast.makeText(ctx, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<Department> call, Throwable t) {
+                Toast.makeText(ctx, "Cannot connect server"+t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
