@@ -19,15 +19,15 @@
     </style>
 
     <style name="JosefinTextViewStyle" parent="android:Widget.TextView">
-        <item name="android:fontFamily">@font/josefin_sans_semibold</item>
+        <item name="android:fontFamily">@font/helvetica_regular</item>
     </style>
 
     <style name="JosefinEditTextStyle" parent="android:Widget.EditText">
-        <item name="android:fontFamily">@font/josefin_sans</item>
+        <item name="android:fontFamily">@font/helvetica_regular</item>
     </style>
 
     <style name="JosefinButtonStyle" parent="android:Widget.Holo.Button">
-        <item name="android:fontFamily">@font/josefin_sans_bold</item>
+        <item name="android:fontFamily">@font/helveticabold</item>
     </style>
 
     <style name="Theme.RapierTech.NoActionBar">

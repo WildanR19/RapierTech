@@ -6,7 +6,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.rapiertech.R;
 import com.example.rapiertech.ui.department.DepartmentFragment;
@@ -15,6 +14,7 @@ import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -22,6 +22,8 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import www.sanju.motiontoast.MotionToast;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -93,7 +95,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private void logout() {
         sessionManager.logoutSession();
         moveToLogin();
-        Toast.makeText(HomeActivity.this, "Logout Success", Toast.LENGTH_SHORT).show();
+        MotionToast.Companion.createColorToast(HomeActivity.this, "Success",
+                "Logout Success",
+                MotionToast.TOAST_SUCCESS,
+                MotionToast.GRAVITY_BOTTOM,
+                MotionToast.LONG_DURATION,
+                ResourcesCompat.getFont(HomeActivity.this,R.font.helvetica_regular)
+        );
     }
 
     @Override

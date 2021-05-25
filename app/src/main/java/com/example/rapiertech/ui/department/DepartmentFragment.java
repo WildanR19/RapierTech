@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,6 +31,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import www.sanju.motiontoast.MotionToast;
 
 public class DepartmentFragment extends Fragment {
 
@@ -145,16 +147,35 @@ public class DepartmentFragment extends Fragment {
                 if (response.body() != null && response.isSuccessful() && response.body().isStatus()){
                     String message = response.body().getMessage();
 
-                    Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                    MotionToast.Companion.createColorToast(getActivity(), "Success",
+                            message,
+                            MotionToast.TOAST_SUCCESS,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.LONG_DURATION,
+                            ResourcesCompat.getFont(getActivity(),R.font.helvetica_regular)
+                    );
+
                     retrieveData();
                 }else{
-                    Toast.makeText(getActivity(), "!! "+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                    MotionToast.Companion.createColorToast(getActivity(), "Error",
+                            response.body().getMessage(),
+                            MotionToast.TOAST_ERROR,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.LONG_DURATION,
+                            ResourcesCompat.getFont(getActivity(),R.font.helvetica_regular)
+                    );
                 }
             }
 
             @Override
             public void onFailure(Call<Department> call, Throwable t) {
-                Toast.makeText(getActivity(), "Cannot connect server"+t.getMessage(), Toast.LENGTH_SHORT).show();
+                MotionToast.Companion.createColorToast(getActivity(), "Cannot connect server",
+                        t.getMessage(),
+                        MotionToast.TOAST_ERROR,
+                        MotionToast.GRAVITY_BOTTOM,
+                        MotionToast.LONG_DURATION,
+                        ResourcesCompat.getFont(getActivity(),R.font.helvetica_regular)
+                );
             }
         });
     }
@@ -175,14 +196,26 @@ public class DepartmentFragment extends Fragment {
                     rvData.setAdapter(adData);
                     adData.notifyDataSetChanged();
                 }else{
-                    Toast.makeText(getActivity(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                    MotionToast.Companion.createColorToast(getActivity(), "Error",
+                            response.body().getMessage(),
+                            MotionToast.TOAST_ERROR,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.LONG_DURATION,
+                            ResourcesCompat.getFont(getActivity(),R.font.helvetica_regular)
+                    );
                 }
                 loadingData.setVisibility(View.INVISIBLE);
             }
 
             @Override
             public void onFailure(Call<Department> call, Throwable t) {
-                Toast.makeText(getActivity(), "Cannot connect server"+t.getMessage(), Toast.LENGTH_SHORT).show();
+                MotionToast.Companion.createColorToast(getActivity(), "Cannot connect server",
+                        t.getMessage(),
+                        MotionToast.TOAST_ERROR,
+                        MotionToast.GRAVITY_BOTTOM,
+                        MotionToast.LONG_DURATION,
+                        ResourcesCompat.getFont(getActivity(),R.font.helvetica_regular)
+                );
                 loadingData.setVisibility(View.INVISIBLE);
             }
         });

@@ -1,5 +1,6 @@
 package com.example.rapiertech.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.view.LayoutInflater;
@@ -10,10 +11,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.rapiertech.R;
@@ -29,6 +30,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import www.sanju.motiontoast.MotionToast;
 
 public class AdapterDataDepartment extends RecyclerView.Adapter<AdapterDataDepartment.HolderData>{
     private Context context;
@@ -143,15 +145,33 @@ public class AdapterDataDepartment extends RecyclerView.Adapter<AdapterDataDepar
                 if (response.body() != null && response.isSuccessful() && response.body().isStatus()){
                     String message = response.body().getMessage();
 
-                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                    MotionToast.Companion.createColorToast((Activity) context, "Success",
+                            message,
+                            MotionToast.TOAST_SUCCESS,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.LONG_DURATION,
+                            ResourcesCompat.getFont(context,R.font.helvetica_regular)
+                    );
                 }else{
-                    Toast.makeText(context, "!! "+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                    MotionToast.Companion.createColorToast((Activity) context, "Error",
+                            response.body().getMessage(),
+                            MotionToast.TOAST_ERROR,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.LONG_DURATION,
+                            ResourcesCompat.getFont(context,R.font.helvetica_regular)
+                    );
                 }
             }
 
             @Override
             public void onFailure(Call<Department> call, Throwable t) {
-                Toast.makeText(context, "Cannot connect server"+t.getMessage(), Toast.LENGTH_SHORT).show();
+                MotionToast.Companion.createColorToast((Activity) context, "Cannot connect server",
+                        t.getMessage(),
+                        MotionToast.TOAST_ERROR,
+                        MotionToast.GRAVITY_BOTTOM,
+                        MotionToast.LONG_DURATION,
+                        ResourcesCompat.getFont(context,R.font.helvetica_regular)
+                );
             }
         });
     }
@@ -162,12 +182,24 @@ public class AdapterDataDepartment extends RecyclerView.Adapter<AdapterDataDepar
         deletedata.enqueue(new Callback<Department>() {
             @Override
             public void onResponse(Call<Department> call, Response<Department> response) {
-                Toast.makeText(context, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                MotionToast.Companion.createColorToast((Activity) context, "Error",
+                        response.body().getMessage(),
+                        MotionToast.TOAST_ERROR,
+                        MotionToast.GRAVITY_BOTTOM,
+                        MotionToast.LONG_DURATION,
+                        ResourcesCompat.getFont(context,R.font.helvetica_regular)
+                );
             }
 
             @Override
             public void onFailure(Call<Department> call, Throwable t) {
-                Toast.makeText(context, "Cannot connect server"+t.getMessage(), Toast.LENGTH_SHORT).show();
+                MotionToast.Companion.createColorToast((Activity) context, "Cannot connect server",
+                        t.getMessage(),
+                        MotionToast.TOAST_ERROR,
+                        MotionToast.GRAVITY_BOTTOM,
+                        MotionToast.LONG_DURATION,
+                        ResourcesCompat.getFont(context,R.font.helvetica_regular)
+                );
             }
         });
     }

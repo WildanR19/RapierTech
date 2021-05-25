@@ -1,6 +1,7 @@
 package com.example.rapiertech.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import com.example.rapiertech.model.login.LoginData;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import www.sanju.motiontoast.MotionToast;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -74,19 +76,37 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     sessionManager.createLoginSession(loginData);
 
                     // pindah activity
-                    Toast.makeText(LoginActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                    MotionToast.Companion.createColorToast(LoginActivity.this, "Success",
+                            response.body().getMessage(),
+                            MotionToast.TOAST_SUCCESS,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.LONG_DURATION,
+                            ResourcesCompat.getFont(LoginActivity.this,R.font.helvetica_regular)
+                    );
                     Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                     startActivity(intent);
                     finish();
                 } else {
-                    Toast.makeText(LoginActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                    MotionToast.Companion.createColorToast(LoginActivity.this, "Error",
+                            response.body().getMessage(),
+                            MotionToast.TOAST_ERROR,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.LONG_DURATION,
+                            ResourcesCompat.getFont(LoginActivity.this,R.font.helvetica_regular)
+                    );
                 }
 
             }
 
             @Override
             public void onFailure(Call<Login> call, Throwable t) {
-                Toast.makeText(LoginActivity.this, t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                MotionToast.Companion.createColorToast(LoginActivity.this, "Cannot connect server",
+                        t.getMessage(),
+                        MotionToast.TOAST_ERROR,
+                        MotionToast.GRAVITY_BOTTOM,
+                        MotionToast.LONG_DURATION,
+                        ResourcesCompat.getFont(LoginActivity.this,R.font.helvetica_regular)
+                );
             }
         });
 
