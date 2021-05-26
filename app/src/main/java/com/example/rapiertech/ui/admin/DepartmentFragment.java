@@ -1,4 +1,4 @@
-package com.example.rapiertech.ui.department;
+package com.example.rapiertech.ui.admin;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -76,34 +76,25 @@ public class DepartmentFragment extends Fragment {
 //    }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_department, container, false);
 
         rvData = root.findViewById(R.id.rvDataDepartment);
-        lmData = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        lmData = new LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false);
         rvData.setLayoutManager(lmData);
 
         srlData = root.findViewById(R.id.srlDataDepartment);
-        srlData.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                srlData.setRefreshing(true);
-                retrieveData();
-                srlData.setRefreshing(false);
-            }
+        srlData.setOnRefreshListener(() -> {
+            srlData.setRefreshing(true);
+            retrieveData();
+            srlData.setRefreshing(false);
         });
 
         loadingData = root.findViewById(R.id.loadingDataDepartment);
 
         fab = root.findViewById(R.id.fab_department);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDialog();
-            }
-        });
+        fab.setOnClickListener(v -> showDialog());
 
         return root;
 
@@ -113,25 +104,17 @@ public class DepartmentFragment extends Fragment {
 
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.add_dialog_deptjob, null);
-        etName = view.findViewById(R.id.add_deptName);
+        etName = view.findViewById(R.id.add_deptJobName);
 
-        MaterialAlertDialogBuilder mDialog = new MaterialAlertDialogBuilder(getActivity());
+        MaterialAlertDialogBuilder mDialog = new MaterialAlertDialogBuilder(requireActivity());
         mDialog.setView(view)
                 .setTitle(R.string.add_title_dialog)
-                .setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        name = etName.getText().toString();
-                        createData();
-                        dialog.dismiss();
-                    }
+                .setPositiveButton(R.string.save, (dialog, which) -> {
+                    name = etName.getText().toString();
+                    createData();
+                    dialog.dismiss();
                 })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
+                .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss())
                 .show();
     }
 
@@ -145,34 +128,33 @@ public class DepartmentFragment extends Fragment {
                 if (response.body() != null && response.isSuccessful() && response.body().isStatus()){
                     String message = response.body().getMessage();
 
-                    MotionToast.Companion.createColorToast(getActivity(), "Success",
+                    MotionToast.Companion.createColorToast(requireActivity(), "Success",
                             message,
                             MotionToast.TOAST_SUCCESS,
                             MotionToast.GRAVITY_BOTTOM,
                             MotionToast.LONG_DURATION,
-                            ResourcesCompat.getFont(getActivity(),R.font.helvetica_regular)
+                            ResourcesCompat.getFont(requireActivity(),R.font.helvetica_regular)
                     );
 
                     retrieveData();
-                }else{
-                    MotionToast.Companion.createColorToast(getActivity(), "Error",
-                            response.body().getMessage(),
-                            MotionToast.TOAST_ERROR,
-                            MotionToast.GRAVITY_BOTTOM,
-                            MotionToast.LONG_DURATION,
-                            ResourcesCompat.getFont(getActivity(),R.font.helvetica_regular)
-                    );
-                }
+                }else
+                    MotionToast.Companion.createColorToast(requireActivity(), "Error",
+                        response.body().getMessage(),
+                        MotionToast.TOAST_ERROR,
+                        MotionToast.GRAVITY_BOTTOM,
+                        MotionToast.LONG_DURATION,
+                        ResourcesCompat.getFont(requireActivity(), R.font.helvetica_regular)
+                );
             }
 
             @Override
             public void onFailure(Call<Department> call, Throwable t) {
-                MotionToast.Companion.createColorToast(getActivity(), "Cannot connect server",
+                MotionToast.Companion.createColorToast(requireActivity(), "Cannot connect server",
                         t.getMessage(),
                         MotionToast.TOAST_ERROR,
                         MotionToast.GRAVITY_BOTTOM,
                         MotionToast.LONG_DURATION,
-                        ResourcesCompat.getFont(getActivity(),R.font.helvetica_regular)
+                        ResourcesCompat.getFont(requireActivity(),R.font.helvetica_regular)
                 );
             }
         });
@@ -190,16 +172,16 @@ public class DepartmentFragment extends Fragment {
             public void onResponse(Call<Department> call, Response<Department> response) {
                 if (response.body() != null && response.isSuccessful() && response.body().isStatus()){
                     listData = response.body().getData();
-                    adData = new AdapterDataDepartment(getActivity(), listData, DepartmentFragment.this);
+                    adData = new AdapterDataDepartment(requireActivity(), listData, DepartmentFragment.this);
                     rvData.setAdapter(adData);
                     adData.notifyDataSetChanged();
                 }else{
-                    MotionToast.Companion.createColorToast(getActivity(), "Error",
+                    MotionToast.Companion.createColorToast(requireActivity(), "Error",
                             response.body().getMessage(),
                             MotionToast.TOAST_ERROR,
                             MotionToast.GRAVITY_BOTTOM,
                             MotionToast.LONG_DURATION,
-                            ResourcesCompat.getFont(getActivity(),R.font.helvetica_regular)
+                            ResourcesCompat.getFont(requireActivity(),R.font.helvetica_regular)
                     );
                 }
                 loadingData.setVisibility(View.INVISIBLE);
@@ -207,12 +189,12 @@ public class DepartmentFragment extends Fragment {
 
             @Override
             public void onFailure(Call<Department> call, Throwable t) {
-                MotionToast.Companion.createColorToast(getActivity(), "Cannot connect server",
+                MotionToast.Companion.createColorToast(requireActivity(), "Cannot connect server",
                         t.getMessage(),
                         MotionToast.TOAST_ERROR,
                         MotionToast.GRAVITY_BOTTOM,
                         MotionToast.LONG_DURATION,
-                        ResourcesCompat.getFont(getActivity(),R.font.helvetica_regular)
+                        ResourcesCompat.getFont(requireActivity(),R.font.helvetica_regular)
                 );
                 loadingData.setVisibility(View.INVISIBLE);
             }
@@ -220,14 +202,10 @@ public class DepartmentFragment extends Fragment {
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
         retrieveData();
         //Set title of this fragment
-        if (getActivity() != null)
-        {
-            getActivity().setTitle("Department");
-        }
+        requireActivity().setTitle("Department");
     }
 }

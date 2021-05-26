@@ -1,6 +1,7 @@
 package com.example.rapiertech.api;
 
 import com.example.rapiertech.model.department.Department;
+import com.example.rapiertech.model.job.Job;
 import com.example.rapiertech.model.login.Login;
 
 import retrofit2.Call;
@@ -39,4 +40,23 @@ public interface ApiInterface {
     @DELETE("department/delete/{id}")
     Call<Department> departmentDeleteData(@Path("id") int deptId);
 
+    // Job
+    @GET("job")
+    Call<Job> jobRetrieveData();
+
+    @FormUrlEncoded
+    @POST("job/add")
+    Call<Job> jobCreateData(
+            @Field("name") String name
+    );
+
+    @FormUrlEncoded
+    @POST("job/edit/{id}")
+    Call<Job> jobUpdateData(
+            @Path("id") int deptId,
+            @Field("name") String name
+    );
+
+    @DELETE("job/delete/{id}")
+    Call<Job> jobDeleteData(@Path("id") int id);
 }

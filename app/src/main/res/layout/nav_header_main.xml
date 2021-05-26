@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="@dimen/nav_header_height"
     android:background="@color/primary"
@@ -16,6 +15,7 @@
         android:id="@+id/imageNavHeader"
         android:layout_width="55dp"
         android:layout_height="55dp"
+        android:contentDescription="@string/profile_picture"
         android:src="@drawable/avatar" />
 
     <LinearLayout
@@ -28,7 +28,7 @@
             android:id="@+id/nameNavHeader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Prescott Carrillo"
+            android:text="@string/name"
             android:textSize="20sp"
             android:textStyle="bold"
             android:textAlignment="center"
@@ -38,7 +38,7 @@
             android:id="@+id/emailNavHeader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Executive Manager"
+            android:text="@string/email"
             android:textSize="20sp"
             android:textAlignment="center"
             android:textColor="@color/white" />

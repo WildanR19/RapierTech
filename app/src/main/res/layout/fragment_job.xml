@@ -5,15 +5,15 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="8dp"
-    tools:context=".ui.admin.DepartmentFragment">
+    tools:context=".ui.admin.JobFragment">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/srlDataDepartment"
+        android:id="@+id/srlDataJob"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvDataDepartment"
+            android:id="@+id/rvDataJob"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:listitem="@layout/card_item" />
@@ -21,14 +21,14 @@
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <ProgressBar
-        android:id="@+id/loadingDataDepartment"
+        android:id="@+id/loadingDataJob"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:visibility="invisible"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_department"
+        android:id="@+id/fab_job"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"

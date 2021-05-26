@@ -14,24 +14,23 @@
         >
 
         <TextView
-            android:id="@+id/tv_idDept"
+            android:id="@+id/tv_idDeptJob"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="id data"
             android:visibility="gone" />
         <TextView
-            android:id="@+id/tv_nameDept"
+            android:id="@+id/tv_nameDeptJob"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Nama Dept"
-            android:textSize="16dp" />
+            android:text="@string/name"
+            android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/total_dept"
+            android:id="@+id/total_deptJob"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_nameDept"
+            android:layout_below="@+id/tv_nameDeptJob"
             android:layout_marginTop="5dp"
             android:background="@drawable/bg_total"
             android:textColor="@color/white"
@@ -40,11 +39,12 @@
             android:text="2 Employee"/>
 
         <ImageView
-            android:id="@+id/more_dept"
+            android:id="@+id/more_deptJob"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
+            android:contentDescription="@string/menu_item"
             android:src="@drawable/ic_more" />
 
     </RelativeLayout>

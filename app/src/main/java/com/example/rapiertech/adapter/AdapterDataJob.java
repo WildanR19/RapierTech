@@ -20,9 +20,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.rapiertech.R;
 import com.example.rapiertech.api.ApiClient;
 import com.example.rapiertech.api.ApiInterface;
-import com.example.rapiertech.model.department.Department;
-import com.example.rapiertech.model.department.DepartmentData;
-import com.example.rapiertech.ui.admin.DepartmentFragment;
+import com.example.rapiertech.model.job.Job;
+import com.example.rapiertech.model.job.JobData;
+import com.example.rapiertech.ui.admin.JobFragment;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.jetbrains.annotations.NotNull;
@@ -35,15 +35,16 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import www.sanju.motiontoast.MotionToast;
 
-public class AdapterDataDepartment extends RecyclerView.Adapter<AdapterDataDepartment.HolderData>{
-    private Context context;
-    private List<DepartmentData> listDept;
-    private String name;
-    private DepartmentFragment fragment;
+public class AdapterDataJob extends RecyclerView.Adapter<AdapterDataJob.HolderData> {
 
-    public AdapterDataDepartment(Context context, List<DepartmentData> listDept, DepartmentFragment fragment) {
+    private Context context;
+    private List<JobData> jobList;
+    private String name;
+    private JobFragment fragment;
+
+    public AdapterDataJob(Context context, List<JobData> jobList, JobFragment fragment){
         this.context = context;
-        this.listDept = listDept;
+        this.jobList = jobList;
         this.fragment = fragment;
     }
 
@@ -57,12 +58,12 @@ public class AdapterDataDepartment extends RecyclerView.Adapter<AdapterDataDepar
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull HolderData holder, int position) {
-        DepartmentData dd = listDept.get(position);
+        JobData jd = jobList.get(position);
 
-        holder.tvId.setText(String.valueOf(dd.getId()));
-        holder.tvName.setText(dd.getName());
-        holder.totalDept.setText(dd.getTotal() + " Employee");
-        if (dd.getTotal() == 0){
+        holder.tvId.setText(String.valueOf(jd.getId()));
+        holder.tvName.setText(jd.getName());
+        holder.totalDept.setText(jd.getTotal() + " Employee");
+        if (jd.getTotal() == 0){
             holder.totalDept.setBackgroundResource(R.drawable.bg_total_empty);
         } else {
             holder.totalDept.setBackgroundResource(R.drawable.bg_total);
@@ -71,60 +72,63 @@ public class AdapterDataDepartment extends RecyclerView.Adapter<AdapterDataDepar
             PopupMenu popupMenu = new PopupMenu(context, v);
             popupMenu.getMenuInflater().inflate(R.menu.home, popupMenu.getMenu());
             popupMenu.show();
-            popupMenu.setOnMenuItemClickListener(item -> {
-                switch (item.getItemId())
-                {
-                    case R.id.action_edit:
-                        MaterialAlertDialogBuilder editDialog = new MaterialAlertDialogBuilder(context);
-                        LayoutInflater inflater = LayoutInflater.from(context);
-                        View view = inflater.inflate(R.layout.add_dialog_deptjob, null);
+            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    switch (item.getItemId())
+                    {
+                        case R.id.action_edit:
+                            MaterialAlertDialogBuilder editDialog = new MaterialAlertDialogBuilder(context);
+                            LayoutInflater inflater = LayoutInflater.from(context);
+                            View view = inflater.inflate(R.layout.add_dialog_deptjob, null);
 
-                        EditText etName = view.findViewById(R.id.add_deptJobName);
-                        etName.setText(dd.getName());
+                            EditText etName = view.findViewById(R.id.add_deptJobName);
+                            etName.setText(jd.getName());
 
-                        editDialog.setView(view)
-                                .setTitle(R.string.add_title_dialog)
-                                .setPositiveButton(R.string.save, (dialog, which) -> {
-                                    name = etName.getText().toString();
-                                    updateData(dd.getId());
-                                    dialog.dismiss();
-                                    ((DepartmentFragment)fragment).retrieveData();
-                                    notifyDataSetChanged();
-                                })
-                                .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss());
+                            editDialog.setView(view)
+                                    .setTitle(R.string.add_title_dialog)
+                                    .setPositiveButton(R.string.save, (dialog, which) -> {
+                                        name = etName.getText().toString();
+                                        updateData(jd.getId());
+                                        dialog.dismiss();
+                                        ((JobFragment)fragment).retrieveData();
+                                        notifyDataSetChanged();
+                                    })
+                                    .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss());
 
-                        AlertDialog alertDialog = editDialog.create();
-                        alertDialog.show();
-                        break;
+                            AlertDialog alertDialog = editDialog.create();
+                            alertDialog.show();
+                            break;
 
-                    case R.id.action_delete:
-                        BottomSheetMaterialDialog mDialog = new BottomSheetMaterialDialog.Builder((Activity) context)
-                                .setTitle("Delete?")
-                                .setMessage("Are you sure want to delete this data?")
-                                .setCancelable(false)
-                                .setPositiveButton("Delete", R.drawable.ic_delete_, (dialogInterface, which) -> {
-                                    deleteData(dd.getId());
-                                    dialogInterface.dismiss();
-                                    listDept.remove(position);
-                                    notifyItemRemoved(position);
-                                    notifyItemRangeChanged(position, listDept.size());
-                                })
-                                .setNegativeButton("Cancel", R.drawable.ic_close, (dialogInterface, which) -> dialogInterface.dismiss())
-                                .build();
-                        mDialog.show();
-                        break;
+                        case R.id.action_delete:
+                            BottomSheetMaterialDialog mDialog = new BottomSheetMaterialDialog.Builder((Activity) context)
+                                    .setTitle("Delete?")
+                                    .setMessage("Are you sure want to delete this data?")
+                                    .setCancelable(false)
+                                    .setPositiveButton("Delete", R.drawable.ic_delete_, (dialogInterface, which) -> {
+                                        deleteData(jd.getId());
+                                        dialogInterface.dismiss();
+                                        jobList.remove(position);
+                                        notifyItemRemoved(position);
+                                        notifyItemRangeChanged(position, jobList.size());
+                                    })
+                                    .setNegativeButton("Cancel", R.drawable.ic_close, (dialogInterface, which) -> dialogInterface.dismiss())
+                                    .build();
+                            mDialog.show();
+                            break;
+                    }
+                    return true;
                 }
-                return true;
             });
         });
     }
 
     private void updateData(int id) {
         ApiInterface apiData = ApiClient.getClient().create(ApiInterface.class);
-        Call<Department> updatedata = apiData.departmentUpdateData(id, name);
-        updatedata.enqueue(new Callback<Department>() {
+        Call<Job> updatedata = apiData.jobUpdateData(id, name);
+        updatedata.enqueue(new Callback<Job>() {
             @Override
-            public void onResponse(Call<Department> call, Response<Department> response) {
+            public void onResponse(Call<Job> call, Response<Job> response) {
                 if (response.body() != null && response.isSuccessful() && response.body().isStatus()){
                     String message = response.body().getMessage();
 
@@ -147,7 +151,7 @@ public class AdapterDataDepartment extends RecyclerView.Adapter<AdapterDataDepar
             }
 
             @Override
-            public void onFailure(Call<Department> call, Throwable t) {
+            public void onFailure(Call<Job> call, Throwable t) {
                 MotionToast.Companion.createColorToast((Activity) context, "Cannot connect server",
                         t.getMessage(),
                         MotionToast.TOAST_ERROR,
@@ -161,10 +165,10 @@ public class AdapterDataDepartment extends RecyclerView.Adapter<AdapterDataDepar
 
     private void deleteData(int id) {
         ApiInterface apiData = ApiClient.getClient().create(ApiInterface.class);
-        Call<Department> deletedata = apiData.departmentDeleteData(id);
-        deletedata.enqueue(new Callback<Department>() {
+        Call<Job> deletedata = apiData.jobDeleteData(id);
+        deletedata.enqueue(new Callback<Job>() {
             @Override
-            public void onResponse(Call<Department> call, Response<Department> response) {
+            public void onResponse(Call<Job> call, Response<Job> response) {
                 MotionToast.Companion.createColorToast((Activity) context, "Success",
                         response.body().getMessage(),
                         MotionToast.TOAST_SUCCESS,
@@ -175,7 +179,7 @@ public class AdapterDataDepartment extends RecyclerView.Adapter<AdapterDataDepar
             }
 
             @Override
-            public void onFailure(Call<Department> call, Throwable t) {
+            public void onFailure(Call<Job> call, Throwable t) {
                 MotionToast.Companion.createColorToast((Activity) context, "Cannot connect server",
                         t.getMessage(),
                         MotionToast.TOAST_ERROR,
@@ -189,7 +193,7 @@ public class AdapterDataDepartment extends RecyclerView.Adapter<AdapterDataDepar
 
     @Override
     public int getItemCount() {
-        return listDept.size();
+        return jobList.size();
     }
 
     public class HolderData extends RecyclerView.ViewHolder {

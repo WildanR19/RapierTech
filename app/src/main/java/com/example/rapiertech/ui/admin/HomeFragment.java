@@ -1,4 +1,4 @@
-package com.example.rapiertech.ui.home;
+package com.example.rapiertech.ui.admin;
 
 import android.os.Bundle;
 

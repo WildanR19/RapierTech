@@ -23,5 +23,10 @@
     <string name="add_title_dialog">Add Data</string>
     <string name="alert_delete">Yes, delete it!</string>
     <string name="enter_name">Enter Name</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="name">Name</string>
+    <string name="profile_picture">Profile Picture</string>
+    <string name="menu_item">Menu Item</string>
 
 </resources>

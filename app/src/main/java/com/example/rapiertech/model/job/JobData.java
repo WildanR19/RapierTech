@@ -1,8 +1,11 @@
-package com.example.rapiertech.model.department;
+package com.example.rapiertech.model.job;
 
 import com.google.gson.annotations.SerializedName;
 
-public class DepartmentData {
+public class JobData {
+
+	@SerializedName("total")
+	private int total;
 
 	@SerializedName("name")
 	private String name;
@@ -10,8 +13,13 @@ public class DepartmentData {
 	@SerializedName("id")
 	private int id;
 
-	@SerializedName("total")
-	private int total;
+	public void setTotal(int total){
+		this.total = total;
+	}
+
+	public int getTotal(){
+		return total;
+	}
 
 	public void setName(String name){
 		this.name = name;
@@ -28,9 +36,4 @@ public class DepartmentData {
 	public int getId(){
 		return id;
 	}
-
-	public int getTotal() {
-		return total;
-	}
-
 }
