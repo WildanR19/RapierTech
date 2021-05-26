@@ -2,9 +2,7 @@ package com.example.rapiertech.adapter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -63,9 +61,9 @@ public class AdapterDataDepartment extends RecyclerView.Adapter<AdapterDataDepar
         holder.tvName.setText(dd.getName());
         holder.totalDept.setText(dd.getTotal() + " Employee");
         if (dd.getTotal() == 0){
-            holder.totalDept.setBackgroundResource(R.drawable.bg_total_empty);
+            holder.totalDept.setBackgroundResource(R.drawable.bg_label_red);
         } else {
-            holder.totalDept.setBackgroundResource(R.drawable.bg_total);
+            holder.totalDept.setBackgroundResource(R.drawable.bg_label_green);
         }
         holder.menuPopup.setOnClickListener(v -> {
             PopupMenu popupMenu = new PopupMenu(context, v);

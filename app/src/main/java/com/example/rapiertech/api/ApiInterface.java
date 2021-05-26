@@ -1,6 +1,7 @@
 package com.example.rapiertech.api;
 
 import com.example.rapiertech.model.department.Department;
+import com.example.rapiertech.model.employee.Employee;
 import com.example.rapiertech.model.job.Job;
 import com.example.rapiertech.model.login.Login;
 
@@ -19,6 +20,10 @@ public interface ApiInterface {
             @Field("email") String email,
             @Field("password") String password
     );
+
+    // Employee
+    @GET("user")
+    Call<Employee> employeeRetrieveData();
 
     // Department
     @GET("department")

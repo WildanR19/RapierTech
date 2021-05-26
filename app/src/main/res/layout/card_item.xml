@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_margin="6dp"
-    app:cardCornerRadius="10dp"
-    app:cardElevation="@dimen/shadow">
+    android:layout_margin="6dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -32,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_nameDeptJob"
             android:layout_marginTop="5dp"
-            android:background="@drawable/bg_total"
+            android:background="@drawable/bg_label_green"
             android:textColor="@color/white"
             android:paddingVertical="@dimen/paddingH_total"
             android:paddingHorizontal="@dimen/paddingV_total"
@@ -49,4 +46,4 @@
 
     </RelativeLayout>
 
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

@@ -2,9 +2,8 @@ package com.example.rapiertech.adapter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
+import android.os.Build;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -64,61 +63,61 @@ public class AdapterDataJob extends RecyclerView.Adapter<AdapterDataJob.HolderDa
         holder.tvName.setText(jd.getName());
         holder.totalDept.setText(jd.getTotal() + " Employee");
         if (jd.getTotal() == 0){
-            holder.totalDept.setBackgroundResource(R.drawable.bg_total_empty);
+            holder.totalDept.setBackgroundResource(R.drawable.bg_label_red);
         } else {
-            holder.totalDept.setBackgroundResource(R.drawable.bg_total);
+            holder.totalDept.setBackgroundResource(R.drawable.bg_label_green);
         }
         holder.menuPopup.setOnClickListener(v -> {
             PopupMenu popupMenu = new PopupMenu(context, v);
             popupMenu.getMenuInflater().inflate(R.menu.home, popupMenu.getMenu());
             popupMenu.show();
-            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    switch (item.getItemId())
-                    {
-                        case R.id.action_edit:
-                            MaterialAlertDialogBuilder editDialog = new MaterialAlertDialogBuilder(context);
-                            LayoutInflater inflater = LayoutInflater.from(context);
-                            View view = inflater.inflate(R.layout.add_dialog_deptjob, null);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                popupMenu.setForceShowIcon(true);
+            }
+            popupMenu.setOnMenuItemClickListener(item -> {
+                switch (item.getItemId())
+                {
+                    case R.id.action_edit:
+                        MaterialAlertDialogBuilder editDialog = new MaterialAlertDialogBuilder(context);
+                        LayoutInflater inflater = LayoutInflater.from(context);
+                        View view = inflater.inflate(R.layout.add_dialog_deptjob, null);
 
-                            EditText etName = view.findViewById(R.id.add_deptJobName);
-                            etName.setText(jd.getName());
+                        EditText etName = view.findViewById(R.id.add_deptJobName);
+                        etName.setText(jd.getName());
 
-                            editDialog.setView(view)
-                                    .setTitle(R.string.add_title_dialog)
-                                    .setPositiveButton(R.string.save, (dialog, which) -> {
-                                        name = etName.getText().toString();
-                                        updateData(jd.getId());
-                                        dialog.dismiss();
-                                        ((JobFragment)fragment).retrieveData();
-                                        notifyDataSetChanged();
-                                    })
-                                    .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss());
+                        editDialog.setView(view)
+                                .setTitle(R.string.add_title_dialog)
+                                .setPositiveButton(R.string.save, (dialog, which) -> {
+                                    name = etName.getText().toString();
+                                    updateData(jd.getId());
+                                    dialog.dismiss();
+                                    ((JobFragment)fragment).retrieveData();
+                                    notifyDataSetChanged();
+                                })
+                                .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss());
 
-                            AlertDialog alertDialog = editDialog.create();
-                            alertDialog.show();
-                            break;
+                        AlertDialog alertDialog = editDialog.create();
+                        alertDialog.show();
+                        break;
 
-                        case R.id.action_delete:
-                            BottomSheetMaterialDialog mDialog = new BottomSheetMaterialDialog.Builder((Activity) context)
-                                    .setTitle("Delete?")
-                                    .setMessage("Are you sure want to delete this data?")
-                                    .setCancelable(false)
-                                    .setPositiveButton("Delete", R.drawable.ic_delete_, (dialogInterface, which) -> {
-                                        deleteData(jd.getId());
-                                        dialogInterface.dismiss();
-                                        jobList.remove(position);
-                                        notifyItemRemoved(position);
-                                        notifyItemRangeChanged(position, jobList.size());
-                                    })
-                                    .setNegativeButton("Cancel", R.drawable.ic_close, (dialogInterface, which) -> dialogInterface.dismiss())
-                                    .build();
-                            mDialog.show();
-                            break;
-                    }
-                    return true;
+                    case R.id.action_delete:
+                        BottomSheetMaterialDialog mDialog = new BottomSheetMaterialDialog.Builder((Activity) context)
+                                .setTitle("Delete?")
+                                .setMessage("Are you sure want to delete this data?")
+                                .setCancelable(false)
+                                .setPositiveButton("Delete", R.drawable.ic_delete_, (dialogInterface, which) -> {
+                                    deleteData(jd.getId());
+                                    dialogInterface.dismiss();
+                                    jobList.remove(position);
+                                    notifyItemRemoved(position);
+                                    notifyItemRangeChanged(position, jobList.size());
+                                })
+                                .setNegativeButton("Cancel", R.drawable.ic_close, (dialogInterface, which) -> dialogInterface.dismiss())
+                                .build();
+                        mDialog.show();
+                        break;
                 }
+                return true;
             });
         });
     }

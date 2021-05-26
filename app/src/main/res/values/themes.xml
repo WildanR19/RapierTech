@@ -16,24 +16,27 @@
         <item name="android:textViewStyle">@style/JosefinTextViewStyle</item>
         <item name="android:editTextStyle">@style/JosefinEditTextStyle</item>
         <item name="android:buttonStyle">@style/JosefinButtonStyle</item>
+
         <item name="material_dialog_background">#FFFFFF</item>
         <item name="material_dialog_title_text_color">#000000</item>
         <item name="material_dialog_message_text_color">#5F5F5F</item>
         <item name="material_dialog_positive_button_color">@color/colorAccent</item>
         <item name="material_dialog_positive_button_text_color">#FFFFFF</item>
         <item name="material_dialog_negative_button_text_color">@color/colorAccent</item>
+
+        <item name="android:windowContentTransitions">true</item>
     </style>
 
     <style name="JosefinTextViewStyle" parent="android:Widget.TextView">
-        <item name="android:fontFamily">@font/helvetica_regular</item>
+        <item name="android:fontFamily">@font/josefin_sans_semibold</item>
     </style>
 
     <style name="JosefinEditTextStyle" parent="android:Widget.EditText">
-        <item name="android:fontFamily">@font/helvetica_regular</item>
+        <item name="android:fontFamily">@font/josefin_sans_semibold</item>
     </style>
 
     <style name="JosefinButtonStyle" parent="android:Widget.Holo.Button">
-        <item name="android:fontFamily">@font/helveticabold</item>
+        <item name="android:fontFamily">@font/josefin_sans_bold</item>
     </style>
 
     <style name="Theme.RapierTech.NoActionBar">

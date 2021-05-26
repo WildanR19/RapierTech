@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.example.rapiertech.R;
 import com.example.rapiertech.ui.admin.DepartmentFragment;
+import com.example.rapiertech.ui.admin.EmployeeFragment;
 import com.example.rapiertech.ui.admin.HomeFragment;
 import com.example.rapiertech.ui.admin.JobFragment;
 import com.google.android.material.navigation.NavigationView;
@@ -70,7 +71,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         //initial Fragment
 //        HomeFragment homeFragment = new HomeFragment();
-        JobFragment departmentFragment = new JobFragment();
+        EmployeeFragment departmentFragment = new EmployeeFragment();
         setMyFragment(departmentFragment);
     }
 
@@ -118,7 +119,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 break;
 
             case R.id.nav_employee:
-
+                EmployeeFragment employeeFragment = new EmployeeFragment();
+                setMyFragment((employeeFragment));
                 break;
 
             case R.id.nav_department:
