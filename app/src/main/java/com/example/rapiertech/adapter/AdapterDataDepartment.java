@@ -15,6 +15,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.rapiertech.R;
@@ -22,11 +23,16 @@ import com.example.rapiertech.api.ApiClient;
 import com.example.rapiertech.api.ApiInterface;
 import com.example.rapiertech.model.department.Department;
 import com.example.rapiertech.model.department.DepartmentData;
+import com.example.rapiertech.ui.department.DepartmentFragment;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import dev.shreyaspatil.MaterialDialog.AbstractDialog;
+import dev.shreyaspatil.MaterialDialog.BottomSheetMaterialDialog;
+import dev.shreyaspatil.MaterialDialog.MaterialDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -36,11 +42,12 @@ public class AdapterDataDepartment extends RecyclerView.Adapter<AdapterDataDepar
     private Context context;
     private List<DepartmentData> listDept;
     private String name;
+    private DepartmentFragment fragment;
 
-    public AdapterDataDepartment(Context context, List<DepartmentData> listDept) {
+    public AdapterDataDepartment(Context context, List<DepartmentData> listDept, DepartmentFragment fragment) {
         this.context = context;
         this.listDept = listDept;
-        notifyDataSetChanged();
+        this.fragment = fragment;
     }
 
     @NonNull
@@ -76,11 +83,11 @@ public class AdapterDataDepartment extends RecyclerView.Adapter<AdapterDataDepar
                         switch (item.getItemId())
                         {
                             case R.id.action_edit:
-                                AlertDialog.Builder editDialog = new AlertDialog.Builder(context);
+                                MaterialAlertDialogBuilder editDialog = new MaterialAlertDialogBuilder(context);
                                 LayoutInflater inflater = LayoutInflater.from(context);
-                                View view = inflater.inflate(R.layout.add_dialog, null);
+                                View view = inflater.inflate(R.layout.add_dialog_deptjob, null);
 
-                                EditText etName = view.findViewById(R.id.add_name);
+                                EditText etName = view.findViewById(R.id.add_deptName);
                                 etName.setText(dd.getName());
 
                                 editDialog.setView(view)
@@ -91,8 +98,8 @@ public class AdapterDataDepartment extends RecyclerView.Adapter<AdapterDataDepar
                                                 name = etName.getText().toString();
                                                 updateData(dd.getId());
                                                 dialog.dismiss();
-//                                                notifyItemChanged(position);
-//                                                notifyDataSetChanged();
+                                                ((DepartmentFragment)fragment).retrieveData();
+                                                notifyDataSetChanged();
                                             }
                                         })
                                         .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -107,26 +114,28 @@ public class AdapterDataDepartment extends RecyclerView.Adapter<AdapterDataDepar
                                 break;
 
                             case R.id.action_delete:
-                                AlertDialog.Builder deleteDialog = new AlertDialog.Builder(context);
-                                deleteDialog.setMessage("Are you sure?")
-                                        .setCancelable(true)
-                                        .setPositiveButton(R.string.alert_delete, new DialogInterface.OnClickListener() {
+                                BottomSheetMaterialDialog mDialog = new BottomSheetMaterialDialog.Builder((Activity) context)
+                                        .setTitle("Delete?")
+                                        .setMessage("Are you sure want to delete this data?")
+                                        .setCancelable(false)
+                                        .setPositiveButton("Delete", R.drawable.ic_delete_, new BottomSheetMaterialDialog.OnClickListener() {
                                             @Override
-                                            public void onClick(DialogInterface dialog, int which) {
+                                            public void onClick(dev.shreyaspatil.MaterialDialog.interfaces.DialogInterface dialogInterface, int which) {
                                                 deleteData(dd.getId());
-                                                dialog.dismiss();
+                                                dialogInterface.dismiss();
                                                 listDept.remove(position);
                                                 notifyItemRemoved(position);
                                                 notifyItemRangeChanged(position, listDept.size());
                                             }
                                         })
-                                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                        .setNegativeButton("Cancel", R.drawable.ic_close, new BottomSheetMaterialDialog.OnClickListener() {
                                             @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                dialog.dismiss();
+                                            public void onClick(dev.shreyaspatil.MaterialDialog.interfaces.DialogInterface dialogInterface, int which) {
+                                                dialogInterface.dismiss();
                                             }
-                                        });
-                                deleteDialog.show();
+                                        })
+                                        .build();
+                                mDialog.show();
                                 break;
                         }
                         return true;
@@ -182,9 +191,9 @@ public class AdapterDataDepartment extends RecyclerView.Adapter<AdapterDataDepar
         deletedata.enqueue(new Callback<Department>() {
             @Override
             public void onResponse(Call<Department> call, Response<Department> response) {
-                MotionToast.Companion.createColorToast((Activity) context, "Error",
+                MotionToast.Companion.createColorToast((Activity) context, "Success",
                         response.body().getMessage(),
-                        MotionToast.TOAST_ERROR,
+                        MotionToast.TOAST_SUCCESS,
                         MotionToast.GRAVITY_BOTTOM,
                         MotionToast.LONG_DURATION,
                         ResourcesCompat.getFont(context,R.font.helvetica_regular)

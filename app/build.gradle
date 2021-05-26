@@ -48,4 +48,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
     implementation 'com.github.Spikeysanju:MotionToast:1.3.3.4'
+    implementation 'dev.shreyaspatil.MaterialDialog:MaterialDialog:2.2.2'
+    implementation 'com.airbnb.android:lottie:3.3.6'
 }

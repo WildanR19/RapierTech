@@ -3,7 +3,6 @@ package com.example.rapiertech.ui.department;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -15,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.example.rapiertech.R;
 import com.example.rapiertech.adapter.AdapterDataDepartment;
@@ -23,6 +21,7 @@ import com.example.rapiertech.api.ApiClient;
 import com.example.rapiertech.api.ApiInterface;
 import com.example.rapiertech.model.department.Department;
 import com.example.rapiertech.model.department.DepartmentData;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -111,12 +110,13 @@ public class DepartmentFragment extends Fragment {
     }
 
     public void showDialog(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        LayoutInflater inflater = requireActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.add_dialog, null);
-        etName = view.findViewById(R.id.add_name);
 
-        builder.setView(view)
+        LayoutInflater inflater = requireActivity().getLayoutInflater();
+        View view = inflater.inflate(R.layout.add_dialog_deptjob, null);
+        etName = view.findViewById(R.id.add_deptName);
+
+        MaterialAlertDialogBuilder mDialog = new MaterialAlertDialogBuilder(getActivity());
+        mDialog.setView(view)
                 .setTitle(R.string.add_title_dialog)
                 .setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
                     @Override
@@ -131,10 +131,8 @@ public class DepartmentFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
-                });
-
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
+                })
+                .show();
     }
 
     private void createData() {
@@ -192,7 +190,7 @@ public class DepartmentFragment extends Fragment {
             public void onResponse(Call<Department> call, Response<Department> response) {
                 if (response.body() != null && response.isSuccessful() && response.body().isStatus()){
                     listData = response.body().getData();
-                    adData = new AdapterDataDepartment(getActivity(), listData);
+                    adData = new AdapterDataDepartment(getActivity(), listData, DepartmentFragment.this);
                     rvData.setAdapter(adData);
                     adData.notifyDataSetChanged();
                 }else{

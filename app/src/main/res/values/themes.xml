@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.RapierTech" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.RapierTech" parent="Theme.MaterialComponents.Light">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryVariant">@color/primary_variant</item>
@@ -16,6 +16,12 @@
         <item name="android:textViewStyle">@style/JosefinTextViewStyle</item>
         <item name="android:editTextStyle">@style/JosefinEditTextStyle</item>
         <item name="android:buttonStyle">@style/JosefinButtonStyle</item>
+        <item name="material_dialog_background">#FFFFFF</item>
+        <item name="material_dialog_title_text_color">#000000</item>
+        <item name="material_dialog_message_text_color">#5F5F5F</item>
+        <item name="material_dialog_positive_button_color">@color/colorAccent</item>
+        <item name="material_dialog_positive_button_text_color">#FFFFFF</item>
+        <item name="material_dialog_negative_button_text_color">@color/colorAccent</item>
     </style>
 
     <style name="JosefinTextViewStyle" parent="android:Widget.TextView">
