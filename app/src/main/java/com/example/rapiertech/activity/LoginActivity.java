@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.example.rapiertech.R;
 import com.example.rapiertech.api.ApiClient;
@@ -48,12 +47,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.btn_login:
-                email = inputEmail.getText().toString();
-                password = inputPassword.getText().toString();
-                login(email, password);
-                break;
+        if (v.getId() == R.id.btn_login) {
+            email = inputEmail.getText().toString();
+            password = inputPassword.getText().toString();
+            login(email, password);
         }
     }
 

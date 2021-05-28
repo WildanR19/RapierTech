@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.example.rapiertech.R;
 import com.example.rapiertech.ui.admin.DepartmentFragment;
-import com.example.rapiertech.ui.admin.EmployeeFragment;
+import com.example.rapiertech.ui.admin.employee.EmployeeFragment;
 import com.example.rapiertech.ui.admin.HomeFragment;
 import com.example.rapiertech.ui.admin.JobFragment;
 import com.google.android.material.navigation.NavigationView;
@@ -83,8 +83,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         //set new fragment in fragment_container (FrameLayout)
-        fragmentTransaction.replace(R.id.fragment_container, fragment);
-        fragmentTransaction.commit();
+        fragmentTransaction.replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     private void moveToLogin() {

@@ -1,6 +1,5 @@
 package com.example.rapiertech.ui.admin;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.core.content.res.ResourcesCompat;
@@ -34,12 +33,10 @@ import www.sanju.motiontoast.MotionToast;
 
 public class DepartmentFragment extends Fragment {
 
-//    // TODO: Rename parameter arguments, choose names that match
 //    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 //    private static final String ARG_PARAM1 = "param1";
 //    private static final String ARG_PARAM2 = "param2";
 //
-//    // TODO: Rename and change types of parameters
 //    private String mParam1;
 //    private String mParam2;
 //
@@ -49,11 +46,9 @@ public class DepartmentFragment extends Fragment {
 
     private RecyclerView rvData;
     private RecyclerView.Adapter adData;
-    private RecyclerView.LayoutManager lmData;
     private List<DepartmentData> listData = new ArrayList<>();
     private SwipeRefreshLayout srlData;
     private ProgressBar loadingData;
-    private FloatingActionButton fab;
     private EditText etName;
     private String name;
 
@@ -81,7 +76,7 @@ public class DepartmentFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_department, container, false);
 
         rvData = root.findViewById(R.id.rvDataDepartment);
-        lmData = new LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false);
+        RecyclerView.LayoutManager lmData = new LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false);
         rvData.setLayoutManager(lmData);
 
         srlData = root.findViewById(R.id.srlDataDepartment);
@@ -93,7 +88,7 @@ public class DepartmentFragment extends Fragment {
 
         loadingData = root.findViewById(R.id.loadingDataDepartment);
 
-        fab = root.findViewById(R.id.fab_department);
+        FloatingActionButton fab = root.findViewById(R.id.fab_department);
         fab.setOnClickListener(v -> showDialog());
 
         return root;
@@ -151,7 +146,7 @@ public class DepartmentFragment extends Fragment {
             public void onFailure(Call<Department> call, Throwable t) {
                 MotionToast.Companion.createColorToast(requireActivity(), "Cannot connect server",
                         t.getMessage(),
-                        MotionToast.TOAST_ERROR,
+                        MotionToast.TOAST_NO_INTERNET,
                         MotionToast.GRAVITY_BOTTOM,
                         MotionToast.LONG_DURATION,
                         ResourcesCompat.getFont(requireActivity(),R.font.helvetica_regular)
@@ -191,7 +186,7 @@ public class DepartmentFragment extends Fragment {
             public void onFailure(Call<Department> call, Throwable t) {
                 MotionToast.Companion.createColorToast(requireActivity(), "Cannot connect server",
                         t.getMessage(),
-                        MotionToast.TOAST_ERROR,
+                        MotionToast.TOAST_NO_INTERNET,
                         MotionToast.GRAVITY_BOTTOM,
                         MotionToast.LONG_DURATION,
                         ResourcesCompat.getFont(requireActivity(),R.font.helvetica_regular)

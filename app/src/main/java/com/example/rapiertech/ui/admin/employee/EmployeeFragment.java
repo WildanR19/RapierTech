@@ -1,4 +1,4 @@
-package com.example.rapiertech.ui.admin;
+package com.example.rapiertech.ui.admin.employee;
 
 import android.os.Bundle;
 
@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.example.rapiertech.R;
-import com.example.rapiertech.adapter.AdapterDataDepartment;
 import com.example.rapiertech.adapter.AdapterDataEmployee;
 import com.example.rapiertech.api.ApiClient;
 import com.example.rapiertech.api.ApiInterface;
@@ -34,11 +33,9 @@ public class EmployeeFragment extends Fragment {
 
     private RecyclerView rvData;
     private RecyclerView.Adapter adData;
-    private RecyclerView.LayoutManager lmData;
     private List<EmployeeData> dataList = new ArrayList<>();
     private SwipeRefreshLayout srlData;
     private ProgressBar loadingData;
-    private FloatingActionButton fab;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -46,7 +43,7 @@ public class EmployeeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_employee, container, false);
         rvData = view.findViewById(R.id.rvDataEmp);
 
-        lmData = new LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false);
+        RecyclerView.LayoutManager lmData = new LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false);
         rvData.setLayoutManager(lmData);
 
         srlData = view.findViewById(R.id.srlDataEmp);
@@ -58,10 +55,18 @@ public class EmployeeFragment extends Fragment {
 
         loadingData = view.findViewById(R.id.loadingDataEmp);
 
-        fab = view.findViewById(R.id.fab_emp);
-//        fab.setOnClickListener(v -> showDialog());
+        FloatingActionButton fab = view.findViewById(R.id.fab_emp);
+        fab.setOnClickListener(v -> openForm());
 
         return view;
+    }
+
+    private void openForm() {
+        EmployeeDetailsFragment fragment = new EmployeeDetailsFragment();
+        requireActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     private void retrieveData() {
@@ -94,7 +99,7 @@ public class EmployeeFragment extends Fragment {
             public void onFailure(Call<Employee> call, Throwable t) {
                 MotionToast.Companion.createColorToast(requireActivity(), "Cannot connect server",
                         t.getMessage(),
-                        MotionToast.TOAST_ERROR,
+                        MotionToast.TOAST_NO_INTERNET,
                         MotionToast.GRAVITY_BOTTOM,
                         MotionToast.LONG_DURATION,
                         ResourcesCompat.getFont(requireActivity(),R.font.helvetica_regular)

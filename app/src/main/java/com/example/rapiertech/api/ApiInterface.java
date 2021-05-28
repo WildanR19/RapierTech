@@ -1,9 +1,12 @@
 package com.example.rapiertech.api;
 
 import com.example.rapiertech.model.department.Department;
+import com.example.rapiertech.model.empdetail.EmpDetail;
 import com.example.rapiertech.model.employee.Employee;
+import com.example.rapiertech.model.empstatus.EmpStatus;
 import com.example.rapiertech.model.job.Job;
 import com.example.rapiertech.model.login.Login;
+import com.example.rapiertech.model.role.Role;
 
 import retrofit2.Call;
 import retrofit2.http.DELETE;
@@ -24,6 +27,33 @@ public interface ApiInterface {
     // Employee
     @GET("user")
     Call<Employee> employeeRetrieveData();
+
+    @GET("emp_status")
+    Call<EmpStatus> statusRetrieveData();
+
+    @FormUrlEncoded
+    @POST("user/add")
+    Call<Employee> employeeCreateData(
+            @Field("name") String name,
+            @Field("email") String email,
+            @Field("password") String password,
+            @Field("role") String role,
+            @Field("address") String address,
+            @Field("dept") String dept,
+            @Field("job") String job,
+            @Field("phone") String phone,
+            @Field("gender") String gender,
+            @Field("join_date") String join_date,
+            @Field("last_date") String last_date,
+            @Field("status") String status
+    );
+
+    @GET("emp_detail/{id}")
+    Call<EmpDetail> employeeDetailData(@Path("id") int id);
+
+    // Role
+    @GET("role")
+    Call<Role> roleRetrieveData();
 
     // Department
     @GET("department")

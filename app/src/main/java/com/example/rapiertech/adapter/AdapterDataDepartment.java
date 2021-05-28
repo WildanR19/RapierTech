@@ -34,10 +34,10 @@ import retrofit2.Response;
 import www.sanju.motiontoast.MotionToast;
 
 public class AdapterDataDepartment extends RecyclerView.Adapter<AdapterDataDepartment.HolderData>{
-    private Context context;
-    private List<DepartmentData> listDept;
+    private final Context context;
+    private final List<DepartmentData> listDept;
     private String name;
-    private DepartmentFragment fragment;
+    private final DepartmentFragment fragment;
 
     public AdapterDataDepartment(Context context, List<DepartmentData> listDept, DepartmentFragment fragment) {
         this.context = context;
@@ -86,8 +86,6 @@ public class AdapterDataDepartment extends RecyclerView.Adapter<AdapterDataDepar
                                     name = etName.getText().toString();
                                     updateData(dd.getId());
                                     dialog.dismiss();
-                                    ((DepartmentFragment)fragment).retrieveData();
-                                    notifyDataSetChanged();
                                 })
                                 .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss());
 
@@ -103,9 +101,6 @@ public class AdapterDataDepartment extends RecyclerView.Adapter<AdapterDataDepar
                                 .setPositiveButton("Delete", R.drawable.ic_delete_, (dialogInterface, which) -> {
                                     deleteData(dd.getId());
                                     dialogInterface.dismiss();
-                                    listDept.remove(position);
-                                    notifyItemRemoved(position);
-                                    notifyItemRangeChanged(position, listDept.size());
                                 })
                                 .setNegativeButton("Cancel", R.drawable.ic_close, (dialogInterface, which) -> dialogInterface.dismiss())
                                 .build();
@@ -133,6 +128,7 @@ public class AdapterDataDepartment extends RecyclerView.Adapter<AdapterDataDepar
                             MotionToast.LONG_DURATION,
                             ResourcesCompat.getFont(context,R.font.helvetica_regular)
                     );
+                    fragment.retrieveData();
                 }else{
                     MotionToast.Companion.createColorToast((Activity) context, "Error",
                             response.body().getMessage(),
@@ -163,20 +159,31 @@ public class AdapterDataDepartment extends RecyclerView.Adapter<AdapterDataDepar
         deletedata.enqueue(new Callback<Department>() {
             @Override
             public void onResponse(Call<Department> call, Response<Department> response) {
-                MotionToast.Companion.createColorToast((Activity) context, "Success",
-                        response.body().getMessage(),
-                        MotionToast.TOAST_SUCCESS,
-                        MotionToast.GRAVITY_BOTTOM,
-                        MotionToast.LONG_DURATION,
-                        ResourcesCompat.getFont(context,R.font.helvetica_regular)
-                );
+                if (response.isSuccessful()){
+                    MotionToast.Companion.createColorToast((Activity) context, "Success",
+                            response.body().getMessage(),
+                            MotionToast.TOAST_SUCCESS,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.LONG_DURATION,
+                            ResourcesCompat.getFont(context,R.font.helvetica_regular)
+                    );
+                    fragment.retrieveData();
+                } else {
+                    MotionToast.Companion.createColorToast((Activity) context, "Error",
+                            response.body().getMessage(),
+                            MotionToast.TOAST_ERROR,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.LONG_DURATION,
+                            ResourcesCompat.getFont(context,R.font.helvetica_regular)
+                    );
+                }
             }
 
             @Override
             public void onFailure(Call<Department> call, Throwable t) {
                 MotionToast.Companion.createColorToast((Activity) context, "Cannot connect server",
                         t.getMessage(),
-                        MotionToast.TOAST_ERROR,
+                        MotionToast.TOAST_NO_INTERNET,
                         MotionToast.GRAVITY_BOTTOM,
                         MotionToast.LONG_DURATION,
                         ResourcesCompat.getFont(context,R.font.helvetica_regular)
@@ -190,7 +197,7 @@ public class AdapterDataDepartment extends RecyclerView.Adapter<AdapterDataDepar
         return listDept.size();
     }
 
-    public class HolderData extends RecyclerView.ViewHolder {
+    public static class HolderData extends RecyclerView.ViewHolder {
         TextView tvName, tvId, totalDept;
         ImageView menuPopup;
 

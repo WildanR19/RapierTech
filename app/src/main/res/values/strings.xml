@@ -30,5 +30,15 @@
     <string name="menu_item">Menu Item</string>
     <string name="title">Title</string>
     <string name="job">Job</string>
+    <string name="address">Address</string>
+    <string name="department">Department</string>
+    <string name="phone">Phone</string>
+    <string name="gender">Gender</string>
+    <string name="role">Role</string>
+    <string name="emp_status">Employee Status</string>
+    <string name="join_date">Join Date</string>
+    <string name="last_date">Last Date</string>
+    <string name="submit">Submit</string>
+    <string name="update">Update</string>
 
 </resources>

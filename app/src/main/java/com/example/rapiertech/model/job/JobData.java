@@ -36,4 +36,12 @@ public class JobData {
 	public int getId(){
 		return id;
 	}
+
+	public JobData(String name) {
+		this.name = name;
+	}
+
+	public String toString(){
+		return name;
+	}
 }

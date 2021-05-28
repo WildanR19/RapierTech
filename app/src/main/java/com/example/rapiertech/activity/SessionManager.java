@@ -9,9 +9,8 @@ import com.example.rapiertech.model.login.LoginData;
 import java.util.HashMap;
 
 public class SessionManager {
-    private Context _context;
-    private SharedPreferences sharedPreferences;
-    private SharedPreferences.Editor editor;
+    private final SharedPreferences sharedPreferences;
+    private final SharedPreferences.Editor editor;
 
     public static final String IS_LOGGED_IN = "isLoggedIn";
     public static final String USER_ID = "user_id";
@@ -20,7 +19,6 @@ public class SessionManager {
     public static final String ROLE_ID = "role_id";
 
     public SessionManager (Context context){
-        this._context = context;
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         editor = sharedPreferences.edit();
     }

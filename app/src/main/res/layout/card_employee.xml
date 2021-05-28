@@ -41,7 +41,7 @@
                     android:id="@+id/id_emp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="id data"
+                    android:text="id empDetailData"
                     android:visibility="gone" />
                 <TextView
                     android:id="@+id/name_emp"

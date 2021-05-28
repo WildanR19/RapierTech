@@ -1,6 +1,8 @@
 package com.example.rapiertech.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,20 +10,36 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.rapiertech.R;
+import com.example.rapiertech.api.ApiClient;
+import com.example.rapiertech.api.ApiInterface;
+import com.example.rapiertech.model.empdetail.EmpDetail;
+import com.example.rapiertech.model.empdetail.EmpDetailData;
 import com.example.rapiertech.model.employee.EmployeeData;
+import com.example.rapiertech.ui.admin.employee.EmployeeDetailsFragment;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import www.sanju.motiontoast.MotionToast;
+
 public class AdapterDataEmployee extends RecyclerView.Adapter<AdapterDataEmployee.HolderData> {
 
-    private Context context;
-    private List<EmployeeData> empData;
-    private String name, email, role, status, ppPath, job;
+    private final Context context;
+    private final List<EmployeeData> empData;
+    private List<EmpDetailData> detailData;
+//    private String name, email, role, status, ppPath, job;
+//    private int idEmp;
 
     public AdapterDataEmployee(Context context, List<EmployeeData> empList){
         this.context = context;
@@ -33,7 +51,7 @@ public class AdapterDataEmployee extends RecyclerView.Adapter<AdapterDataEmploye
     @Override
     public AdapterDataEmployee.HolderData onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
         View layout = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_employee, parent, false);
-        return new AdapterDataEmployee.HolderData(layout);
+        return new HolderData(layout);
     }
 
     @Override
@@ -48,6 +66,48 @@ public class AdapterDataEmployee extends RecyclerView.Adapter<AdapterDataEmploye
         } else {
             holder.tvStatus.setBackgroundResource(R.drawable.bg_label_red);
         }
+        holder.itemView.setOnClickListener(v -> {
+
+            ApiInterface apiData = ApiClient.getClient().create(ApiInterface.class);
+            Call<EmpDetail> showData = apiData.employeeDetailData(ed.getId());
+
+            showData.enqueue(new Callback<EmpDetail>() {
+                @Override
+                public void onResponse(Call<EmpDetail> call, Response<EmpDetail> response) {
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("id", ed.getId());
+                    bundle.putString("name", ed.getName());
+                    bundle.putString("email", ed.getEmail());
+                    bundle.putString("role", ed.getRole());
+                    bundle.putString("address", response.body().getData().getAddress());
+                    bundle.putString("phone", response.body().getData().getPhone());
+                    bundle.putString("gender", response.body().getData().getGender());
+                    bundle.putInt("empStatusId", response.body().getData().getStatusId());
+                    bundle.putInt("departmentId", response.body().getData().getDepartmentId());
+                    bundle.putString("job", ed.getJob());
+
+                    Fragment fragment = new EmployeeDetailsFragment();
+                    fragment.setArguments(bundle);
+                    FragmentManager fragmentManager = ((FragmentActivity)v.getContext()).getSupportFragmentManager();
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.fragment_container, fragment)
+                            .setReorderingAllowed(true)
+                            .addToBackStack(null)
+                            .commit();
+                }
+
+                @Override
+                public void onFailure(Call<EmpDetail> call, Throwable t) {
+                    MotionToast.Companion.createColorToast((Activity) context, "Cannot connect server",
+                            t.getMessage(),
+                            MotionToast.TOAST_ERROR,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.LONG_DURATION,
+                            ResourcesCompat.getFont(context,R.font.helvetica_regular)
+                    );
+                }
+            });
+        });
     }
 
     @Override
@@ -55,7 +115,7 @@ public class AdapterDataEmployee extends RecyclerView.Adapter<AdapterDataEmploye
         return empData.size();
     }
 
-    public class HolderData extends RecyclerView.ViewHolder {
+    public static class HolderData extends RecyclerView.ViewHolder {
 
         ImageView imgEmp;
         TextView tvId, tvName, tvJob, tvStatus;
@@ -67,6 +127,7 @@ public class AdapterDataEmployee extends RecyclerView.Adapter<AdapterDataEmploye
             tvName = itemView.findViewById(R.id.name_emp);
             tvJob = itemView.findViewById(R.id.job_emp);
             tvStatus = itemView.findViewById(R.id.status_emp);
+
         }
     }
 }

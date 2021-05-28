@@ -33,4 +33,11 @@ public class DepartmentData {
 		return total;
 	}
 
+	public DepartmentData(String name) {
+		this.name = name;
+	}
+
+	public String toString(){
+		return name;
+	}
 }

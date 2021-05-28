@@ -36,10 +36,10 @@ import www.sanju.motiontoast.MotionToast;
 
 public class AdapterDataJob extends RecyclerView.Adapter<AdapterDataJob.HolderData> {
 
-    private Context context;
-    private List<JobData> jobList;
+    private final Context context;
+    private final List<JobData> jobList;
     private String name;
-    private JobFragment fragment;
+    private final JobFragment fragment;
 
     public AdapterDataJob(Context context, List<JobData> jobList, JobFragment fragment){
         this.context = context;
@@ -91,8 +91,6 @@ public class AdapterDataJob extends RecyclerView.Adapter<AdapterDataJob.HolderDa
                                     name = etName.getText().toString();
                                     updateData(jd.getId());
                                     dialog.dismiss();
-                                    ((JobFragment)fragment).retrieveData();
-                                    notifyDataSetChanged();
                                 })
                                 .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss());
 
@@ -108,9 +106,6 @@ public class AdapterDataJob extends RecyclerView.Adapter<AdapterDataJob.HolderDa
                                 .setPositiveButton("Delete", R.drawable.ic_delete_, (dialogInterface, which) -> {
                                     deleteData(jd.getId());
                                     dialogInterface.dismiss();
-                                    jobList.remove(position);
-                                    notifyItemRemoved(position);
-                                    notifyItemRangeChanged(position, jobList.size());
                                 })
                                 .setNegativeButton("Cancel", R.drawable.ic_close, (dialogInterface, which) -> dialogInterface.dismiss())
                                 .build();
@@ -138,6 +133,7 @@ public class AdapterDataJob extends RecyclerView.Adapter<AdapterDataJob.HolderDa
                             MotionToast.LONG_DURATION,
                             ResourcesCompat.getFont(context,R.font.helvetica_regular)
                     );
+                    fragment.retrieveData();
                 }else{
                     MotionToast.Companion.createColorToast((Activity) context, "Error",
                             response.body().getMessage(),
@@ -168,13 +164,24 @@ public class AdapterDataJob extends RecyclerView.Adapter<AdapterDataJob.HolderDa
         deletedata.enqueue(new Callback<Job>() {
             @Override
             public void onResponse(Call<Job> call, Response<Job> response) {
-                MotionToast.Companion.createColorToast((Activity) context, "Success",
-                        response.body().getMessage(),
-                        MotionToast.TOAST_SUCCESS,
-                        MotionToast.GRAVITY_BOTTOM,
-                        MotionToast.LONG_DURATION,
-                        ResourcesCompat.getFont(context,R.font.helvetica_regular)
-                );
+                if (response.isSuccessful()){
+                    MotionToast.Companion.createColorToast((Activity) context, "Success",
+                            response.body().getMessage(),
+                            MotionToast.TOAST_SUCCESS,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.LONG_DURATION,
+                            ResourcesCompat.getFont(context,R.font.helvetica_regular)
+                    );
+                    fragment.retrieveData();
+                } else {
+                    MotionToast.Companion.createColorToast((Activity) context, "Error",
+                            response.body().getMessage(),
+                            MotionToast.TOAST_ERROR,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.LONG_DURATION,
+                            ResourcesCompat.getFont(context,R.font.helvetica_regular)
+                    );
+                }
             }
 
             @Override
@@ -195,7 +202,7 @@ public class AdapterDataJob extends RecyclerView.Adapter<AdapterDataJob.HolderDa
         return jobList.size();
     }
 
-    public class HolderData extends RecyclerView.ViewHolder {
+    public static class HolderData extends RecyclerView.ViewHolder {
         TextView tvName, tvId, totalDept;
         ImageView menuPopup;
 
