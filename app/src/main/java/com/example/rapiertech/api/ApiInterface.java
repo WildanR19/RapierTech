@@ -31,25 +31,46 @@ public interface ApiInterface {
     @GET("emp_status")
     Call<EmpStatus> statusRetrieveData();
 
+    @GET("emp_detail/{id}")
+    Call<EmpDetail> employeeDetailData(@Path("id") int id);
+
     @FormUrlEncoded
-    @POST("user/add")
-    Call<Employee> employeeCreateData(
+    @POST("user/add/store")
+    Call<EmpDetail> employeeCreateData(
             @Field("name") String name,
             @Field("email") String email,
             @Field("password") String password,
-            @Field("role") String role,
+            @Field("role") int role,
             @Field("address") String address,
-            @Field("dept") String dept,
-            @Field("job") String job,
+            @Field("dept") int dept,
+            @Field("job") int job,
             @Field("phone") String phone,
             @Field("gender") String gender,
             @Field("join_date") String join_date,
             @Field("last_date") String last_date,
-            @Field("status") String status
+            @Field("status") int status
     );
 
-    @GET("emp_detail/{id}")
-    Call<EmpDetail> employeeDetailData(@Path("id") int id);
+    @FormUrlEncoded
+    @POST("user/edit/{id}")
+    Call<EmpDetail> employeeUpdateData(
+            @Path("id") int empId,
+            @Field("name") String name,
+            @Field("email") String email,
+            @Field("password") String password,
+            @Field("role") int role,
+            @Field("address") String address,
+            @Field("dept") int dept,
+            @Field("job") int job,
+            @Field("phone") String phone,
+            @Field("gender") String gender,
+            @Field("join_date") String join_date,
+            @Field("last_date") String last_date,
+            @Field("status") int status
+    );
+
+    @DELETE("user/delete/{id}")
+    Call<Employee> employeeDeleteData(@Path("id") int empId);
 
     // Role
     @GET("role")

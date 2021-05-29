@@ -124,36 +124,16 @@ public class AdapterDataJob extends RecyclerView.Adapter<AdapterDataJob.HolderDa
             @Override
             public void onResponse(Call<Job> call, Response<Job> response) {
                 if (response.body() != null && response.isSuccessful() && response.body().isStatus()){
-                    String message = response.body().getMessage();
-
-                    MotionToast.Companion.createColorToast((Activity) context, "Success",
-                            message,
-                            MotionToast.TOAST_SUCCESS,
-                            MotionToast.GRAVITY_BOTTOM,
-                            MotionToast.LONG_DURATION,
-                            ResourcesCompat.getFont(context,R.font.helvetica_regular)
-                    );
+                    successToast(response.body().getMessage());
                     fragment.retrieveData();
                 }else{
-                    MotionToast.Companion.createColorToast((Activity) context, "Error",
-                            response.body().getMessage(),
-                            MotionToast.TOAST_ERROR,
-                            MotionToast.GRAVITY_BOTTOM,
-                            MotionToast.LONG_DURATION,
-                            ResourcesCompat.getFont(context,R.font.helvetica_regular)
-                    );
+                    errorToast(response.body().getMessage());
                 }
             }
 
             @Override
             public void onFailure(Call<Job> call, Throwable t) {
-                MotionToast.Companion.createColorToast((Activity) context, "Cannot connect server",
-                        t.getMessage(),
-                        MotionToast.TOAST_ERROR,
-                        MotionToast.GRAVITY_BOTTOM,
-                        MotionToast.LONG_DURATION,
-                        ResourcesCompat.getFont(context,R.font.helvetica_regular)
-                );
+                noConnectToast(t.getMessage());
             }
         });
     }
@@ -165,34 +145,16 @@ public class AdapterDataJob extends RecyclerView.Adapter<AdapterDataJob.HolderDa
             @Override
             public void onResponse(Call<Job> call, Response<Job> response) {
                 if (response.isSuccessful()){
-                    MotionToast.Companion.createColorToast((Activity) context, "Success",
-                            response.body().getMessage(),
-                            MotionToast.TOAST_SUCCESS,
-                            MotionToast.GRAVITY_BOTTOM,
-                            MotionToast.LONG_DURATION,
-                            ResourcesCompat.getFont(context,R.font.helvetica_regular)
-                    );
+                    successToast(response.body().getMessage());
                     fragment.retrieveData();
                 } else {
-                    MotionToast.Companion.createColorToast((Activity) context, "Error",
-                            response.body().getMessage(),
-                            MotionToast.TOAST_ERROR,
-                            MotionToast.GRAVITY_BOTTOM,
-                            MotionToast.LONG_DURATION,
-                            ResourcesCompat.getFont(context,R.font.helvetica_regular)
-                    );
+                    errorToast(response.body().getMessage());
                 }
             }
 
             @Override
             public void onFailure(Call<Job> call, Throwable t) {
-                MotionToast.Companion.createColorToast((Activity) context, "Cannot connect server",
-                        t.getMessage(),
-                        MotionToast.TOAST_ERROR,
-                        MotionToast.GRAVITY_BOTTOM,
-                        MotionToast.LONG_DURATION,
-                        ResourcesCompat.getFont(context,R.font.helvetica_regular)
-                );
+                noConnectToast(t.getMessage());
             }
         });
     }
@@ -214,5 +176,35 @@ public class AdapterDataJob extends RecyclerView.Adapter<AdapterDataJob.HolderDa
             menuPopup = itemView.findViewById(R.id.more_deptJob);
             totalDept = itemView.findViewById(R.id.total_deptJob);
         }
+    }
+
+    private void noConnectToast(String message) {
+        MotionToast.Companion.createColorToast((Activity) context, "Cannot connect server",
+                message,
+                MotionToast.TOAST_ERROR,
+                MotionToast.GRAVITY_BOTTOM,
+                MotionToast.LONG_DURATION,
+                ResourcesCompat.getFont(context,R.font.helvetica_regular)
+        );
+    }
+
+    private void errorToast(String message) {
+        MotionToast.Companion.createColorToast((Activity) context, "Error",
+                message,
+                MotionToast.TOAST_ERROR,
+                MotionToast.GRAVITY_BOTTOM,
+                MotionToast.LONG_DURATION,
+                ResourcesCompat.getFont(context,R.font.helvetica_regular)
+        );
+    }
+
+    private void successToast(String message) {
+        MotionToast.Companion.createColorToast((Activity) context, "Success",
+                message,
+                MotionToast.TOAST_SUCCESS,
+                MotionToast.GRAVITY_BOTTOM,
+                MotionToast.LONG_DURATION,
+                ResourcesCompat.getFont(context,R.font.helvetica_regular)
+        );
     }
 }

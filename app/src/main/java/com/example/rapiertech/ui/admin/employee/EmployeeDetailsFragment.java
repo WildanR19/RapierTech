@@ -1,10 +1,12 @@
 package com.example.rapiertech.ui.admin.employee;
 
+import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -12,7 +14,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
@@ -23,6 +24,8 @@ import com.example.rapiertech.api.ApiClient;
 import com.example.rapiertech.api.ApiInterface;
 import com.example.rapiertech.model.department.Department;
 import com.example.rapiertech.model.department.DepartmentData;
+import com.example.rapiertech.model.empdetail.EmpDetail;
+import com.example.rapiertech.model.employee.Employee;
 import com.example.rapiertech.model.empstatus.EmpStatus;
 import com.example.rapiertech.model.empstatus.EmpStatusData;
 import com.example.rapiertech.model.job.Job;
@@ -30,7 +33,7 @@ import com.example.rapiertech.model.job.JobData;
 import com.example.rapiertech.model.role.Role;
 import com.example.rapiertech.model.role.RoleData;
 import com.google.android.material.datepicker.MaterialDatePicker;
-import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
+import com.google.android.material.textfield.TextInputLayout;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -43,6 +46,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import dev.shreyaspatil.MaterialDialog.BottomSheetMaterialDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -50,6 +54,7 @@ import www.sanju.motiontoast.MotionToast;
 
 public class EmployeeDetailsFragment extends Fragment {
 
+    private ApiInterface apiInterface;
     private EditText etName, etEmail, etPassword, etAddress, etPhone, etJoin, etLast;
     private View view;
     private AutoCompleteTextView tvJob, tvDept, tvGender, tvRole, tvStatus;
@@ -59,19 +64,23 @@ public class EmployeeDetailsFragment extends Fragment {
     private List<RoleData> roleList = new ArrayList<>();
     private List<EmpStatusData> statusList = new ArrayList<>();
     private String[] genderList = {"Male", "Female"};
-    private ArrayAdapter<JobData> jobAdapter;
     private ArrayAdapter<DepartmentData> deptAdapter;
+    private ArrayAdapter<JobData> jobAdapter;
     private ArrayAdapter<RoleData> roleAdapter;
     private ArrayAdapter<EmpStatusData> statusAdapter;
     private ArrayAdapter<String> genderAdapter;
-    private int empId, deptId, jobId, statusId;
-    private String name, email, job, role, address, phone, joinDate, lastDate;
+    private int empId, deptId, jobId, statusId, roleId;
+    private String name, email, password, address, phone, joinDate, lastDate, gender;
     private Long jdTime, ldTime;
     private Calendar calendar;
     private SimpleDateFormat dateFormat;
+    private EditText[] etList;
+    private AutoCompleteTextView[] actvList;
+    private Menu actionMenu;
+    private TextInputLayout tlPassword;
+    private FragmentManager fm;
 
     public EmployeeDetailsFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -83,11 +92,12 @@ public class EmployeeDetailsFragment extends Fragment {
             empId = bundle.getInt("id");
             name = bundle.getString("name");
             email = bundle.getString("email");
-            job = bundle.getString("job");
-            role = bundle.getString("role");
+            jobId = bundle.getInt("jobId");
+            deptId = bundle.getInt("departmentId");
+            roleId = bundle.getInt("roleId");
             address = bundle.getString("address");
             phone = bundle.getString("phone");
-            deptId = bundle.getInt("departmentId");
+            gender = bundle.getString("gender");
             statusId = bundle.getInt("empStatusId");
             joinDate = bundle.getString("joinDate");
             lastDate = bundle.getString("lastDate");
@@ -100,11 +110,44 @@ public class EmployeeDetailsFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_employee_details, container, false);
 
         setHasOptionsMenu(true);
+        apiInterface = ApiClient.getClient().create(ApiInterface.class);
+        fm = requireActivity().getSupportFragmentManager();
+
+        findView();
 
         calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC+7"));
         dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
         dateFormat.setTimeZone(TimeZone.getTimeZone("UTC+7"));
 
+        etList = new EditText[]{etName, etEmail, etPassword, etAddress, etPhone, etJoin, etLast};
+        actvList = new AutoCompleteTextView[]{tvDept, tvGender, tvStatus, tvRole, tvJob};
+
+        if (empId != 0) {
+            setDataUpdate();
+            requireActivity().setTitle("Employee Details");
+            tlPassword.setHelperTextEnabled(false);
+        } else {
+            requireActivity().setTitle("New Employee");
+        }
+
+        initUi();
+        return view;
+    }
+
+    private void setDataUpdate() {
+        tvId.setText(String.valueOf(empId));
+        etName.setText(name);
+        etEmail.setText(email);
+        etAddress.setText(address);
+        tvGender.setText(gender);
+        etPhone.setText(phone);
+        etJoin.setText(joinDate);
+        etLast.setText(lastDate);
+
+        detailView();
+    }
+
+    private void findView() {
         tvId = view.findViewById(R.id.tvIdDetail);
         etName = view.findViewById(R.id.etNameDetail);
         etEmail = view.findViewById(R.id.etEmailDetail);
@@ -118,195 +161,134 @@ public class EmployeeDetailsFragment extends Fragment {
         tvStatus = view.findViewById(R.id.tvStatusDetail);
         etJoin = view.findViewById(R.id.etJoinDetail);
         etLast = view.findViewById(R.id.etLastDetail);
-
-        tvId.setText(String.valueOf(empId));
-        etName.setText(name);
-        etEmail.setText(email);
-        etAddress.setText(address);
-        etPhone.setText(phone);
-        tvJob.setText(job);
-        tvRole.setText(role);
-        etJoin.setText(joinDate);
-        etLast.setText(lastDate);
-
-        initUi();
-        return view;
+        tlPassword = view.findViewById(R.id.tfPasswordDetail);
     }
 
     private void initUi() {
-        ApiInterface apiData = ApiClient.getClient().create(ApiInterface.class);
-
-        deptAdapter = new ArrayAdapter<>(requireActivity(), R.layout.support_simple_spinner_dropdown_item, deptList);
-        Call<Department> deptdata = apiData.departmentRetrieveData();
+        Call<Department> deptdata = apiInterface.departmentRetrieveData();
         deptdata.enqueue(new Callback<Department>() {
             @Override
             public void onResponse(Call<Department> call, Response<Department> response) {
                 if (response.isSuccessful()){
-                    for (DepartmentData post : response.body().getData()){
-                        String name = post.getName();
-                        DepartmentData dd = new DepartmentData(name);
-                        deptList.add(dd);
-
-                        tvDept.setAdapter(deptAdapter);
+                    deptList = response.body().getData();
+                    for (int i = 0; i < deptList.size(); i++){
+                        if (deptId == deptList.get(i).getId()){
+                            tvDept.setText(deptList.get(i).getName());
+                        }
                     }
+                    deptAdapter = new ArrayAdapter<>(requireActivity(), R.layout.support_simple_spinner_dropdown_item, deptList);
                     tvDept.setAdapter(deptAdapter);
+                    tvDept.setOnItemClickListener((parent, view, position, id) -> {
+                        deptId = deptList.get(position).getId();
+                    });
                 }else {
-                    MotionToast.Companion.createColorToast(requireActivity(), "Error",
-                            response.body().getMessage(),
-                            MotionToast.TOAST_ERROR,
-                            MotionToast.GRAVITY_BOTTOM,
-                            MotionToast.LONG_DURATION,
-                            ResourcesCompat.getFont(requireActivity(),R.font.helvetica_regular)
-                    );
+                    errorToast(response.body().getMessage());
                 }
             }
 
             @Override
             public void onFailure(Call<Department> call, Throwable t) {
-                MotionToast.Companion.createColorToast(requireActivity(), "Cannot connect server",
-                        t.getMessage(),
-                        MotionToast.TOAST_ERROR,
-                        MotionToast.GRAVITY_BOTTOM,
-                        MotionToast.LONG_DURATION,
-                        ResourcesCompat.getFont(requireActivity(),R.font.helvetica_regular)
-                );
+                noConnectToast(t.getMessage());
             }
         });
-        tvDept.setFocusable(false);
-        tvDept.setFocusableInTouchMode(false);
 
-        jobAdapter = new ArrayAdapter<>(requireActivity(), R.layout.support_simple_spinner_dropdown_item, jobList);
-        Call<Job> jobData = apiData.jobRetrieveData();
+        Call<Job> jobData = apiInterface.jobRetrieveData();
         jobData.enqueue(new Callback<Job>() {
             @Override
             public void onResponse(Call<Job> call, Response<Job> response) {
                 if (response.isSuccessful()){
-                    for (JobData post : response.body().getData()){
-                        String name = post.getName();
-                        JobData jd = new JobData(name);
-                        jobList.add(jd);
-
-                        tvJob.setAdapter(jobAdapter);
-                        tvJob.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                JobData jd = (JobData) parent.getItemAtPosition(position);
-                                jobId = jd.getId();
-                                String jobName = jd.getName();
-                                MotionToast.Companion.createColorToast(requireActivity(), "Info",
-                                        "ID : " + jobId + ", Name : " + jobName,
-                                        MotionToast.TOAST_INFO,
-                                        MotionToast.GRAVITY_BOTTOM,
-                                        MotionToast.LONG_DURATION,
-                                        ResourcesCompat.getFont(requireActivity(),R.font.helvetica_regular)
-                                );
-                            }
-                        });
+                    jobList = response.body().getData();
+                    for (int i = 0; i < jobList.size(); i++){
+                        if (jobId == jobList.get(i).getId()){
+                            tvJob.setText(jobList.get(i).getName());
+                        }
                     }
+
+                    jobAdapter = new ArrayAdapter<>(requireActivity(), R.layout.support_simple_spinner_dropdown_item, jobList);
+                    tvJob.setAdapter(jobAdapter);
+                    tvJob.setOnItemClickListener((parent, view, position, id) -> {
+                        jobId = jobList.get(position).getId();
+                    });
+//                    List<String> listJob = new ArrayList<>();
+//                    for (int i = 0; i < jobList.size(); i++){
+//                        listJob.add(jobList.get(i).getName());
+//                    }
+//
+//                    ArrayAdapter<String> adapter = new ArrayAdapter<>(requireActivity(), R.layout.support_simple_spinner_dropdown_item, listJob);
+//                    tvJob.setAdapter(adapter);
+//                    tvJob.setOnItemClickListener((parent, view, position, id) -> {
+//                        jobName = parent.getItemAtPosition(position).toString();
+//                        jobId = jobList.get(position).getId();
+//                    });
                 }else {
-                    MotionToast.Companion.createColorToast(requireActivity(), "Error",
-                            response.body().getMessage(),
-                            MotionToast.TOAST_ERROR,
-                            MotionToast.GRAVITY_BOTTOM,
-                            MotionToast.LONG_DURATION,
-                            ResourcesCompat.getFont(requireActivity(),R.font.helvetica_regular)
-                    );
+                    errorToast(response.body().getMessage());
                 }
             }
 
             @Override
             public void onFailure(Call<Job> call, Throwable t) {
-                MotionToast.Companion.createColorToast(requireActivity(), "Cannot connect server",
-                        t.getMessage(),
-                        MotionToast.TOAST_NO_INTERNET,
-                        MotionToast.GRAVITY_BOTTOM,
-                        MotionToast.LONG_DURATION,
-                        ResourcesCompat.getFont(requireActivity(),R.font.helvetica_regular)
-                );
+                noConnectToast(t.getMessage());
             }
         });
-        tvJob.setFocusable(false);
-        tvJob.setFocusableInTouchMode(false);
 
-        roleAdapter = new ArrayAdapter<>(requireActivity(), R.layout.support_simple_spinner_dropdown_item, roleList);
-        Call<Role> roleData = apiData.roleRetrieveData();
+        Call<Role> roleData = apiInterface.roleRetrieveData();
         roleData.enqueue(new Callback<Role>() {
             @Override
             public void onResponse(Call<Role> call, Response<Role> response) {
                 if (response.isSuccessful()){
-                    for (RoleData post : response.body().getData()){
-                        String name = post.getName();
-                        RoleData rd = new RoleData(name);
-
-                        roleList.add(rd);
-                        tvRole.setAdapter(roleAdapter);
+                    roleList = response.body().getData();
+                    for (int i = 0; i < roleList.size(); i++){
+                        if (roleId == roleList.get(i).getId()){
+                            tvRole.setText(roleList.get(i).getName());
+                        }
                     }
+
+                    roleAdapter = new ArrayAdapter<>(requireActivity(), R.layout.support_simple_spinner_dropdown_item, roleList);
+                    tvRole.setAdapter(roleAdapter);
+                    tvRole.setOnItemClickListener((parent, view, position, id) -> {
+                        roleId = roleList.get(position).getId();
+                    });
                 }else {
-                    MotionToast.Companion.createColorToast(requireActivity(), "Error",
-                            response.body().getMessage(),
-                            MotionToast.TOAST_ERROR,
-                            MotionToast.GRAVITY_BOTTOM,
-                            MotionToast.LONG_DURATION,
-                            ResourcesCompat.getFont(requireActivity(),R.font.helvetica_regular)
-                    );
+                    errorToast(response.body().getMessage());
                 }
             }
 
             @Override
             public void onFailure(Call<Role> call, Throwable t) {
-                MotionToast.Companion.createColorToast(requireActivity(), "Cannot connect server",
-                        t.getMessage(),
-                        MotionToast.TOAST_ERROR,
-                        MotionToast.GRAVITY_BOTTOM,
-                        MotionToast.LONG_DURATION,
-                        ResourcesCompat.getFont(requireActivity(),R.font.helvetica_regular)
-                );
+                noConnectToast(t.getMessage());
             }
         });
-        tvRole.setFocusable(false);
-        tvRole.setFocusableInTouchMode(false);
 
-        statusAdapter = new ArrayAdapter<>(requireActivity(), R.layout.support_simple_spinner_dropdown_item, statusList);
-        Call<EmpStatus> statusData = apiData.statusRetrieveData();
+        Call<EmpStatus> statusData = apiInterface.statusRetrieveData();
         statusData.enqueue(new Callback<EmpStatus>() {
             @Override
             public void onResponse(Call<EmpStatus> call, Response<EmpStatus> response) {
                 if (response.isSuccessful()){
-                    for (EmpStatusData post : response.body().getData()){
-                        String name = post.getStatusName();
-                        EmpStatusData sd = new EmpStatusData(name);
-                        statusList.add(sd);
-                        tvStatus.setAdapter(statusAdapter);
+                    statusList = response.body().getData();
+                    for (int i = 0; i < statusList.size(); i++){
+                        if (statusId == statusList.get(i).getId()){
+                            tvStatus.setText(statusList.get(i).getStatusName());
+                        }
                     }
+
+                    statusAdapter = new ArrayAdapter<>(requireActivity(), R.layout.support_simple_spinner_dropdown_item, statusList);
+                    tvStatus.setAdapter(statusAdapter);
+                    tvStatus.setOnItemClickListener((parent, view, position, id) -> {
+                        statusId = statusList.get(position).getId();
+                    });
                 } else {
-                    MotionToast.Companion.createColorToast(requireActivity(), "Error",
-                            response.body().getMessage(),
-                            MotionToast.TOAST_ERROR,
-                            MotionToast.GRAVITY_BOTTOM,
-                            MotionToast.LONG_DURATION,
-                            ResourcesCompat.getFont(requireActivity(),R.font.helvetica_regular)
-                    );
+                    errorToast(response.body().getMessage());
                 }
             }
 
             @Override
             public void onFailure(Call<EmpStatus> call, Throwable t) {
-                MotionToast.Companion.createColorToast(requireActivity(), "Cannot connect server",
-                        t.getMessage(),
-                        MotionToast.TOAST_NO_INTERNET,
-                        MotionToast.GRAVITY_BOTTOM,
-                        MotionToast.LONG_DURATION,
-                        ResourcesCompat.getFont(requireActivity(),R.font.helvetica_regular)
-                );
+                noConnectToast(t.getMessage());
             }
         });
-        tvStatus.setFocusable(false);
-        tvStatus.setFocusableInTouchMode(false);
 
         genderAdapter =  new ArrayAdapter<>(requireActivity(), R.layout.support_simple_spinner_dropdown_item, genderList);
         tvGender.setAdapter(genderAdapter);
-        tvGender.setFocusable(false);
-        tvGender.setFocusableInTouchMode(false);
 
         MaterialDatePicker.Builder mDateBuilder = MaterialDatePicker.Builder.datePicker().setTitleText("Select a Date");
 
@@ -324,12 +306,11 @@ public class EmployeeDetailsFragment extends Fragment {
             mDatePicker.show(requireActivity().getSupportFragmentManager(), null);
             mDatePicker.addOnPositiveButtonClickListener(selection -> {
                 calendar.setTimeInMillis(selection);
-                String formatted = dateFormat.format(calendar.getTime());
-                etJoin.setText(formatted);
+                etJoin.setText(mDatePicker.getHeaderText());
+                joinDate = dateFormat.format(calendar.getTime());
             });
         });
         etJoin.setFocusable(false);
-        etJoin.setFocusableInTouchMode(false);
 
         etLast.setOnClickListener(v -> {
             if (lastDate != null){
@@ -345,40 +326,275 @@ public class EmployeeDetailsFragment extends Fragment {
             mDatePicker.show(requireActivity().getSupportFragmentManager(), null);
             mDatePicker.addOnPositiveButtonClickListener(selection -> {
                 calendar.setTimeInMillis(selection);
-                String formatted = dateFormat.format(calendar.getTime());
-                etLast.setText(formatted);
+                lastDate = dateFormat.format(calendar.getTime());
+                etLast.setText(mDatePicker.getHeaderText());
             });
         });
         etLast.setFocusable(false);
-        etLast.setFocusableInTouchMode(false);
+
+        for (int i = 0; i < actvList.length; i++){
+            setActvFocusableFalse(actvList[i]);
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
-        requireActivity().setTitle("Employee Details");
     }
 
     @Override
     public void onCreateOptionsMenu(@NonNull @NotNull Menu menu, @NonNull @NotNull MenuInflater inflater) {
         inflater = requireActivity().getMenuInflater();
         inflater.inflate(R.menu.menu_update, menu);
+        actionMenu = menu;
+
+        if (empId != 0){
+            setMenu(true, true, false, false, false);
+        } else {
+            setMenu(false, false, true, false, false);
+        }
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    private void setMenu(boolean bEdit, boolean bDelete, boolean bSave, boolean bUpdate, boolean bCancel) {
+        actionMenu.findItem(R.id.menu_edit).setVisible(bEdit);
+        actionMenu.findItem(R.id.menu_delete).setVisible(bDelete);
+        actionMenu.findItem(R.id.menu_save).setVisible(bSave);
+        actionMenu.findItem(R.id.menu_update).setVisible(bUpdate);
+        actionMenu.findItem(R.id.menu_cancel).setVisible(bCancel);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull @NotNull MenuItem item) {
+        name = etName.getText().toString();
+        email = etEmail.getText().toString();
+        password = etPassword.getText().toString();
+        address = etAddress.getText().toString();
+        phone = etPhone.getText().toString();
+        gender = tvGender.getText().toString();
+        Boolean allFieldsChecked = validation();
+
         switch (item.getItemId()){
-            case R.id.save:
-                saveData();
+            case R.id.menu_save:
+                if (allFieldsChecked){
+                    saveData();
+                }
+                return true;
+
+            case R.id.menu_edit:
+                editView();
+                setMenu(false, false, false, true, true);
+                return true;
+
+            case R.id.menu_cancel:
+                detailView();
+                setMenu(true, true, false, false, false);
+                return true;
+
+            case R.id.menu_update:
+                if (allFieldsChecked){
+                    updateData();
+                }
+                return true;
+
+            case R.id.menu_delete:
+                BottomSheetMaterialDialog mDialog = new BottomSheetMaterialDialog.Builder(requireActivity())
+                        .setTitle("Delete?")
+                        .setMessage("Are you sure want to delete this data?")
+                        .setCancelable(false)
+                        .setPositiveButton("Delete", R.drawable.ic_delete_, (dialogInterface, which) -> {
+                            deleteData();
+                            dialogInterface.dismiss();
+                        })
+                        .setNegativeButton("Cancel", R.drawable.ic_close, (dialogInterface, which) -> dialogInterface.dismiss())
+                        .build();
+                mDialog.show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
+    private void deleteData() {
+        Call<Employee> deleteData  = apiInterface.employeeDeleteData(empId);
+        deleteData.enqueue(new Callback<Employee>() {
+            @Override
+            public void onResponse(Call<Employee> call, Response<Employee> response) {
+                if (response.isSuccessful() && response.body().isStatus()){
+                    successToast(response.body().getMessage());
+                    fm.popBackStack();
+                } else {
+                    errorToast(response.body().getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Employee> call, Throwable t) {
+                noConnectToast(t.getMessage());
+            }
+        });
+    }
+
+    private void updateData() {
+        Call<EmpDetail> updateData = apiInterface.employeeUpdateData(empId, name, email, password, roleId, address, deptId, jobId, phone, gender, joinDate, lastDate, statusId);
+        updateData.enqueue(new Callback<EmpDetail>() {
+            @Override
+            public void onResponse(Call<EmpDetail> call, Response<EmpDetail> response) {
+                if (response.isSuccessful() && response.body().isStatus()){
+                    successToast(response.body().getMessage());
+                    fm.popBackStack();
+                } else {
+                    errorToast(response.body().getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<EmpDetail> call, Throwable t) {
+                noConnectToast(t.getMessage());
+            }
+        });
+    }
+
+    private void detailView() {
+        for (int i = 0; i < etList.length; i++){
+            disableEditText(etList[i]);
+        }
+        for (int i = 0; i < actvList.length; i++){
+            disableAutoCompleteTextView(actvList[i]);
+        }
+        tlPassword.setHelperTextEnabled(false);
+    }
+
+    private void editView() {
+        for (int i = 0; i < etList.length; i++){
+            enableEditText(etList[i]);
+        }
+        for (int i = 0; i < actvList.length; i++){
+            enableAutoCompleteTextView(actvList[i]);
+        }
+        tlPassword.setHelperText(getString(R.string.helper_password));
+    }
+
+    private boolean validation() {
+        String message = "Required!";
+        if (name.isEmpty()){
+            etName.setError(message);
+            return false;
+        } else if (email.isEmpty()){
+            etEmail.setError(message);
+            return false;
+        } else if (password.isEmpty()){
+            if (empId == 0){
+                etPassword.setError(message);
+                return false;
+            }
+        } else if (address.isEmpty()){
+            etAddress.setError(message);
+            return false;
+        } else if (phone.isEmpty()) {
+            etPhone.setError(message);
+            return false;
+        }
+//         else if (gender.isEmpty()){
+//            tvGender.setError(message);
+//            return false;
+//        } else if (deptId == 0){
+//            tvDept.setError(message);
+//            return false;
+//        } else if (jobId == 0){
+//            tvJob.setError(message);
+//            return false;
+//        } else if (roleId == 0){
+//            tvRole.setError(message);
+//            return false;
+//        } else if (statusId == 0){
+//            tvStatus.setError(message);
+//            return false;
+//        } else if (joinDate.isEmpty()){
+//            etJoin.setError(message);
+//            return false;
+//        } else if (lastDate.isEmpty()){
+//            etLast.setError(message);
+//            return false;
+//        }
+        return true;
+    }
+
     private void saveData() {
 
+        Call<EmpDetail> createData = apiInterface.employeeCreateData(name, email, password, roleId, address, deptId, jobId, phone, gender, joinDate, lastDate, statusId);
+        createData.enqueue(new Callback<EmpDetail>() {
+            @Override
+            public void onResponse(Call<EmpDetail> call, Response<EmpDetail> response) {
+                if (response.isSuccessful() && response.body().isStatus()){
+                    successToast(response.body().getMessage());
+                    fm.popBackStack();
+                } else {
+                    errorToast(response.body().getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<EmpDetail> call, Throwable t) {
+                noConnectToast(t.getMessage());
+            }
+        });
+    }
+
+    private void noConnectToast(String message) {
+        MotionToast.Companion.createColorToast(requireActivity(), "Cannot connect server",
+                message,
+                MotionToast.TOAST_NO_INTERNET,
+                MotionToast.GRAVITY_BOTTOM,
+                MotionToast.LONG_DURATION,
+                ResourcesCompat.getFont(requireActivity(),R.font.helvetica_regular)
+        );
+    }
+
+    private void errorToast(String message) {
+        MotionToast.Companion.createColorToast(requireActivity(), "Error",
+                message,
+                MotionToast.TOAST_ERROR,
+                MotionToast.GRAVITY_BOTTOM,
+                MotionToast.LONG_DURATION,
+                ResourcesCompat.getFont(requireActivity(),R.font.helvetica_regular)
+        );
+    }
+
+    private void successToast(String message) {
+        MotionToast.Companion.createColorToast((Activity) requireActivity(), "Success",
+                message,
+                MotionToast.TOAST_SUCCESS,
+                MotionToast.GRAVITY_BOTTOM,
+                MotionToast.LONG_DURATION,
+                ResourcesCompat.getFont(requireActivity(),R.font.helvetica_regular)
+        );
+    }
+
+    private void disableAutoCompleteTextView(AutoCompleteTextView actv) {
+        actv.setFocusable(false);
+        actv.setEnabled(false);
+        actv.setClickable(false);
+    }
+
+    private void disableEditText(EditText editText) {
+        editText.setFocusable(false);
+        editText.setEnabled(false);
+    }
+
+    private void enableAutoCompleteTextView(AutoCompleteTextView autoCompleteTextView) {
+        autoCompleteTextView.setFocusable(true);
+        autoCompleteTextView.setEnabled(true);
+        autoCompleteTextView.setClickable(true);
+    }
+
+    private void enableEditText(EditText editText) {
+        editText.setFocusable(true);
+        editText.setFocusableInTouchMode(true);
+        editText.setEnabled(true);
+    }
+
+    private void setActvFocusableFalse(AutoCompleteTextView actv) {
+        actv.setFocusable(false);
     }
 }

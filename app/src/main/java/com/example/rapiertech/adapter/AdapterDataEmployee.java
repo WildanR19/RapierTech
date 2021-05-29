@@ -74,37 +74,37 @@ public class AdapterDataEmployee extends RecyclerView.Adapter<AdapterDataEmploye
             showData.enqueue(new Callback<EmpDetail>() {
                 @Override
                 public void onResponse(Call<EmpDetail> call, Response<EmpDetail> response) {
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("id", ed.getId());
-                    bundle.putString("name", ed.getName());
-                    bundle.putString("email", ed.getEmail());
-                    bundle.putString("role", ed.getRole());
-                    bundle.putString("address", response.body().getData().getAddress());
-                    bundle.putString("phone", response.body().getData().getPhone());
-                    bundle.putString("gender", response.body().getData().getGender());
-                    bundle.putInt("empStatusId", response.body().getData().getStatusId());
-                    bundle.putInt("departmentId", response.body().getData().getDepartmentId());
-                    bundle.putString("job", ed.getJob());
+                    if (response.isSuccessful()){
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("id", ed.getId());
+                        bundle.putString("name", ed.getName());
+                        bundle.putString("email", ed.getEmail());
+                        bundle.putInt("roleId", ed.getRole_id());
+                        bundle.putString("address", response.body().getData().getAddress());
+                        bundle.putString("phone", response.body().getData().getPhone());
+                        bundle.putString("gender", response.body().getData().getGender());
+                        bundle.putString("joinDate", response.body().getData().getJoinDate());
+                        bundle.putString("lastDate", response.body().getData().getLastDate());
+                        bundle.putInt("empStatusId", response.body().getData().getStatusId());
+                        bundle.putInt("departmentId", response.body().getData().getDepartmentId());
+                        bundle.putInt("jobId", response.body().getData().getJobId());
 
-                    Fragment fragment = new EmployeeDetailsFragment();
-                    fragment.setArguments(bundle);
-                    FragmentManager fragmentManager = ((FragmentActivity)v.getContext()).getSupportFragmentManager();
-                    fragmentManager.beginTransaction()
-                            .replace(R.id.fragment_container, fragment)
-                            .setReorderingAllowed(true)
-                            .addToBackStack(null)
-                            .commit();
+                        Fragment fragment = new EmployeeDetailsFragment();
+                        fragment.setArguments(bundle);
+                        FragmentManager fragmentManager = ((FragmentActivity)v.getContext()).getSupportFragmentManager();
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.fragment_container, fragment)
+                                .setReorderingAllowed(true)
+                                .addToBackStack(null)
+                                .commit();
+                    } else {
+                        errorToast(response.body().getMessage());
+                    }
                 }
 
                 @Override
                 public void onFailure(Call<EmpDetail> call, Throwable t) {
-                    MotionToast.Companion.createColorToast((Activity) context, "Cannot connect server",
-                            t.getMessage(),
-                            MotionToast.TOAST_ERROR,
-                            MotionToast.GRAVITY_BOTTOM,
-                            MotionToast.LONG_DURATION,
-                            ResourcesCompat.getFont(context,R.font.helvetica_regular)
-                    );
+                    noConnectToast(t.getMessage());
                 }
             });
         });
@@ -129,5 +129,35 @@ public class AdapterDataEmployee extends RecyclerView.Adapter<AdapterDataEmploye
             tvStatus = itemView.findViewById(R.id.status_emp);
 
         }
+    }
+
+    private void noConnectToast(String message) {
+        MotionToast.Companion.createColorToast((Activity) context, "Cannot connect server",
+                message,
+                MotionToast.TOAST_ERROR,
+                MotionToast.GRAVITY_BOTTOM,
+                MotionToast.LONG_DURATION,
+                ResourcesCompat.getFont(context,R.font.helvetica_regular)
+        );
+    }
+
+    private void errorToast(String message) {
+        MotionToast.Companion.createColorToast((Activity) context, "Error",
+                message,
+                MotionToast.TOAST_ERROR,
+                MotionToast.GRAVITY_BOTTOM,
+                MotionToast.LONG_DURATION,
+                ResourcesCompat.getFont(context,R.font.helvetica_regular)
+        );
+    }
+
+    private void successToast(String message) {
+        MotionToast.Companion.createColorToast((Activity) context, "Success",
+                message,
+                MotionToast.TOAST_SUCCESS,
+                MotionToast.GRAVITY_BOTTOM,
+                MotionToast.LONG_DURATION,
+                ResourcesCompat.getFont(context,R.font.helvetica_regular)
+        );
     }
 }

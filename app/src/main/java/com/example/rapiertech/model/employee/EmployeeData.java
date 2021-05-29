@@ -4,8 +4,8 @@ import com.google.gson.annotations.SerializedName;
 
 public class EmployeeData {
 
-	@SerializedName("role")
-	private String role;
+	@SerializedName("role_id")
+	private int role_id;
 
 	@SerializedName("name")
 	private String name;
@@ -25,12 +25,12 @@ public class EmployeeData {
 	@SerializedName("status")
 	private String status;
 
-	public void setRole(String role){
-		this.role = role;
+	public void setRole_id(int role_id){
+		this.role_id = role_id;
 	}
 
-	public String getRole(){
-		return role;
+	public int getRole_id(){
+		return role_id;
 	}
 
 	public void setName(String name){

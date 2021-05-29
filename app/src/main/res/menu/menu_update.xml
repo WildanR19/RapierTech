@@ -2,24 +2,29 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-<!--    <item android:id="@+id/edit"-->
-<!--        android:title="@string/edit"-->
-<!--        android:icon="@drawable/ic_edit"-->
-<!--        android:iconTint="@color/white"-->
-<!--        app:showAsAction="always" />-->
+    <item android:id="@+id/menu_edit"
+        android:title="@string/edit"
+        android:icon="@drawable/ic_edit"
+        android:iconTint="@color/white"
+        app:showAsAction="always" />
 
-<!--    <item android:id="@+id/delete"-->
-<!--        android:title="@string/delete"-->
-<!--        android:icon="@drawable/ic_delete"-->
-<!--        android:iconTint="@color/white"-->
-<!--        app:showAsAction="always" />-->
+    <item android:id="@+id/menu_delete"
+        android:title="@string/delete"
+        android:icon="@drawable/ic_delete"
+        android:iconTint="@color/white"
+        app:showAsAction="always" />
 
-<!--    <item android:id="@+id/update"-->
-<!--        android:title="@string/update"-->
-<!--        android:icon="@drawable/ic_check"-->
-<!--        app:showAsAction="always" />-->
+    <item android:id="@+id/menu_cancel"
+        android:title="@string/cancel"
+        android:icon="@drawable/ic_cancel"
+        app:showAsAction="always" />
 
-    <item android:id="@+id/save"
+    <item android:id="@+id/menu_update"
+        android:title="@string/update"
+        android:icon="@drawable/ic_check"
+        app:showAsAction="always" />
+
+    <item android:id="@+id/menu_save"
         android:title="@string/save"
         android:icon="@drawable/ic_check"
         app:showAsAction="always" />

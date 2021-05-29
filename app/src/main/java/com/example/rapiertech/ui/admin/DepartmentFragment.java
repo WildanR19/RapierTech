@@ -1,5 +1,6 @@
 package com.example.rapiertech.ui.admin;
 
+import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.core.content.res.ResourcesCompat;
@@ -114,6 +115,8 @@ public class DepartmentFragment extends Fragment {
     }
 
     private void createData() {
+        loadingData.setVisibility(View.VISIBLE);
+
         ApiInterface apiData = ApiClient.getClient().create(ApiInterface.class);
         Call<Department> createdata = apiData.departmentCreateData(name);
 
@@ -121,36 +124,15 @@ public class DepartmentFragment extends Fragment {
             @Override
             public void onResponse(Call<Department> call, Response<Department> response) {
                 if (response.body() != null && response.isSuccessful() && response.body().isStatus()){
-                    String message = response.body().getMessage();
-
-                    MotionToast.Companion.createColorToast(requireActivity(), "Success",
-                            message,
-                            MotionToast.TOAST_SUCCESS,
-                            MotionToast.GRAVITY_BOTTOM,
-                            MotionToast.LONG_DURATION,
-                            ResourcesCompat.getFont(requireActivity(),R.font.helvetica_regular)
-                    );
-
+                    successToast(response.body().getMessage());
                     retrieveData();
                 }else
-                    MotionToast.Companion.createColorToast(requireActivity(), "Error",
-                        response.body().getMessage(),
-                        MotionToast.TOAST_ERROR,
-                        MotionToast.GRAVITY_BOTTOM,
-                        MotionToast.LONG_DURATION,
-                        ResourcesCompat.getFont(requireActivity(), R.font.helvetica_regular)
-                );
+                    errorToast(response.body().getMessage());
             }
 
             @Override
             public void onFailure(Call<Department> call, Throwable t) {
-                MotionToast.Companion.createColorToast(requireActivity(), "Cannot connect server",
-                        t.getMessage(),
-                        MotionToast.TOAST_NO_INTERNET,
-                        MotionToast.GRAVITY_BOTTOM,
-                        MotionToast.LONG_DURATION,
-                        ResourcesCompat.getFont(requireActivity(),R.font.helvetica_regular)
-                );
+                noConnectToast(t.getMessage());
             }
         });
     }
@@ -170,28 +152,15 @@ public class DepartmentFragment extends Fragment {
                     adData = new AdapterDataDepartment(requireActivity(), listData, DepartmentFragment.this);
                     rvData.setAdapter(adData);
                     adData.notifyDataSetChanged();
+                    loadingData.setVisibility(View.INVISIBLE);
                 }else{
-                    MotionToast.Companion.createColorToast(requireActivity(), "Error",
-                            response.body().getMessage(),
-                            MotionToast.TOAST_ERROR,
-                            MotionToast.GRAVITY_BOTTOM,
-                            MotionToast.LONG_DURATION,
-                            ResourcesCompat.getFont(requireActivity(),R.font.helvetica_regular)
-                    );
+                    errorToast(response.body().getMessage());
                 }
-                loadingData.setVisibility(View.INVISIBLE);
             }
 
             @Override
             public void onFailure(Call<Department> call, Throwable t) {
-                MotionToast.Companion.createColorToast(requireActivity(), "Cannot connect server",
-                        t.getMessage(),
-                        MotionToast.TOAST_NO_INTERNET,
-                        MotionToast.GRAVITY_BOTTOM,
-                        MotionToast.LONG_DURATION,
-                        ResourcesCompat.getFont(requireActivity(),R.font.helvetica_regular)
-                );
-                loadingData.setVisibility(View.INVISIBLE);
+                noConnectToast(t.getMessage());
             }
         });
     }
@@ -202,5 +171,38 @@ public class DepartmentFragment extends Fragment {
         retrieveData();
         //Set title of this fragment
         requireActivity().setTitle("Department");
+    }
+
+    private void noConnectToast(String message) {
+        MotionToast.Companion.createColorToast(requireActivity(), "Cannot connect server",
+                message,
+                MotionToast.TOAST_ERROR,
+                MotionToast.GRAVITY_BOTTOM,
+                MotionToast.LONG_DURATION,
+                ResourcesCompat.getFont(requireActivity(),R.font.helvetica_regular)
+        );
+        loadingData.setVisibility(View.INVISIBLE);
+    }
+
+    private void errorToast(String message) {
+        MotionToast.Companion.createColorToast((Activity) requireActivity(), "Error",
+                message,
+                MotionToast.TOAST_ERROR,
+                MotionToast.GRAVITY_BOTTOM,
+                MotionToast.LONG_DURATION,
+                ResourcesCompat.getFont(requireActivity(),R.font.helvetica_regular)
+        );
+        loadingData.setVisibility(View.INVISIBLE);
+    }
+
+    private void successToast(String message) {
+        MotionToast.Companion.createColorToast((Activity) requireActivity(), "Success",
+                message,
+                MotionToast.TOAST_SUCCESS,
+                MotionToast.GRAVITY_BOTTOM,
+                MotionToast.LONG_DURATION,
+                ResourcesCompat.getFont(requireActivity(),R.font.helvetica_regular)
+        );
+        loadingData.setVisibility(View.INVISIBLE);
     }
 }

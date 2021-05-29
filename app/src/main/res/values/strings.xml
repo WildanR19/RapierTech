@@ -40,5 +40,7 @@
     <string name="last_date">Last Date</string>
     <string name="submit">Submit</string>
     <string name="update">Update</string>
+    <string name="helper_password">Fill this form, if you want to change the password</string>
+    <string name="id">id</string>
 
 </resources>
