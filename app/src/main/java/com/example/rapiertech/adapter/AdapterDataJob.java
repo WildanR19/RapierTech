@@ -51,7 +51,7 @@ public class AdapterDataJob extends RecyclerView.Adapter<AdapterDataJob.HolderDa
     @NotNull
     @Override
     public HolderData onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
-        View layout = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_item, parent, false);
+        View layout = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_deptjob, parent, false);
         return new HolderData(layout);
     }
 
@@ -63,9 +63,9 @@ public class AdapterDataJob extends RecyclerView.Adapter<AdapterDataJob.HolderDa
         holder.tvName.setText(jd.getName());
         holder.totalDept.setText(jd.getTotal() + " Employee");
         if (jd.getTotal() == 0){
-            holder.totalDept.setBackgroundResource(R.drawable.bg_label_red);
+            holder.totalDept.setBackgroundTintList(context.getColorStateList(R.color.danger));
         } else {
-            holder.totalDept.setBackgroundResource(R.drawable.bg_label_green);
+            holder.totalDept.setBackgroundTintList(context.getColorStateList(R.color.success));
         }
         holder.menuPopup.setOnClickListener(v -> {
             PopupMenu popupMenu = new PopupMenu(context, v);

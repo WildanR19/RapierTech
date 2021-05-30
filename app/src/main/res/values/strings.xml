@@ -42,5 +42,9 @@
     <string name="update">Update</string>
     <string name="helper_password">Fill this form, if you want to change the password</string>
     <string name="id">id</string>
+    <string name="duration">Duration</string>
+    <string name="reason">Reason</string>
+    <string name="from_date">From Date</string>
+    <string name="to_date">To Date</string>
 
 </resources>

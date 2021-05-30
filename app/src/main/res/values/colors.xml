@@ -14,12 +14,12 @@
     <color name="primary_variant">#FB4107</color>
     <color name="text">#252F3F</color>
     <color name="background">#F4F5F7</color>
-    <color name="blue">#3C8DBC</color>
+    <color name="info">#3C8DBC</color>
     <color name="light_blue">#62B0DE</color>
-    <color name="green">#24963E</color>
+    <color name="success">#24963E</color>
     <color name="light_green">#28A745</color>
-    <color name="yellow">#E5AD06</color>
+    <color name="warning">#E5AD06</color>
     <color name="light_yellow">#FFC107</color>
-    <color name="red">#C21856</color>
+    <color name="danger">#C21856</color>
     <color name="light_red">#D81B60</color>
 </resources>

@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_margin="8dp">
+    android:layout_marginHorizontal="8dp"
+    android:layout_marginTop="8dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -67,7 +68,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
-                android:background="@drawable/bg_label_green"
+                android:background="@drawable/bg_label"
                 android:textColor="@color/white"
                 android:paddingVertical="@dimen/paddingH_total"
                 android:paddingHorizontal="@dimen/paddingV_total"

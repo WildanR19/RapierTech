@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="8dp"
+    android:layout_marginBottom="8dp"
     tools:context=".ui.admin.JobFragment">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -16,7 +16,7 @@
             android:id="@+id/rvDataJob"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:listitem="@layout/card_item" />
+            tools:listitem="@layout/card_deptjob" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

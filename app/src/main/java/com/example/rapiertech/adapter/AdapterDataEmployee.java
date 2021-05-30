@@ -62,9 +62,9 @@ public class AdapterDataEmployee extends RecyclerView.Adapter<AdapterDataEmploye
         holder.tvJob.setText(ed.getJob());
         holder.tvStatus.setText(ed.getStatus());
         if (ed.getStatus().equalsIgnoreCase("active")){
-            holder.tvStatus.setBackgroundResource(R.drawable.bg_label_green);
+            holder.tvStatus.setBackgroundTintList(context.getColorStateList(R.color.success));
         } else {
-            holder.tvStatus.setBackgroundResource(R.drawable.bg_label_red);
+            holder.tvStatus.setBackgroundTintList(context.getColorStateList(R.color.danger));
         }
         holder.itemView.setOnClickListener(v -> {
 

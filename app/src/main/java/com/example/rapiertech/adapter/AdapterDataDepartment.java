@@ -49,7 +49,7 @@ public class AdapterDataDepartment extends RecyclerView.Adapter<AdapterDataDepar
     @NotNull
     @Override
     public HolderData onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
-        View layout = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_item, parent, false);
+        View layout = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_deptjob, parent, false);
         return new HolderData(layout);
     }
 
@@ -61,9 +61,9 @@ public class AdapterDataDepartment extends RecyclerView.Adapter<AdapterDataDepar
         holder.tvName.setText(dd.getName());
         holder.totalDept.setText(dd.getTotal() + " Employee");
         if (dd.getTotal() == 0){
-            holder.totalDept.setBackgroundResource(R.drawable.bg_label_red);
+            holder.totalDept.setBackgroundTintList(context.getColorStateList(R.color.danger));
         } else {
-            holder.totalDept.setBackgroundResource(R.drawable.bg_label_green);
+            holder.totalDept.setBackgroundTintList(context.getColorStateList(R.color.success));
         }
         holder.menuPopup.setOnClickListener(v -> {
             PopupMenu popupMenu = new PopupMenu(context, v);

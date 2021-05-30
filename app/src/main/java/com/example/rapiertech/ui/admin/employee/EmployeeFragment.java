@@ -21,6 +21,8 @@ import com.example.rapiertech.model.employee.Employee;
 import com.example.rapiertech.model.employee.EmployeeData;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,33 +79,22 @@ public class EmployeeFragment extends Fragment {
 
         showdata.enqueue(new Callback<Employee>() {
             @Override
-            public void onResponse(Call<Employee> call, Response<Employee> response) {
+            public void onResponse(@NotNull Call<Employee> call, @NotNull Response<Employee> response) {
                 if (response.body() != null && response.isSuccessful() && response.body().isStatus()){
                     dataList = response.body().getData();
                     adData = new AdapterDataEmployee(requireActivity(), dataList);
                     rvData.setAdapter(adData);
                     adData.notifyDataSetChanged();
                 }else{
-                    MotionToast.Companion.createColorToast(requireActivity(), "Error",
-                            response.body().getMessage(),
-                            MotionToast.TOAST_ERROR,
-                            MotionToast.GRAVITY_BOTTOM,
-                            MotionToast.LONG_DURATION,
-                            ResourcesCompat.getFont(requireActivity(),R.font.helvetica_regular)
-                    );
+                    assert response.body() != null;
+                    errorToast(response.body().getMessage());
                 }
                 loadingData.setVisibility(View.INVISIBLE);
             }
 
             @Override
-            public void onFailure(Call<Employee> call, Throwable t) {
-                MotionToast.Companion.createColorToast(requireActivity(), "Cannot connect server",
-                        t.getMessage(),
-                        MotionToast.TOAST_NO_INTERNET,
-                        MotionToast.GRAVITY_BOTTOM,
-                        MotionToast.LONG_DURATION,
-                        ResourcesCompat.getFont(requireActivity(),R.font.helvetica_regular)
-                );
+            public void onFailure(@NotNull Call<Employee> call, @NotNull Throwable t) {
+               noConnectToast(t.getMessage());
                 loadingData.setVisibility(View.INVISIBLE);
             }
         });
@@ -115,5 +106,25 @@ public class EmployeeFragment extends Fragment {
         retrieveData();
         //Set title of this fragment
         requireActivity().setTitle("Employee");
+    }
+
+    private void noConnectToast(String message) {
+        MotionToast.Companion.createColorToast(requireActivity(), "Cannot connect server",
+                message,
+                MotionToast.TOAST_ERROR,
+                MotionToast.GRAVITY_BOTTOM,
+                MotionToast.LONG_DURATION,
+                ResourcesCompat.getFont(requireActivity(),R.font.helvetica_regular)
+        );
+    }
+
+    private void errorToast(String message) {
+        MotionToast.Companion.createColorToast(requireActivity(), "Error",
+                message,
+                MotionToast.TOAST_ERROR,
+                MotionToast.GRAVITY_BOTTOM,
+                MotionToast.LONG_DURATION,
+                ResourcesCompat.getFont(requireActivity(),R.font.helvetica_regular)
+        );
     }
 }

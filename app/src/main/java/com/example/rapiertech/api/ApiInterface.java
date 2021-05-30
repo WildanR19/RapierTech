@@ -5,6 +5,8 @@ import com.example.rapiertech.model.empdetail.EmpDetail;
 import com.example.rapiertech.model.employee.Employee;
 import com.example.rapiertech.model.empstatus.EmpStatus;
 import com.example.rapiertech.model.job.Job;
+import com.example.rapiertech.model.leave.Leave;
+import com.example.rapiertech.model.leave.LeaveType;
 import com.example.rapiertech.model.login.Login;
 import com.example.rapiertech.model.role.Role;
 
@@ -115,4 +117,11 @@ public interface ApiInterface {
 
     @DELETE("job/delete/{id}")
     Call<Job> jobDeleteData(@Path("id") int id);
+
+    // Leave
+    @GET("leave/type")
+    Call<LeaveType> leaveTypeRetrieveData();
+
+    @GET("leave")
+    Call<Leave> leaveRetrieveData();
 }

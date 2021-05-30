@@ -12,6 +12,7 @@ import com.example.rapiertech.ui.admin.DepartmentFragment;
 import com.example.rapiertech.ui.admin.employee.EmployeeFragment;
 import com.example.rapiertech.ui.admin.HomeFragment;
 import com.example.rapiertech.ui.admin.JobFragment;
+import com.example.rapiertech.ui.leave.LeaveFragment;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
@@ -71,7 +72,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         //initial Fragment
 //        HomeFragment homeFragment = new HomeFragment();
-        EmployeeFragment departmentFragment = new EmployeeFragment();
+        LeaveFragment departmentFragment = new LeaveFragment();
         setMyFragment(departmentFragment);
     }
 
@@ -134,9 +135,15 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 setMyFragment(jobFragment);
                 break;
 
+            case R.id.nav_leave:
+                LeaveFragment leaveFragment = new LeaveFragment();
+                setMyFragment(leaveFragment);
+                break;
+
             case R.id.nav_logout:
                 logout();
                 break;
+
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;
