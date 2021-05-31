@@ -5,6 +5,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -76,12 +77,15 @@ public class AdapterDataLeave extends RecyclerView.Adapter<AdapterDataLeave.View
         if (status.equalsIgnoreCase("approved")){
             holder.tvStatus.setBackgroundTintList(context.getColorStateList(R.color.success));
             holder.vBorder.setBackgroundResource(R.color.success);
+            holder.llConfirm.setVisibility(View.GONE);
         } else if (status.equalsIgnoreCase("pending")){
             holder.tvStatus.setBackgroundTintList(context.getColorStateList(R.color.warning));
             holder.vBorder.setBackgroundResource(R.color.warning);
+            holder.llConfirm.setVisibility(View.VISIBLE);
         } else {
             holder.tvStatus.setBackgroundTintList(context.getColorStateList(R.color.danger));
             holder.vBorder.setBackgroundResource(R.color.danger);
+            holder.llConfirm.setVisibility(View.GONE);
         }
     }
 
@@ -142,6 +146,7 @@ public class AdapterDataLeave extends RecyclerView.Adapter<AdapterDataLeave.View
 
         TextView tvId, tvName, tvReason, tvDuration, tvFromDate, tvToDate, tvType, tvStatus;
         View vBorder;
+        LinearLayout llConfirm;
 
         public ViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
@@ -155,6 +160,7 @@ public class AdapterDataLeave extends RecyclerView.Adapter<AdapterDataLeave.View
             vBorder = itemView.findViewById(R.id.border_leave);
             tvType = itemView.findViewById(R.id.type_leave);
             tvStatus = itemView.findViewById(R.id.status_leave);
+            llConfirm = itemView.findViewById(R.id.llApproveConfirm);
         }
     }
 

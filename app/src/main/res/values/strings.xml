@@ -46,5 +46,13 @@
     <string name="reason">Reason</string>
     <string name="from_date">From Date</string>
     <string name="to_date">To Date</string>
+    <string name="approve_confirm">Approve ?</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
+    <string name="employee">Employee</string>
+    <string name="leave_type">Leave Type</string>
+    <string name="half_day">Half Day</string>
+    <string name="full_day">Full Day</string>
+    <string name="status">Status</string>
 
 </resources>

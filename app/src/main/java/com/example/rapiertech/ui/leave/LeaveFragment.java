@@ -85,7 +85,11 @@ public class LeaveFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                LeaveEditorFragment leaveEditorFragment = new LeaveEditorFragment();
+                requireActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, leaveEditorFragment)
+                        .addToBackStack(null)
+                        .commit();
             }
         });
 
