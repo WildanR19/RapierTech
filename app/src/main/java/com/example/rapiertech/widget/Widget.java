@@ -9,6 +9,11 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.example.rapiertech.R;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
 import www.sanju.motiontoast.MotionToast;
 
 public class Widget {
@@ -70,4 +75,39 @@ public class Widget {
         actv.setFocusable(false);
     }
 
+    public String capitalizeText(String text) {
+        char[] charArray = text.toCharArray();
+        boolean foundSpace = true;
+
+        for(int i = 0; i < charArray.length; i++) {
+            if(Character.isLetter(charArray[i])) {
+                if(foundSpace) {
+                    charArray[i] = Character.toUpperCase(charArray[i]);
+                    foundSpace = false;
+                }
+            }
+            else {
+                foundSpace = true;
+            }
+        }
+
+        return String.valueOf(charArray);
+    }
+
+    public String changeDateFormat(String date){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date parseDate;
+        String newDate = null;
+
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC+7"));
+        try {
+            parseDate = dateFormat.parse(date);
+            dateFormat.applyPattern("dd MMM yyyy");
+            newDate = dateFormat.format(parseDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return newDate;
+    }
 }

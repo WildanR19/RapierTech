@@ -56,5 +56,8 @@
     <string name="status">Status</string>
     <string name="reject">Reject</string>
     <string name="reject_reason">Reject Reason</string>
+    <string name="payslip">Payslip</string>
+    <string name="basic_salary">Basic Salary</string>
+    <string name="payment">Payment</string>
 
 </resources>

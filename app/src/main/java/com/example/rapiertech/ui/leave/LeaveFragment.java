@@ -1,10 +1,7 @@
 package com.example.rapiertech.ui.leave;
 
-import android.app.Activity;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,7 +10,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.example.rapiertech.R;
@@ -23,6 +19,7 @@ import com.example.rapiertech.api.ApiClient;
 import com.example.rapiertech.api.ApiInterface;
 import com.example.rapiertech.model.leave.Leave;
 import com.example.rapiertech.model.leave.LeaveData;
+import com.example.rapiertech.widget.Widget;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.jetbrains.annotations.NotNull;
@@ -34,7 +31,6 @@ import java.util.Objects;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import www.sanju.motiontoast.MotionToast;
 
 public class LeaveFragment extends Fragment {
 
@@ -45,6 +41,7 @@ public class LeaveFragment extends Fragment {
     private ProgressBar loadingData;
     private ApiInterface apiInterface;
     private SessionManager sessionManager;
+    private Widget widget;
 
     public LeaveFragment() {
         // Required empty public constructor
@@ -55,6 +52,7 @@ public class LeaveFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_leave, container, false);
         apiInterface = ApiClient.getClient().create(ApiInterface.class);
+        widget = new Widget();
 
         rvData = view.findViewById(R.id.rvDataLeave);
         RecyclerView.LayoutManager lmData = new LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false);
@@ -118,7 +116,7 @@ public class LeaveFragment extends Fragment {
                         rvData.setAdapter(adData);
                         adData.notifyDataSetChanged();
                     } else {
-                        errorToast(response.body().getMessage());
+                        widget.errorToast(response.body().getMessage(), requireActivity());
                     }
                 }
                 loadingData.setVisibility(View.INVISIBLE);
@@ -126,7 +124,7 @@ public class LeaveFragment extends Fragment {
 
             @Override
             public void onFailure(@NotNull Call<Leave> call, @NotNull Throwable t) {
-                noConnectToast(t.getMessage());
+                widget.noConnectToast(t.getMessage(), requireActivity());
                 loadingData.setVisibility(View.INVISIBLE);
             }
         });
@@ -146,7 +144,7 @@ public class LeaveFragment extends Fragment {
                         rvData.setAdapter(adData);
                         adData.notifyDataSetChanged();
                     } else {
-                        errorToast(response.body().getMessage());
+                        widget.errorToast(response.body().getMessage(), requireActivity());
                     }
                 }
                 loadingData.setVisibility(View.INVISIBLE);
@@ -154,29 +152,9 @@ public class LeaveFragment extends Fragment {
 
             @Override
             public void onFailure(@NotNull Call<Leave> call, @NotNull Throwable t) {
-                noConnectToast(t.getMessage());
+                widget.noConnectToast(t.getMessage(), requireActivity());
                 loadingData.setVisibility(View.INVISIBLE);
             }
         });
-    }
-
-    private void noConnectToast(String message) {
-        MotionToast.Companion.createColorToast(requireActivity(), "Cannot connect server",
-                message,
-                MotionToast.TOAST_ERROR,
-                MotionToast.GRAVITY_BOTTOM,
-                MotionToast.LONG_DURATION,
-                ResourcesCompat.getFont(requireActivity(),R.font.helvetica_regular)
-        );
-    }
-
-    private void errorToast(String message) {
-        MotionToast.Companion.createColorToast((Activity) requireActivity(), "Error",
-                message,
-                MotionToast.TOAST_ERROR,
-                MotionToast.GRAVITY_BOTTOM,
-                MotionToast.LONG_DURATION,
-                ResourcesCompat.getFont(requireActivity(),R.font.helvetica_regular)
-        );
     }
 }

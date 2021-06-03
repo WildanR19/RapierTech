@@ -13,18 +13,29 @@ import com.example.rapiertech.ui.admin.employee.EmployeeFragment;
 import com.example.rapiertech.ui.admin.HomeFragment;
 import com.example.rapiertech.ui.admin.JobFragment;
 import com.example.rapiertech.ui.leave.LeaveFragment;
+import com.example.rapiertech.ui.payslip.BasicSalaryFragment;
+import com.example.rapiertech.ui.payslip.PayslipFragment;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.tabs.TabLayout;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.viewpager.widget.ViewPager;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import www.sanju.motiontoast.MotionToast;
 
@@ -33,9 +44,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout drawer;
     Toolbar toolbar;
     NavigationView navigationView;
-
     SessionManager sessionManager;
-
     TextView name, email;
     ImageView image;
     View headerView;
@@ -72,8 +81,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         //initial Fragment
 //        HomeFragment homeFragment = new HomeFragment();
-        LeaveFragment departmentFragment = new LeaveFragment();
-        setMyFragment(departmentFragment);
+        PayslipFragment homeFragment = new PayslipFragment();
+        setMyFragment(homeFragment);
+
     }
 
     private void setMyFragment(Fragment fragment) {
@@ -144,6 +154,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 logout();
                 break;
 
+            case R.id.nav_payslip:
+                PayslipFragment payslipFragment = new PayslipFragment();
+                setMyFragment(payslipFragment);
+                break;
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;

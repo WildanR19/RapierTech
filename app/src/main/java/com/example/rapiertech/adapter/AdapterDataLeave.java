@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
@@ -37,22 +36,25 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
-import dev.shreyaspatil.MaterialDialog.BottomSheetMaterialDialog;
 import dev.shreyaspatil.MaterialDialog.MaterialDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import www.sanju.motiontoast.MotionToast;
 
 public class AdapterDataLeave extends RecyclerView.Adapter<AdapterDataLeave.ViewHolder> {
 
     private final Context context;
-    private List<LeaveData> leaveDataList;
+    private final List<LeaveData> leaveDataList;
     private List<EmployeeData> employeeDataList;
     private List<LeaveTypeData> leaveTypeDataList;
-    private LeaveFragment leaveFragment;
+    private final LeaveFragment leaveFragment;
     private ApiInterface apiInterface;
     private SessionManager sessionManager;
     private Widget widget;
@@ -76,6 +78,7 @@ public class AdapterDataLeave extends RecyclerView.Adapter<AdapterDataLeave.View
         LeaveData leaveData = leaveDataList.get(position);
         apiInterface = ApiClient.getClient().create(ApiInterface.class);
         sessionManager = new SessionManager(context);
+        widget = new Widget();
 
         int userId = leaveData.getUserId();
         int leaveTypeId = leaveData.getLeaveTypeId();
@@ -85,12 +88,14 @@ public class AdapterDataLeave extends RecyclerView.Adapter<AdapterDataLeave.View
 
         holder.tvId.setText(String.valueOf(leaveData.getId()));
         holder.tvReason.setText(leaveData.getReason());
-        String duration = leaveData.getDuration();
-        holder.tvDuration.setText(duration.substring(0, 1).toUpperCase() + duration.substring(1));
-        holder.tvFromDate.setText(leaveData.getFromDate());
-        holder.tvToDate.setText(leaveData.getToDate());
+        holder.tvDuration.setText(widget.capitalizeText(leaveData.getDuration()));
+
+        String fromDate = widget.changeDateFormat(leaveData.getFromDate());
+        holder.tvFromDate.setText(fromDate);
+        String toDate = widget.changeDateFormat(leaveData.getToDate());
+        holder.tvToDate.setText(toDate);
         String status = leaveData.getStatus();
-        holder.tvStatus.setText(status.substring(0, 1).toUpperCase() + status.substring(1));
+        holder.tvStatus.setText(widget.capitalizeText(status));
 
         if (status.equalsIgnoreCase("approved")){
             holder.tvStatus.setBackgroundTintList(context.getColorStateList(R.color.success));
@@ -236,14 +241,14 @@ public class AdapterDataLeave extends RecyclerView.Adapter<AdapterDataLeave.View
                             }
                         }
                     } else {
-                        errorToast("LeaveType" + response.body().getMessage());
+                        widget.errorToast("LeaveType" + response.body().getMessage(), leaveFragment.requireActivity());
                     }
                 }
             }
 
             @Override
             public void onFailure(Call<LeaveType> call, Throwable t) {
-                noConnectToast("LeaveType" + t.getMessage());
+                widget.noConnectToast("LeaveType" + t.getMessage(), leaveFragment.requireActivity());
             }
         });
     }
@@ -262,14 +267,14 @@ public class AdapterDataLeave extends RecyclerView.Adapter<AdapterDataLeave.View
                             }
                         }
                     } else {
-                        errorToast("User" + response.body().getMessage());
+                        widget.errorToast("User" + response.body().getMessage(), leaveFragment.requireActivity());
                     }
                 }
             }
 
             @Override
             public void onFailure(Call<Employee> call, Throwable t) {
-                noConnectToast("User" + t.getMessage());
+                widget.noConnectToast("User" + t.getMessage(), leaveFragment.requireActivity());
             }
         });
     }
@@ -301,28 +306,6 @@ public class AdapterDataLeave extends RecyclerView.Adapter<AdapterDataLeave.View
             llConfirm = itemView.findViewById(R.id.llApproveConfirm);
             btnApproved = itemView.findViewById(R.id.btnApprovedLeave);
             btnRejected = itemView.findViewById(R.id.btnRejectedLeave);
-
-            widget = new Widget();
         }
-    }
-
-    private void noConnectToast(String message) {
-        MotionToast.Companion.createColorToast((Activity) context, "Cannot connect server",
-                message,
-                MotionToast.TOAST_ERROR,
-                MotionToast.GRAVITY_BOTTOM,
-                MotionToast.LONG_DURATION,
-                ResourcesCompat.getFont(context,R.font.helvetica_regular)
-        );
-    }
-
-    private void errorToast(String message) {
-        MotionToast.Companion.createColorToast((Activity) context, "Error",
-                message,
-                MotionToast.TOAST_ERROR,
-                MotionToast.GRAVITY_BOTTOM,
-                MotionToast.LONG_DURATION,
-                ResourcesCompat.getFont(context,R.font.helvetica_regular)
-        );
     }
 }
