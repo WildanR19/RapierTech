@@ -2,7 +2,6 @@ package com.example.rapiertech.ui.admin.employee;
 
 import android.os.Bundle;
 
-import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,6 +18,7 @@ import com.example.rapiertech.api.ApiClient;
 import com.example.rapiertech.api.ApiInterface;
 import com.example.rapiertech.model.employee.Employee;
 import com.example.rapiertech.model.employee.EmployeeData;
+import com.example.rapiertech.widget.Widget;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.jetbrains.annotations.NotNull;
@@ -29,7 +29,6 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import www.sanju.motiontoast.MotionToast;
 
 public class EmployeeFragment extends Fragment {
 
@@ -38,11 +37,13 @@ public class EmployeeFragment extends Fragment {
     private List<EmployeeData> dataList = new ArrayList<>();
     private SwipeRefreshLayout srlData;
     private ProgressBar loadingData;
+    private Widget widget;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_employee, container, false);
+        widget = new Widget();
         rvData = view.findViewById(R.id.rvDataEmp);
 
         RecyclerView.LayoutManager lmData = new LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false);
@@ -80,21 +81,22 @@ public class EmployeeFragment extends Fragment {
         showdata.enqueue(new Callback<Employee>() {
             @Override
             public void onResponse(@NotNull Call<Employee> call, @NotNull Response<Employee> response) {
-                if (response.body() != null && response.isSuccessful() && response.body().isStatus()){
-                    dataList = response.body().getData();
-                    adData = new AdapterDataEmployee(requireActivity(), dataList);
-                    rvData.setAdapter(adData);
-                    adData.notifyDataSetChanged();
-                }else{
-                    assert response.body() != null;
-                    errorToast(response.body().getMessage());
+                if (response.body() != null){
+                    if (response.isSuccessful() && response.body().isStatus()){
+                        dataList = response.body().getData();
+                        adData = new AdapterDataEmployee(requireActivity(), dataList);
+                        rvData.setAdapter(adData);
+                        adData.notifyDataSetChanged();
+                    }else{
+                        widget.errorToast(response.body().getMessage(), requireActivity());
+                    }
                 }
                 loadingData.setVisibility(View.INVISIBLE);
             }
 
             @Override
             public void onFailure(@NotNull Call<Employee> call, @NotNull Throwable t) {
-               noConnectToast(t.getMessage());
+               widget.noConnectToast(t.getMessage(), requireActivity());
                 loadingData.setVisibility(View.INVISIBLE);
             }
         });
@@ -106,25 +108,5 @@ public class EmployeeFragment extends Fragment {
         retrieveData();
         //Set title of this fragment
         requireActivity().setTitle("Employee");
-    }
-
-    private void noConnectToast(String message) {
-        MotionToast.Companion.createColorToast(requireActivity(), "Cannot connect server",
-                message,
-                MotionToast.TOAST_ERROR,
-                MotionToast.GRAVITY_BOTTOM,
-                MotionToast.LONG_DURATION,
-                ResourcesCompat.getFont(requireActivity(),R.font.helvetica_regular)
-        );
-    }
-
-    private void errorToast(String message) {
-        MotionToast.Companion.createColorToast(requireActivity(), "Error",
-                message,
-                MotionToast.TOAST_ERROR,
-                MotionToast.GRAVITY_BOTTOM,
-                MotionToast.LONG_DURATION,
-                ResourcesCompat.getFont(requireActivity(),R.font.helvetica_regular)
-        );
     }
 }

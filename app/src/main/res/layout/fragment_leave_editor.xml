@@ -65,7 +65,6 @@
                     android:id="@+id/rgDurationLeaveEditor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:checkedButton="@id/rbFullDay"
                     android:orientation="horizontal">
 
                     <TextView
@@ -79,6 +78,7 @@
                         android:id="@+id/rbFullDay"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:checked="true"
                         android:text="@string/full_day"/>
 
                     <RadioButton
@@ -154,6 +154,23 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etReasonLeaveEditor"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:inputType="text|textMultiLine"
+                        android:gravity="top" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tfRejectReasonLeaveEditor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/reject_reason"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:visibility="gone">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etRejectReasonLeaveEditor"
                         android:layout_width="match_parent"
                         android:layout_height="100dp"
                         android:inputType="text|textMultiLine"

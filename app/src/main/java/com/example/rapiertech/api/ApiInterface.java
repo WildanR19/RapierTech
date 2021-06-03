@@ -124,4 +124,42 @@ public interface ApiInterface {
 
     @GET("leave")
     Call<Leave> leaveRetrieveData();
+
+    @GET("leave/user/{id}")
+    Call<Leave> leaveRetrieveDataUser(@Path("id") int id);
+
+    @FormUrlEncoded
+    @POST("leave/add/store")
+    Call<Leave> leaveCreateData(
+            @Field("employee") int empId,
+            @Field("type") int typeId,
+            @Field("duration") String duration,
+            @Field("fromdate") String fromDate,
+            @Field("todate") String toDate,
+            @Field("status") String status,
+            @Field("reason") String reason
+    );
+
+    @DELETE("leave/delete/{id}")
+    Call<Leave> leaveDeleteData(@Path("id") int id);
+
+    @FormUrlEncoded
+    @POST("leave/edit/{id}")
+    Call<Leave> leaveUpdateData(
+            @Path("id") int id,
+            @Field("employee") int empId,
+            @Field("type") int typeId,
+            @Field("duration") String duration,
+            @Field("fromdate") String fromDate,
+            @Field("todate") String toDate,
+            @Field("status") String status,
+            @Field("reason") String reason
+    );
+
+    @GET("leave/approve/{id}")
+    Call<Leave> leaveApproved(@Path("id") int id);
+
+    @FormUrlEncoded
+    @POST("leave/reject/{id}")
+    Call<Leave> leaveRejected(@Path("id") int id, @Field("reason") String reason);
 }

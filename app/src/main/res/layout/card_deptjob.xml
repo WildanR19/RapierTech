@@ -34,6 +34,7 @@
             android:textColor="@color/white"
             android:paddingVertical="@dimen/paddingH_total"
             android:paddingHorizontal="@dimen/paddingV_total"
+            android:textSize="12sp"
             android:text="2 Employee"/>
 
         <ImageView

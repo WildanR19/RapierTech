@@ -80,4 +80,11 @@ public class EmployeeData {
 	public String getStatus(){
 		return status;
 	}
+
+	public EmployeeData(String name) {
+		this.name = name;
+	}
+	public String toString(){
+		return name;
+	}
 }

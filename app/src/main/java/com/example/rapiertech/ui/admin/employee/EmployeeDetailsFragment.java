@@ -32,6 +32,7 @@ import com.example.rapiertech.model.job.Job;
 import com.example.rapiertech.model.job.JobData;
 import com.example.rapiertech.model.role.Role;
 import com.example.rapiertech.model.role.RoleData;
+import com.example.rapiertech.widget.Widget;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -79,6 +80,7 @@ public class EmployeeDetailsFragment extends Fragment {
     private Menu actionMenu;
     private TextInputLayout tlPassword;
     private FragmentManager fm;
+    private Widget widget;
 
     public EmployeeDetailsFragment() {
     }
@@ -108,7 +110,7 @@ public class EmployeeDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_employee_details, container, false);
-
+        widget = new Widget();
         setHasOptionsMenu(true);
         apiInterface = ApiClient.getClient().create(ApiInterface.class);
         fm = requireActivity().getSupportFragmentManager();
@@ -182,13 +184,13 @@ public class EmployeeDetailsFragment extends Fragment {
                         deptId = deptList.get(position).getId();
                     });
                 }else {
-                    errorToast(response.body().getMessage());
+                    widget.errorToast(response.body().getMessage(), requireActivity());
                 }
             }
 
             @Override
             public void onFailure(Call<Department> call, Throwable t) {
-                noConnectToast(t.getMessage());
+                widget.noConnectToast(t.getMessage(), requireActivity());
             }
         });
 
@@ -221,13 +223,13 @@ public class EmployeeDetailsFragment extends Fragment {
 //                        jobId = jobList.get(position).getId();
 //                    });
                 }else {
-                    errorToast(response.body().getMessage());
+                    widget.errorToast(response.body().getMessage(), requireActivity());
                 }
             }
 
             @Override
             public void onFailure(Call<Job> call, Throwable t) {
-                noConnectToast(t.getMessage());
+                widget.noConnectToast(t.getMessage(), requireActivity());
             }
         });
 
@@ -249,13 +251,13 @@ public class EmployeeDetailsFragment extends Fragment {
                         roleId = roleList.get(position).getId();
                     });
                 }else {
-                    errorToast(response.body().getMessage());
+                    widget.errorToast(response.body().getMessage(), requireActivity());
                 }
             }
 
             @Override
             public void onFailure(Call<Role> call, Throwable t) {
-                noConnectToast(t.getMessage());
+                widget.noConnectToast(t.getMessage(), requireActivity());
             }
         });
 
@@ -277,13 +279,13 @@ public class EmployeeDetailsFragment extends Fragment {
                         statusId = statusList.get(position).getId();
                     });
                 } else {
-                    errorToast(response.body().getMessage());
+                    widget.errorToast(response.body().getMessage(), requireActivity());
                 }
             }
 
             @Override
             public void onFailure(Call<EmpStatus> call, Throwable t) {
-                noConnectToast(t.getMessage());
+                widget.noConnectToast(t.getMessage(), requireActivity());
             }
         });
 
@@ -333,7 +335,7 @@ public class EmployeeDetailsFragment extends Fragment {
         etLast.setFocusable(false);
 
         for (int i = 0; i < actvList.length; i++){
-            setActvFocusableFalse(actvList[i]);
+            widget.setActvFocusableFalse(actvList[i]);
         }
     }
 
@@ -420,17 +422,19 @@ public class EmployeeDetailsFragment extends Fragment {
         deleteData.enqueue(new Callback<Employee>() {
             @Override
             public void onResponse(Call<Employee> call, Response<Employee> response) {
-                if (response.isSuccessful() && response.body().isStatus()){
-                    successToast(response.body().getMessage());
-                    fm.popBackStack();
-                } else {
-                    errorToast(response.body().getMessage());
+                if (response.body() != null){
+                    if (response.isSuccessful() && response.body().isStatus()){
+                        widget.successToast(response.body().getMessage(), requireActivity());
+                        fm.popBackStack();
+                    } else {
+                        widget.errorToast(response.body().getMessage(), requireActivity());
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<Employee> call, Throwable t) {
-                noConnectToast(t.getMessage());
+                widget.noConnectToast(t.getMessage(), requireActivity());
             }
         });
     }
@@ -441,36 +445,36 @@ public class EmployeeDetailsFragment extends Fragment {
             @Override
             public void onResponse(Call<EmpDetail> call, Response<EmpDetail> response) {
                 if (response.isSuccessful() && response.body().isStatus()){
-                    successToast(response.body().getMessage());
+                    widget.successToast(response.body().getMessage(), requireActivity());
                     fm.popBackStack();
                 } else {
-                    errorToast(response.body().getMessage());
+                    widget.errorToast(response.body().getMessage(), requireActivity());
                 }
             }
 
             @Override
             public void onFailure(Call<EmpDetail> call, Throwable t) {
-                noConnectToast(t.getMessage());
+                widget.noConnectToast(t.getMessage(), requireActivity());
             }
         });
     }
 
     private void detailView() {
         for (int i = 0; i < etList.length; i++){
-            disableEditText(etList[i]);
+            widget.disableEditText(etList[i]);
         }
         for (int i = 0; i < actvList.length; i++){
-            disableAutoCompleteTextView(actvList[i]);
+            widget.disableAutoCompleteTextView(actvList[i]);
         }
         tlPassword.setHelperTextEnabled(false);
     }
 
     private void editView() {
         for (int i = 0; i < etList.length; i++){
-            enableEditText(etList[i]);
+            widget.enableEditText(etList[i]);
         }
         for (int i = 0; i < actvList.length; i++){
-            enableAutoCompleteTextView(actvList[i]);
+            widget.enableAutoCompleteTextView(actvList[i]);
         }
         tlPassword.setHelperText(getString(R.string.helper_password));
     }
@@ -526,75 +530,22 @@ public class EmployeeDetailsFragment extends Fragment {
         createData.enqueue(new Callback<EmpDetail>() {
             @Override
             public void onResponse(Call<EmpDetail> call, Response<EmpDetail> response) {
-                if (response.isSuccessful() && response.body().isStatus()){
-                    successToast(response.body().getMessage());
-                    fm.popBackStack();
-                } else {
-                    errorToast(response.body().getMessage());
+                if (response.body() != null){
+                    if (response.isSuccessful() && response.body().isStatus()){
+                        widget.successToast(response.body().getMessage(), requireActivity());
+                        fm.popBackStack();
+                    } else {
+                        widget.errorToast(response.body().getMessage(), requireActivity());
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<EmpDetail> call, Throwable t) {
-                noConnectToast(t.getMessage());
+                widget.noConnectToast(t.getMessage(), requireActivity());
             }
         });
     }
 
-    private void noConnectToast(String message) {
-        MotionToast.Companion.createColorToast(requireActivity(), "Cannot connect server",
-                message,
-                MotionToast.TOAST_NO_INTERNET,
-                MotionToast.GRAVITY_BOTTOM,
-                MotionToast.LONG_DURATION,
-                ResourcesCompat.getFont(requireActivity(),R.font.helvetica_regular)
-        );
-    }
 
-    private void errorToast(String message) {
-        MotionToast.Companion.createColorToast(requireActivity(), "Error",
-                message,
-                MotionToast.TOAST_ERROR,
-                MotionToast.GRAVITY_BOTTOM,
-                MotionToast.LONG_DURATION,
-                ResourcesCompat.getFont(requireActivity(),R.font.helvetica_regular)
-        );
-    }
-
-    private void successToast(String message) {
-        MotionToast.Companion.createColorToast((Activity) requireActivity(), "Success",
-                message,
-                MotionToast.TOAST_SUCCESS,
-                MotionToast.GRAVITY_BOTTOM,
-                MotionToast.LONG_DURATION,
-                ResourcesCompat.getFont(requireActivity(),R.font.helvetica_regular)
-        );
-    }
-
-    private void disableAutoCompleteTextView(AutoCompleteTextView actv) {
-        actv.setFocusable(false);
-        actv.setEnabled(false);
-        actv.setClickable(false);
-    }
-
-    private void disableEditText(EditText editText) {
-        editText.setFocusable(false);
-        editText.setEnabled(false);
-    }
-
-    private void enableAutoCompleteTextView(AutoCompleteTextView autoCompleteTextView) {
-        autoCompleteTextView.setFocusable(true);
-        autoCompleteTextView.setEnabled(true);
-        autoCompleteTextView.setClickable(true);
-    }
-
-    private void enableEditText(EditText editText) {
-        editText.setFocusable(true);
-        editText.setFocusableInTouchMode(true);
-        editText.setEnabled(true);
-    }
-
-    private void setActvFocusableFalse(AutoCompleteTextView actv) {
-        actv.setFocusable(false);
-    }
 }

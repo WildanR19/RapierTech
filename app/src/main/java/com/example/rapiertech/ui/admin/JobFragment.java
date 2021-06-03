@@ -1,9 +1,8 @@
 package com.example.rapiertech.ui.admin;
 
-import android.app.Activity;
 import android.os.Bundle;
 
-import androidx.core.content.res.ResourcesCompat;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,6 +20,7 @@ import com.example.rapiertech.api.ApiClient;
 import com.example.rapiertech.api.ApiInterface;
 import com.example.rapiertech.model.job.Job;
 import com.example.rapiertech.model.job.JobData;
+import com.example.rapiertech.widget.Widget;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -32,7 +32,6 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import www.sanju.motiontoast.MotionToast;
 
 public class JobFragment extends Fragment {
 
@@ -43,21 +42,13 @@ public class JobFragment extends Fragment {
     private ProgressBar loadingData;
     private EditText etName;
     private String name;
-
-//    public JobFragment() {
-//        // Required empty public constructor
-//    }
-//
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//
-//    }
+    private Widget widget;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_job, container, false);
+        widget = new Widget();
 
         rvData = root.findViewById(R.id.rvDataJob);
         RecyclerView.LayoutManager lmData = new LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false);
@@ -106,17 +97,19 @@ public class JobFragment extends Fragment {
         createdata.enqueue(new Callback<Job>() {
             @Override
             public void onResponse(@NotNull Call<Job> call, @NotNull Response<Job> response) {
-                if (response.body() != null && response.isSuccessful() && response.body().isStatus()){
-                    successToast(response.body().getMessage());
-                    retrieveData();
-                }else{
-                    errorToast(response.body().getMessage());
+                if (response.body() != null){
+                    if (response.isSuccessful() && response.body().isStatus()){
+                        widget.successToast(response.body().getMessage(), requireActivity());
+                        retrieveData();
+                    } else {
+                        widget.errorToast(response.body().getMessage(), requireActivity());
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<Job> call, Throwable t) {
-                noConnectToast(t.getMessage());
+                widget.noConnectToast(t.getMessage(), requireActivity());
             }
         });
     }
@@ -131,20 +124,22 @@ public class JobFragment extends Fragment {
         showdata.enqueue(new Callback<Job>() {
             @Override
             public void onResponse(Call<Job> call, Response<Job> response) {
-                if (response.body() != null && response.isSuccessful() && response.body().isStatus()){
-                    listData = response.body().getData();
-                    adData = new AdapterDataJob(requireActivity(), listData, JobFragment.this);
-                    rvData.setAdapter(adData);
-                    adData.notifyDataSetChanged();
-                    loadingData.setVisibility(View.INVISIBLE);
-                }else{
-                    errorToast(response.body().getMessage());
+                if (response.body() != null){
+                    if (response.isSuccessful() && response.body().isStatus()){
+                        listData = response.body().getData();
+                        adData = new AdapterDataJob(requireActivity(), listData, JobFragment.this);
+                        rvData.setAdapter(adData);
+                        adData.notifyDataSetChanged();
+                        loadingData.setVisibility(View.INVISIBLE);
+                    }else{
+                        widget.errorToast(response.body().getMessage(), requireActivity());
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<Job> call, Throwable t) {
-                noConnectToast(t.getMessage());
+                widget.noConnectToast(t.getMessage(), requireActivity());
             }
         });
     }
@@ -155,38 +150,5 @@ public class JobFragment extends Fragment {
         retrieveData();
         //Set title of this fragment
         requireActivity().setTitle("Job");
-    }
-
-    private void noConnectToast(String message) {
-        MotionToast.Companion.createColorToast(requireActivity(), "Cannot connect server",
-                message,
-                MotionToast.TOAST_ERROR,
-                MotionToast.GRAVITY_BOTTOM,
-                MotionToast.LONG_DURATION,
-                ResourcesCompat.getFont(requireActivity(),R.font.helvetica_regular)
-        );
-        loadingData.setVisibility(View.INVISIBLE);
-    }
-
-    private void errorToast(String message) {
-        MotionToast.Companion.createColorToast((Activity) requireActivity(), "Error",
-                message,
-                MotionToast.TOAST_ERROR,
-                MotionToast.GRAVITY_BOTTOM,
-                MotionToast.LONG_DURATION,
-                ResourcesCompat.getFont(requireActivity(),R.font.helvetica_regular)
-        );
-        loadingData.setVisibility(View.INVISIBLE);
-    }
-
-    private void successToast(String message) {
-        MotionToast.Companion.createColorToast((Activity) requireActivity(), "Success",
-                message,
-                MotionToast.TOAST_SUCCESS,
-                MotionToast.GRAVITY_BOTTOM,
-                MotionToast.LONG_DURATION,
-                ResourcesCompat.getFont(requireActivity(),R.font.helvetica_regular)
-        );
-        loadingData.setVisibility(View.INVISIBLE);
     }
 }

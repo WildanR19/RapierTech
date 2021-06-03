@@ -36,4 +36,12 @@ public class LeaveTypeData {
 	public int getId(){
 		return id;
 	}
+
+	public LeaveTypeData(String typeName) {
+		this.typeName = typeName;
+	}
+
+	public String toString(){
+		return typeName;
+	}
 }
