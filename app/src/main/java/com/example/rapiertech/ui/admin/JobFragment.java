@@ -2,7 +2,6 @@ package com.example.rapiertech.ui.admin;
 
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -72,7 +71,7 @@ public class JobFragment extends Fragment {
     public void showDialog(){
 
         LayoutInflater inflater = requireActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.add_dialog_deptjob, null);
+        View view = inflater.inflate(R.layout.dialog_add_deptjob, null);
         etName = view.findViewById(R.id.add_deptJobName);
 
         MaterialAlertDialogBuilder mDialog = new MaterialAlertDialogBuilder(requireActivity());
@@ -105,11 +104,13 @@ public class JobFragment extends Fragment {
                         widget.errorToast(response.body().getMessage(), requireActivity());
                     }
                 }
+                loadingData.setVisibility(View.INVISIBLE);
             }
 
             @Override
             public void onFailure(Call<Job> call, Throwable t) {
                 widget.noConnectToast(t.getMessage(), requireActivity());
+                loadingData.setVisibility(View.INVISIBLE);
             }
         });
     }

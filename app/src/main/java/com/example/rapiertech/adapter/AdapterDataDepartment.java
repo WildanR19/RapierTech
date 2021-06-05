@@ -74,7 +74,7 @@ public class AdapterDataDepartment extends RecyclerView.Adapter<AdapterDataDepar
                 if (itemId == R.id.action_edit) {
                     MaterialAlertDialogBuilder editDialog = new MaterialAlertDialogBuilder(context);
                     LayoutInflater inflater = LayoutInflater.from(context);
-                    View view = inflater.inflate(R.layout.add_dialog_deptjob, null);
+                    View view = inflater.inflate(R.layout.dialog_add_deptjob, null);
 
                     EditText etName = view.findViewById(R.id.add_deptJobName);
                     etName.setText(dd.getName());

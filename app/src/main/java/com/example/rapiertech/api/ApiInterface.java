@@ -1,5 +1,6 @@
 package com.example.rapiertech.api;
 
+import com.example.rapiertech.model.basicpays.BasicPays;
 import com.example.rapiertech.model.department.Department;
 import com.example.rapiertech.model.empdetail.EmpDetail;
 import com.example.rapiertech.model.employee.Employee;
@@ -167,4 +168,31 @@ public interface ApiInterface {
     // Payslip
     @GET("payslip")
     Call<Payslip> payslipRetrieveData();
+
+    @GET("payslip/user/{id}")
+    Call<Payslip> payslipRetrieveDataUser(@Path("id") int id);
+
+    @DELETE("payslip/delete/{id}")
+    Call<Payslip> payslipDeleteData(@Path("id") int id);
+
+    @FormUrlEncoded
+    @POST("payslip/autogenerate")
+    Call<Payslip> payslipAutoGenerate(
+            @Field("from_date") String fromDate,
+            @Field("to_date") String toDate,
+            @Field("payment") String payment
+    );
+
+    @GET("payslip/basic")
+    Call<BasicPays> basicPaysRetrieveData();
+
+    @DELETE("payslip/basic/{id}")
+    Call<BasicPays> basicPaysDeleteData(@Path("id") int id);
+
+    @FormUrlEncoded
+    @POST("payslip/basic/add")
+    Call<BasicPays> basicPaysCreateData(
+            @Field("job") int jobId,
+            @Field("salary") int salary
+    );
 }

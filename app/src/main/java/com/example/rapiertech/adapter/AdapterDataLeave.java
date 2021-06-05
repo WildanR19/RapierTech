@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -36,12 +37,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
 
 import dev.shreyaspatil.MaterialDialog.MaterialDialog;
 import retrofit2.Call;
@@ -154,7 +150,7 @@ public class AdapterDataLeave extends RecyclerView.Adapter<AdapterDataLeave.View
         holder.btnRejected.setOnClickListener(v -> {
             MaterialAlertDialogBuilder rejectDialog = new MaterialAlertDialogBuilder(context);
             LayoutInflater inflater = LayoutInflater.from(context);
-            View view = inflater.inflate(R.layout.add_dialog_deptjob, null);
+            View view = inflater.inflate(R.layout.dialog_add_deptjob, null);
 
             EditText etReasonDialog = view.findViewById(R.id.add_deptJobName);
             TextInputLayout tilName = view.findViewById(R.id.name_text_field);
@@ -228,6 +224,8 @@ public class AdapterDataLeave extends RecyclerView.Adapter<AdapterDataLeave.View
     }
 
     private void getLeaveTypeById(ViewHolder holder, int leaveTypeId) {
+        holder.loadingData.setVisibility(View.VISIBLE);
+
         Call<LeaveType> showData = apiInterface.leaveTypeRetrieveData();
         showData.enqueue(new Callback<LeaveType>() {
             @Override
@@ -244,16 +242,20 @@ public class AdapterDataLeave extends RecyclerView.Adapter<AdapterDataLeave.View
                         widget.errorToast("LeaveType" + response.body().getMessage(), leaveFragment.requireActivity());
                     }
                 }
+                holder.loadingData.setVisibility(View.INVISIBLE);
             }
 
             @Override
             public void onFailure(Call<LeaveType> call, Throwable t) {
                 widget.noConnectToast("LeaveType" + t.getMessage(), leaveFragment.requireActivity());
+                holder.loadingData.setVisibility(View.INVISIBLE);
             }
         });
     }
 
     private void getUserById(ViewHolder holder, int userId) {
+        holder.loadingData.setVisibility(View.VISIBLE);
+
         Call<Employee> showData = apiInterface.employeeRetrieveData();
         showData.enqueue(new Callback<Employee>() {
             @Override
@@ -270,11 +272,13 @@ public class AdapterDataLeave extends RecyclerView.Adapter<AdapterDataLeave.View
                         widget.errorToast("User" + response.body().getMessage(), leaveFragment.requireActivity());
                     }
                 }
+                holder.loadingData.setVisibility(View.INVISIBLE);
             }
 
             @Override
             public void onFailure(Call<Employee> call, Throwable t) {
                 widget.noConnectToast("User" + t.getMessage(), leaveFragment.requireActivity());
+                holder.loadingData.setVisibility(View.INVISIBLE);
             }
         });
     }
@@ -290,6 +294,7 @@ public class AdapterDataLeave extends RecyclerView.Adapter<AdapterDataLeave.View
         View vBorder;
         LinearLayout llConfirm;
         Button btnApproved, btnRejected;
+        ProgressBar loadingData;
 
         public ViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
@@ -306,6 +311,7 @@ public class AdapterDataLeave extends RecyclerView.Adapter<AdapterDataLeave.View
             llConfirm = itemView.findViewById(R.id.llApproveConfirm);
             btnApproved = itemView.findViewById(R.id.btnApprovedLeave);
             btnRejected = itemView.findViewById(R.id.btnRejectedLeave);
+            loadingData = itemView.findViewById(R.id.loadingDataCardLeave);
         }
     }
 }

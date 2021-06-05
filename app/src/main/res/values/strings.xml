@@ -59,5 +59,14 @@
     <string name="payslip">Payslip</string>
     <string name="basic_salary">Basic Salary</string>
     <string name="payment">Payment</string>
+    <string name="auto_payslip">Auto Generate Payslip</string>
+    <string name="details">Details</string>
+    <string name="print_to_pdf">Print to PDF</string>
+    <string name="salary">Salary</string>
+    <string name="allowance">Allowance</string>
+    <string name="overtime">Overtime</string>
+    <string name="deduction">Deduction</string>
+    <string name="other">Other</string>
+    <string name="action">Action</string>
 
 </resources>

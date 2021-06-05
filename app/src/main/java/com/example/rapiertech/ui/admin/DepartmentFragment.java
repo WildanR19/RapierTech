@@ -70,7 +70,7 @@ public class DepartmentFragment extends Fragment {
     public void showDialog(){
 
         LayoutInflater inflater = requireActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.add_dialog_deptjob, null);
+        View view = inflater.inflate(R.layout.dialog_add_deptjob, null);
         etName = view.findViewById(R.id.add_deptJobName);
 
         MaterialAlertDialogBuilder mDialog = new MaterialAlertDialogBuilder(requireActivity());

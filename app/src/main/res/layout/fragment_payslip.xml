@@ -28,6 +28,15 @@
         android:layout_centerInParent="true"
         android:visibility="invisible"/>
 
+    <View
+        android:id="@+id/shadowView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#B3000000"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_payslip"
         android:layout_width="wrap_content"
@@ -40,5 +49,68 @@
         app:tint="@color/white"
         app:srcCompat="@android:drawable/ic_input_add" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_basicSalary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        android:layout_alignParentEnd="true"
+        android:layout_above="@+id/fab_payslip"
+        android:contentDescription="@string/basic_salary"
+        app:backgroundTint="@color/primary"
+        app:fabSize="normal"
+        app:tint="@color/white"
+        app:srcCompat="@drawable/ic_payslip"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/fab_basicSalary_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/dimen_8"
+        android:paddingHorizontal="@dimen/dimen_8"
+        android:background="@drawable/bg_label"
+        android:backgroundTint="@color/white"
+        android:elevation="2dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/basic_salary"
+        android:textColor="@color/text"
+        android:layout_alignBottom="@+id/fab_basicSalary"
+        android:layout_alignTop="@+id/fab_basicSalary"
+        android:layout_toStartOf="@+id/fab_basicSalary"
+        android:gravity="center_vertical"
+        android:visibility="gone"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_autoPayslip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        android:layout_alignParentEnd="true"
+        android:layout_above="@+id/fab_basicSalary"
+        android:contentDescription="@string/auto_payslip"
+        app:backgroundTint="@color/primary"
+        app:fabSize="normal"
+        app:tint="@color/white"
+        app:srcCompat="@drawable/ic_add"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/fab_autoPayslip_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/dimen_8"
+        android:paddingHorizontal="@dimen/dimen_8"
+        android:background="@drawable/bg_label"
+        android:backgroundTint="@color/white"
+        android:elevation="2dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/auto_payslip"
+        android:textColor="@color/text"
+        android:layout_alignBottom="@+id/fab_autoPayslip"
+        android:layout_alignTop="@+id/fab_autoPayslip"
+        android:layout_toStartOf="@+id/fab_autoPayslip"
+        android:gravity="center_vertical"
+        android:visibility="gone"/>
 
 </RelativeLayout>

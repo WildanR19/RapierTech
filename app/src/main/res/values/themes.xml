@@ -51,4 +51,9 @@
     <style name="splashTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowTranslucentStatus">true</item>
     </style>
+
+    <style name="BottomSheet" parent="@style/Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/bottomsheet_back</item>
+        <item name="android:layout_margin">0dp</item>
+    </style>
 </resources>
