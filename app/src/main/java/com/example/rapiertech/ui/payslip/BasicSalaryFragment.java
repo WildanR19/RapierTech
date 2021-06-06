@@ -83,42 +83,14 @@ public class BasicSalaryFragment extends Fragment {
         mDialog.setView(view)
                 .setTitle(R.string.add_title_dialog)
                 .setPositiveButton(R.string.save, (dialog, which) -> {
+                    salary = widget.getDigitOnly(etSalary.getText().toString());
                     createData();
                     dialog.dismiss();
                 })
                 .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss())
                 .show();
 
-        etSalary.addTextChangedListener(new TextWatcher() {
-            private String setEtSalary = "etSalary.getText().toString().trim()";
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!s.toString().equals(setEtSalary)){
-                    etSalary.removeTextChangedListener(this);
-                    String replace = s.toString().replaceAll("[Rp. ]", "");
-                    if (!replace.isEmpty()){
-                        setEtSalary = widget.editTextFormatRupiah(Double.valueOf(replace));
-                        salary = widget.getDigitOnly(etSalary.getText().toString());
-                    } else {
-                        setEtSalary = "";
-                    }
-                    etSalary.setText(setEtSalary);
-                    etSalary.setSelection(setEtSalary.length());
-                    etSalary.addTextChangedListener(this);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
+        widget.editTextFormatRupiahChangeListener(etSalary);
     }
 
     private void actvJob(AutoCompleteTextView tvJob) {

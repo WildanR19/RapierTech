@@ -1,10 +1,8 @@
 package com.example.rapiertech.ui.leave;
 
-import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -17,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -51,7 +48,6 @@ import dev.shreyaspatil.MaterialDialog.BottomSheetMaterialDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import www.sanju.motiontoast.MotionToast;
 
 public class LeaveEditorFragment extends Fragment {
 
@@ -68,7 +64,6 @@ public class LeaveEditorFragment extends Fragment {
     private final String[] statusList = {"Approved", "Pending", "Rejected"};
     private ArrayAdapter<EmployeeData> employeeDataArrayAdapter;
     private ArrayAdapter<LeaveTypeData> leaveTypeDataArrayAdapter;
-    private ArrayAdapter<String> statusAdapter;
     private SessionManager sessionManager;
     private TextInputLayout tilStatusLeave, tilEmpLeave, tilRejectReason;
     private int leaveId, leaveTypeId, empId;
@@ -172,9 +167,7 @@ public class LeaveEditorFragment extends Fragment {
                         }
                         employeeDataArrayAdapter = new ArrayAdapter<>(requireActivity(), R.layout.support_simple_spinner_dropdown_item, employeeDataList);
                         tvEmp.setAdapter(employeeDataArrayAdapter);
-                        tvEmp.setOnItemClickListener((parent, view, position, id) -> {
-                            empId = employeeDataList.get(position).getId();
-                        });
+                        tvEmp.setOnItemClickListener((parent, view, position, id) -> empId = employeeDataList.get(position).getId());
                     } else {
                         widget.errorToast(response.body().getMessage(), requireActivity());
                     }
@@ -201,9 +194,7 @@ public class LeaveEditorFragment extends Fragment {
                         }
                         leaveTypeDataArrayAdapter = new ArrayAdapter<>(requireActivity(), R.layout.support_simple_spinner_dropdown_item, leaveTypeDataList);
                         tvType.setAdapter(leaveTypeDataArrayAdapter);
-                        tvType.setOnItemClickListener((parent, view, position, id) -> {
-                            leaveTypeId = leaveTypeDataList.get(position).getId();
-                        });
+                        tvType.setOnItemClickListener((parent, view, position, id) -> leaveTypeId = leaveTypeDataList.get(position).getId());
                     } else {
                         widget.errorToast(response.body().getMessage(), requireActivity());
                     }
@@ -216,7 +207,7 @@ public class LeaveEditorFragment extends Fragment {
             }
         });
 
-        statusAdapter = new ArrayAdapter<>(requireActivity(), R.layout.support_simple_spinner_dropdown_item, statusList);
+        ArrayAdapter<String> statusAdapter = new ArrayAdapter<>(requireActivity(), R.layout.support_simple_spinner_dropdown_item, statusList);
         tvStatus.setAdapter(statusAdapter);
 
         MaterialDatePicker.Builder mDateBuilder = MaterialDatePicker.Builder.datePicker().setTitleText("Select a Date");
@@ -261,8 +252,8 @@ public class LeaveEditorFragment extends Fragment {
         });
         etToDate.setFocusable(false);
 
-        for (int i = 0; i < actvList.length; i++){
-            widget.setActvFocusableFalse(actvList[i]);
+        for (AutoCompleteTextView autoCompleteTextView : actvList) {
+            widget.setActvFocusableFalse(autoCompleteTextView);
         }
     }
 
@@ -308,46 +299,40 @@ public class LeaveEditorFragment extends Fragment {
 
         Boolean allFieldsChecked = validation();
 
-        switch (item.getItemId()){
-            case R.id.menu_save:
-                if (allFieldsChecked){
-                    saveData();
-                }
-                return true;
-
-            case R.id.menu_edit:
-                editView();
-                setMenu(false, false, false, true, true);
-                return true;
-
-            case R.id.menu_cancel:
-                detailView();
-                setMenu(true, true, false, false, false);
-                return true;
-
-            case R.id.menu_update:
-                if (allFieldsChecked){
-                    updateData();
-                }
-
-                return true;
-
-            case R.id.menu_delete:
-                BottomSheetMaterialDialog mDialog = new BottomSheetMaterialDialog.Builder(requireActivity())
-                        .setTitle("Delete?")
-                        .setMessage("Are you sure want to delete this data?")
-                        .setCancelable(false)
-                        .setPositiveButton("Delete", R.drawable.ic_delete_, (dialogInterface, which) -> {
-                            deleteData();
-                            dialogInterface.dismiss();
-                        })
-                        .setNegativeButton("Cancel", R.drawable.ic_close, (dialogInterface, which) -> dialogInterface.dismiss())
-                        .build();
-                mDialog.show();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        int itemId = item.getItemId();
+        if (itemId == R.id.menu_save) {
+            if (allFieldsChecked) {
+                saveData();
+            }
+            return true;
+        } else if (itemId == R.id.menu_edit) {
+            editView();
+            setMenu(false, false, false, true, true);
+            return true;
+        } else if (itemId == R.id.menu_cancel) {
+            detailView();
+            setMenu(true, true, false, false, false);
+            return true;
+        } else if (itemId == R.id.menu_update) {
+            if (allFieldsChecked) {
+                updateData();
+            }
+            return true;
+        } else if (itemId == R.id.menu_delete) {
+            BottomSheetMaterialDialog mDialog = new BottomSheetMaterialDialog.Builder(requireActivity())
+                    .setTitle("Delete?")
+                    .setMessage("Are you sure want to delete this data?")
+                    .setCancelable(false)
+                    .setPositiveButton("Delete", R.drawable.ic_delete_, (dialogInterface, which) -> {
+                        deleteData();
+                        dialogInterface.dismiss();
+                    })
+                    .setNegativeButton("Cancel", R.drawable.ic_close, (dialogInterface, which) -> dialogInterface.dismiss())
+                    .build();
+            mDialog.show();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     private void updateData() {
@@ -428,19 +413,19 @@ public class LeaveEditorFragment extends Fragment {
     private void setDataDetails() {
         tvId.setText(String.valueOf(leaveId));
         etReason.setText(reason);
-        etFromDate.setText(fromDate);
-        etToDate.setText(toDate);
+        etFromDate.setText(widget.changeDateFormat(fromDate));
+        etToDate.setText(widget.changeDateFormat(toDate));
         tvStatus.setText(status);
         
         detailView();
     }
 
     private void detailView() {
-        for (int i = 0; i < etList.length; i++){
-            widget.disableEditText(etList[i]);
+        for (EditText editText : etList) {
+            widget.disableEditText(editText);
         }
-        for (int i = 0; i < actvList.length; i++){
-            widget.disableAutoCompleteTextView(actvList[i]);
+        for (AutoCompleteTextView autoCompleteTextView : actvList) {
+            widget.disableAutoCompleteTextView(autoCompleteTextView);
         }
         for(int i = 0; i < rgDuration.getChildCount(); i++){
             (rgDuration.getChildAt(i)).setEnabled(false);
@@ -448,11 +433,11 @@ public class LeaveEditorFragment extends Fragment {
     }
 
     private void editView() {
-        for (int i = 0; i < etList.length; i++){
-            widget.enableEditText(etList[i]);
+        for (EditText editText : etList) {
+            widget.enableEditText(editText);
         }
-        for (int i = 0; i < actvList.length; i++){
-            widget.enableAutoCompleteTextView(actvList[i]);
+        for (AutoCompleteTextView autoCompleteTextView : actvList) {
+            widget.enableAutoCompleteTextView(autoCompleteTextView);
         }
         for(int i = 0; i < rgDuration.getChildCount(); i++){
             (rgDuration.getChildAt(i)).setEnabled(true);

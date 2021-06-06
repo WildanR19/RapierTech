@@ -31,8 +31,8 @@ public class PayslipData {
 	@SerializedName("others")
 	private int others;
 
-	@SerializedName("basic_id")
-	private int basicId;
+	@SerializedName("salary")
+	private int salary;
 
 	@SerializedName("status")
 	private String status;
@@ -115,12 +115,12 @@ public class PayslipData {
 		return others;
 	}
 
-	public void setBasicId(int basicId){
-		this.basicId = basicId;
+	public void setSalary(int salary){
+		this.salary = salary;
 	}
 
-	public int getBasicId(){
-		return basicId;
+	public int getSalary(){
+		return salary;
 	}
 
 	public void setStatus(String status){

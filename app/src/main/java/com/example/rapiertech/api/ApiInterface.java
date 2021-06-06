@@ -183,6 +183,23 @@ public interface ApiInterface {
             @Field("payment") String payment
     );
 
+    @FormUrlEncoded
+    @POST("payslip/update/{id}")
+    Call<Payslip> payslipUpdateData(
+            @Path("id") int id,
+            @Field("from_date") String fromDate,
+            @Field("to_date") String toDate,
+            @Field("allowance") int allowance,
+            @Field("deduction") int deduction,
+            @Field("overtime") int overtime,
+            @Field("other") int other,
+            @Field("payment") String payment,
+            @Field("status") String status
+    );
+
+    @GET("payslip/pdf/{id}")
+    Call<Payslip> payslipCreatePDF(@Path("id") int id);
+
     @GET("payslip/basic")
     Call<BasicPays> basicPaysRetrieveData();
 

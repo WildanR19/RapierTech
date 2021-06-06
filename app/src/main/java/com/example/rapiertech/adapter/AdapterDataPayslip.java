@@ -1,13 +1,20 @@
 package com.example.rapiertech.adapter;
 
 import android.app.Activity;
+import android.app.DownloadManager;
 import android.content.Context;
+import android.graphics.pdf.PdfDocument;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.CookieManager;
+import android.webkit.URLUtil;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -31,6 +38,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 import dev.shreyaspatil.MaterialDialog.BottomSheetMaterialDialog;
+import okhttp3.HttpUrl;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -99,10 +107,13 @@ public class AdapterDataPayslip extends RecyclerView.Adapter<AdapterDataPayslip.
                 llEdit.setVisibility(View.GONE);
                 llDelete.setVisibility(View.GONE);
             }
+            if (!payslipData.getStatus().equalsIgnoreCase("in progress")){
+                llEdit.setVisibility(View.GONE);
+            }
             llEdit.setOnClickListener(vi -> {
                 Bundle bundle = new Bundle();
                 bundle.putInt("id", payslipData.getId());
-                bundle.putInt("userId", payslipData.getUserId());
+                bundle.putString("empName", payslipData.getEmpName());
                 bundle.putString("fromDate", payslipData.getForDate());
                 bundle.putString("toDate", payslipData.getToDate());
                 bundle.putInt("allowances", payslipData.getAllowances());
@@ -111,16 +122,10 @@ public class AdapterDataPayslip extends RecyclerView.Adapter<AdapterDataPayslip.
                 bundle.putInt("others", payslipData.getOthers());
                 bundle.putString("payment", payslipData.getPayment());
                 bundle.putString("status", payslipData.getStatus());
+                bundle.putInt("salary", payslipData.getSalary());
+                bundle.putBoolean("isEditable", true);
 
-                Fragment fragment = new PayslipEditorFragment();
-                fragment.setArguments(bundle);
-                FragmentManager fragmentManager = ((FragmentActivity)v.getContext()).getSupportFragmentManager();
-                fragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container, fragment)
-                        .setReorderingAllowed(true)
-                        .addToBackStack(null)
-                        .commit();
-
+                moveFragment(v, bundle);
                 bottomSheetDialog.dismiss();
             });
 
@@ -140,16 +145,79 @@ public class AdapterDataPayslip extends RecyclerView.Adapter<AdapterDataPayslip.
             });
 
             llDetail.setOnClickListener(vi -> {
+                Bundle bundle = new Bundle();
+                bundle.putInt("id", payslipData.getId());
+                bundle.putString("empName", payslipData.getEmpName());
+                bundle.putString("fromDate", payslipData.getForDate());
+                bundle.putString("toDate", payslipData.getToDate());
+                bundle.putInt("allowances", payslipData.getAllowances());
+                bundle.putInt("deductions", payslipData.getDeductions());
+                bundle.putInt("overtimes", payslipData.getOvertimes());
+                bundle.putInt("others", payslipData.getOthers());
+                bundle.putString("payment", payslipData.getPayment());
+                bundle.putString("status", payslipData.getStatus());
+                bundle.putInt("salary", payslipData.getSalary());
+                bundle.putBoolean("isEditable", false);
+
+                moveFragment(v, bundle);
                 bottomSheetDialog.dismiss();
             });
 
             llPrint.setOnClickListener(vi -> {
+//                Call<Payslip> createPdf = apiInterface.payslipCreatePDF(payslipData.getId());
+//                createPdf.enqueue(new Callback<Payslip>() {
+//                    @Override
+//                    public void onResponse(Call<Payslip> call, Response<Payslip> response) {
+//                        if (response.body() != null) {
+//                            if (response.isSuccessful() && response.body().isStatus()) {
+//                                widget.successToast(response.body().getMessage(), payslipFragment.requireActivity());
+//                            } else {
+//                                widget.errorToast(response.body().getMessage(), payslipFragment.requireActivity());
+//                            }
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<Payslip> call, Throwable t) {
+//                        widget.noConnectToast(t.getMessage(), payslipFragment.requireActivity());
+//                    }
+//                });
+                createPDF(payslipData.getId());
                 bottomSheetDialog.dismiss();
             });
 
             bottomSheetDialog.setContentView(view);
             bottomSheetDialog.show();
         });
+    }
+
+    private void createPDF(int id) {
+        String url = ApiClient.getClient().baseUrl()+"payslip/pdf/"+id;
+//        widget.successToast("URL : "+url, payslipFragment.requireActivity());
+
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+        String title = URLUtil.guessFileName(url, null, null);
+        request.setTitle(title);
+        request.setDescription("Downloading File Please Wait......");
+        String cookie = CookieManager.getInstance().getCookie(url);
+        request.addRequestHeader("cookie", cookie);
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, title+".pdf");
+
+        DownloadManager downloadManager = (DownloadManager)context.getSystemService(Context.DOWNLOAD_SERVICE);
+        downloadManager.enqueue(request);
+        Toast.makeText(payslipFragment.requireActivity(), "Downloading Started", Toast.LENGTH_SHORT).show();
+    }
+
+    private void moveFragment(View v, Bundle bundle) {
+        Fragment fragment = new PayslipEditorFragment();
+        fragment.setArguments(bundle);
+        FragmentManager fragmentManager = ((FragmentActivity)v.getContext()).getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .setReorderingAllowed(true)
+                .addToBackStack(null)
+                .commit();
     }
 
     private void deleteData(int id) {

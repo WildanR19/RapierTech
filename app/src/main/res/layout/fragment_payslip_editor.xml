@@ -25,25 +25,22 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tfEmpPayslip"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/employee">
+                    android:hint="@string/employee"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-                    <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-                        android:id="@+id/tvEmpPayslip"
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etEmpPayslip"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clickable="true"
-                        tools:ignore="KeyboardInaccessibleWidget" />
+                        android:layout_height="wrap_content" />
+
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tfSalaryPayslip"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:prefixText="Rp"
-                    app:prefixTextColor="@color/text"
                     android:hint="@string/salary"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
@@ -108,8 +105,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        app:prefixText="Rp"
-                        app:prefixTextColor="@color/text"
                         android:layout_marginEnd="10dp"
                         android:hint="@string/allowance"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
@@ -127,8 +122,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        app:prefixText="Rp"
-                        app:prefixTextColor="@color/text"
                         android:layout_marginStart="10dp"
                         android:hint="@string/deduction"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
@@ -153,8 +146,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        app:prefixText="Rp"
-                        app:prefixTextColor="@color/text"
                         android:layout_marginEnd="10dp"
                         android:hint="@string/overtime"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
@@ -172,8 +163,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        app:prefixText="Rp"
-                        app:prefixTextColor="@color/text"
                         android:layout_marginStart="10dp"
                         android:hint="@string/other"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">

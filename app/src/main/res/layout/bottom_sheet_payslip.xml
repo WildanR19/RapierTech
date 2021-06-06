@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:background="@color/white"
     android:id="@+id/bottom_sheet_container"
-    android:paddingBottom="@dimen/dimen_16"
+    android:paddingVertical="@dimen/dimen_16"
     android:fitsSystemWindows="true">
 
     <LinearLayout

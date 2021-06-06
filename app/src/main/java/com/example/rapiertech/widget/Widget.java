@@ -1,6 +1,8 @@
 package com.example.rapiertech.widget;
 
 import android.app.Activity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 
@@ -126,10 +128,42 @@ public class Widget {
         String result = formatRupiah.format(amount);
         String[] split = result.split(",");
         int length = split[0].length();
-        return split[0].substring(0,2)+". "+split[0].substring(2, length);
+        return split[0].substring(0,2)+split[0].substring(2, length);
     }
 
     public int getDigitOnly(String string){
         return Integer.parseInt(string.replaceAll("\\D+",""));
+    }
+
+    public void editTextFormatRupiahChangeListener(EditText editText){
+        editText.addTextChangedListener(new TextWatcher() {
+            private String current = "";
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!s.toString().equals(current)){
+                    editText.removeTextChangedListener(this);
+                    String replace = s.toString().replaceAll("[Rp.]", "");
+                    if (!replace.isEmpty()){
+                        current = editTextFormatRupiah(Double.valueOf(replace));
+                    } else {
+                        current = "";
+                    }
+                    editText.setText(current);
+                    editText.setSelection(current.length());
+                    editText.addTextChangedListener(this);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 }

@@ -4,14 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.payslip.BasicSalaryFragment"
-    android:padding="@dimen/dimen_8">
+    tools:context=".ui.payslip.BasicSalaryFragment">
 
     <LinearLayout
         android:id="@+id/llHeaderBasic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_marginTop="@dimen/dimen_16"
+        android:layout_marginHorizontal="@dimen/dimen_16"
         android:weightSum="8">
 
         <TextView
