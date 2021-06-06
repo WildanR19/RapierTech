@@ -9,9 +9,12 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.example.rapiertech.R;
 
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
+import java.util.Objects;
 import java.util.TimeZone;
 
 import www.sanju.motiontoast.MotionToast;
@@ -103,11 +106,30 @@ public class Widget {
         try {
             parseDate = dateFormat.parse(date);
             dateFormat.applyPattern("dd MMM yyyy");
-            newDate = dateFormat.format(parseDate);
+            newDate = dateFormat.format(Objects.requireNonNull(parseDate));
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
         return newDate;
+    }
+
+    public String formatRupiah(Double amount) {
+        Locale localeID = new Locale("in", "ID");
+        NumberFormat formatRupiah = NumberFormat.getCurrencyInstance(localeID);
+        return formatRupiah.format(amount);
+    }
+
+    public String editTextFormatRupiah(Double amount) {
+        Locale localeID = new Locale("IND", "ID");
+        NumberFormat formatRupiah = NumberFormat.getCurrencyInstance(localeID);
+        String result = formatRupiah.format(amount);
+        String[] split = result.split(",");
+        int length = split[0].length();
+        return split[0].substring(0,2)+". "+split[0].substring(2, length);
+    }
+
+    public int getDigitOnly(String string){
+        return Integer.parseInt(string.replaceAll("\\D+",""));
     }
 }

@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -21,10 +20,9 @@ import com.example.rapiertech.model.basicpays.BasicPaysData;
 import com.example.rapiertech.ui.payslip.BasicSalaryFragment;
 import com.example.rapiertech.widget.Widget;
 
-import java.text.NumberFormat;
-import java.util.ArrayList;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
-import java.util.Locale;
 
 import dev.shreyaspatil.MaterialDialog.BottomSheetMaterialDialog;
 import retrofit2.Call;
@@ -33,19 +31,15 @@ import retrofit2.Response;
 
 public class AdapterBasicSalary extends ArrayAdapter<BasicPaysData> {
 
-    private Context context;
-    private int resource;
-    private List<BasicPaysData> basicPaysList;
+    private final Context context;
+    private final List<BasicPaysData> basicPaysList;
     private ApiInterface apiInterface;
-    private TextView tvjob, tvSalary, tvId;
-    private Button btnDelete;
     private Widget widget;
-    private BasicSalaryFragment basicSalaryFragment;
+    private final BasicSalaryFragment basicSalaryFragment;
 
     public AdapterBasicSalary(@NonNull Context context, int resource, List<BasicPaysData> basicPaysList, BasicSalaryFragment basicSalaryFragment) {
         super(context, resource, basicPaysList);
         this.context = context;
-        this.resource = resource;
         this.basicPaysList = basicPaysList;
         this.basicSalaryFragment = basicSalaryFragment;
     }
@@ -61,17 +55,14 @@ public class AdapterBasicSalary extends ArrayAdapter<BasicPaysData> {
         widget = new Widget();
 
         BasicPaysData basicPaysData = basicPaysList.get(position);
-        tvId = convertView.findViewById(R.id.tvIdBasic);
-        tvjob = convertView.findViewById(R.id.tvJobBasic);
-        tvSalary = convertView.findViewById(R.id.tvSalaryBasic);
-        btnDelete = convertView.findViewById(R.id.btnDeleteBasic);
-
-        Locale localeID = new Locale("in", "ID");
-        NumberFormat formatRupiah = NumberFormat.getCurrencyInstance(localeID);
+        TextView tvId = convertView.findViewById(R.id.tvIdBasic);
+        TextView tvjob = convertView.findViewById(R.id.tvJobBasic);
+        TextView tvSalary = convertView.findViewById(R.id.tvSalaryBasic);
+        Button btnDelete = convertView.findViewById(R.id.btnDeleteBasic);
 
         tvId.setText(String.valueOf(basicPaysData.getId()));
         tvjob.setText(basicPaysData.getName());
-        tvSalary.setText(formatRupiah.format((double) basicPaysData.getAmount()));
+        tvSalary.setText(widget.formatRupiah((double) basicPaysData.getAmount()));
 
         btnDelete.setOnClickListener(v -> {
             BottomSheetMaterialDialog mDialog = new BottomSheetMaterialDialog.Builder((Activity) context)
@@ -94,7 +85,7 @@ public class AdapterBasicSalary extends ArrayAdapter<BasicPaysData> {
         Call<BasicPays> deleteData = apiInterface.basicPaysDeleteData(id);
         deleteData.enqueue(new Callback<BasicPays>() {
             @Override
-            public void onResponse(Call<BasicPays> call, Response<BasicPays> response) {
+            public void onResponse(@NotNull Call<BasicPays> call, @NotNull Response<BasicPays> response) {
                 if (response.body() != null) {
                     if (response.isSuccessful() && response.body().isStatus()) {
                         widget.successToast(response.body().getMessage(), basicSalaryFragment.requireActivity());
@@ -106,7 +97,7 @@ public class AdapterBasicSalary extends ArrayAdapter<BasicPaysData> {
             }
 
             @Override
-            public void onFailure(Call<BasicPays> call, Throwable t) {
+            public void onFailure(@NotNull Call<BasicPays> call, @NotNull Throwable t) {
                 widget.noConnectToast(t.getMessage(), basicSalaryFragment.requireActivity());
             }
         });

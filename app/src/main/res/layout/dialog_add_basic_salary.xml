@@ -13,7 +13,7 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/employee">
+        android:hint="@string/job">
 
         <androidx.appcompat.widget.AppCompatAutoCompleteTextView
             android:id="@+id/tvJobBasicAdd"
@@ -27,7 +27,7 @@
         android:id="@+id/tilSalaryBasicAdd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/enter_name"
+        android:hint="@string/salary"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <com.google.android.material.textfield.TextInputEditText

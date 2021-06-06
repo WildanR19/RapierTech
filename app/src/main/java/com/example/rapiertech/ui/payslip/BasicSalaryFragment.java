@@ -5,6 +5,8 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +27,8 @@ import com.example.rapiertech.widget.Widget;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +44,6 @@ public class BasicSalaryFragment extends Fragment {
     private AdapterBasicSalary adapter;
     private Widget widget;
     private ProgressBar loading;
-    private FloatingActionButton fabAdd;
     private int salary, jobId;
     private List<BasicPaysJobData> jobDataList = new ArrayList<>();
 
@@ -52,7 +55,7 @@ public class BasicSalaryFragment extends Fragment {
 
         listView = view.findViewById(R.id.listviewBasicSalary);
         loading = view.findViewById(R.id.loadingBasicSalary);
-        fabAdd = view.findViewById(R.id.fab_addBasicSalary);
+        FloatingActionButton fabAdd = view.findViewById(R.id.fab_addBasicSalary);
 
         SwipeRefreshLayout srlData = view.findViewById(R.id.srlBasicSalary);
         srlData.setOnRefreshListener(() -> {
@@ -80,19 +83,49 @@ public class BasicSalaryFragment extends Fragment {
         mDialog.setView(view)
                 .setTitle(R.string.add_title_dialog)
                 .setPositiveButton(R.string.save, (dialog, which) -> {
-                    salary = Integer.parseInt(etSalary.getText().toString());
                     createData();
                     dialog.dismiss();
                 })
                 .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss())
                 .show();
+
+        etSalary.addTextChangedListener(new TextWatcher() {
+            private String setEtSalary = "etSalary.getText().toString().trim()";
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!s.toString().equals(setEtSalary)){
+                    etSalary.removeTextChangedListener(this);
+                    String replace = s.toString().replaceAll("[Rp. ]", "");
+                    if (!replace.isEmpty()){
+                        setEtSalary = widget.editTextFormatRupiah(Double.valueOf(replace));
+                        salary = widget.getDigitOnly(etSalary.getText().toString());
+                    } else {
+                        setEtSalary = "";
+                    }
+                    etSalary.setText(setEtSalary);
+                    etSalary.setSelection(setEtSalary.length());
+                    etSalary.addTextChangedListener(this);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     private void actvJob(AutoCompleteTextView tvJob) {
         Call<BasicPays> retrieveData = apiInterface.basicPaysRetrieveData();
         retrieveData.enqueue(new Callback<BasicPays>() {
             @Override
-            public void onResponse(Call<BasicPays> call, Response<BasicPays> response) {
+            public void onResponse(@NotNull Call<BasicPays> call, @NotNull Response<BasicPays> response) {
                 if (response.body() != null) {
                     if (response.isSuccessful() && response.body().isStatus()) {
                         jobDataList = response.body().getJobData();
@@ -103,9 +136,7 @@ public class BasicSalaryFragment extends Fragment {
                         }
                         ArrayAdapter<BasicPaysJobData> jobAdapter = new ArrayAdapter<>(requireActivity(), R.layout.support_simple_spinner_dropdown_item, jobDataList);
                         tvJob.setAdapter(jobAdapter);
-                        tvJob.setOnItemClickListener((parent, view, position, id) -> {
-                            jobId = jobDataList.get(position).getId();
-                        });
+                        tvJob.setOnItemClickListener((parent, view, position, id) -> jobId = jobDataList.get(position).getId());
                     } else {
                         widget.errorToast(response.body().getMessage(), requireActivity());
                     }
@@ -113,7 +144,7 @@ public class BasicSalaryFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<BasicPays> call, Throwable t) {
+            public void onFailure(@NotNull Call<BasicPays> call, @NotNull Throwable t) {
                 widget.noConnectToast(t.getMessage(), requireActivity());
             }
         });
@@ -123,7 +154,7 @@ public class BasicSalaryFragment extends Fragment {
         Call<BasicPays> createData = apiInterface.basicPaysCreateData(jobId, salary);
         createData.enqueue(new Callback<BasicPays>() {
             @Override
-            public void onResponse(Call<BasicPays> call, Response<BasicPays> response) {
+            public void onResponse(@NotNull Call<BasicPays> call, @NotNull Response<BasicPays> response) {
                 if (response.body() != null){
                     if (response.isSuccessful() && response.body().isStatus()){
                         widget.successToast(response.body().getMessage(), requireActivity());
@@ -135,7 +166,7 @@ public class BasicSalaryFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<BasicPays> call, Throwable t) {
+            public void onFailure(@NotNull Call<BasicPays> call, @NotNull Throwable t) {
                 widget.noConnectToast(t.getMessage(), requireActivity());
             }
         });
@@ -147,7 +178,7 @@ public class BasicSalaryFragment extends Fragment {
         Call<BasicPays> retrieveData = apiInterface.basicPaysRetrieveData();
         retrieveData.enqueue(new Callback<BasicPays>() {
             @Override
-            public void onResponse(Call<BasicPays> call, Response<BasicPays> response) {
+            public void onResponse(@NotNull Call<BasicPays> call, @NotNull Response<BasicPays> response) {
                 if (response.body() != null) {
                     if (response.isSuccessful() && response.body().isStatus()) {
                         basicPaysList = response.body().getData();
@@ -161,7 +192,7 @@ public class BasicSalaryFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<BasicPays> call, Throwable t) {
+            public void onFailure(@NotNull Call<BasicPays> call, @NotNull Throwable t) {
                 widget.noConnectToast(t.getMessage(), requireActivity());
                 loading.setVisibility(View.INVISIBLE);
             }
