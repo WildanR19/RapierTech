@@ -19,7 +19,7 @@ import com.example.rapiertech.api.ApiClient;
 import com.example.rapiertech.api.ApiInterface;
 import com.example.rapiertech.model.empdetail.EmpDetail;
 import com.example.rapiertech.model.employee.EmployeeData;
-import com.example.rapiertech.ui.admin.employee.EmployeeDetailsFragment;
+import com.example.rapiertech.ui.employee.EmployeeDetailsFragment;
 import com.example.rapiertech.widget.Widget;
 
 import org.jetbrains.annotations.NotNull;
@@ -70,7 +70,7 @@ public class AdapterDataEmployee extends RecyclerView.Adapter<AdapterDataEmploye
 
             showData.enqueue(new Callback<EmpDetail>() {
                 @Override
-                public void onResponse(Call<EmpDetail> call, Response<EmpDetail> response) {
+                public void onResponse(@NotNull Call<EmpDetail> call, @NotNull Response<EmpDetail> response) {
                     if (response.body() != null){
                         if (response.isSuccessful()){
                             Bundle bundle = new Bundle();
@@ -102,7 +102,7 @@ public class AdapterDataEmployee extends RecyclerView.Adapter<AdapterDataEmploye
                 }
 
                 @Override
-                public void onFailure(Call<EmpDetail> call, Throwable t) {
+                public void onFailure(@NotNull Call<EmpDetail> call, @NotNull Throwable t) {
                     widget.noConnectToast(t.getMessage(), (FragmentActivity) context);
                 }
             });

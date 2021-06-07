@@ -1,13 +1,6 @@
-package com.example.rapiertech.ui.admin.employee;
+package com.example.rapiertech.ui.employee;
 
-import android.app.Activity;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.core.content.res.ResourcesCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,6 +11,10 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.example.rapiertech.R;
 import com.example.rapiertech.api.ApiClient;
@@ -51,7 +48,6 @@ import dev.shreyaspatil.MaterialDialog.BottomSheetMaterialDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import www.sanju.motiontoast.MotionToast;
 
 public class EmployeeDetailsFragment extends Fragment {
 
@@ -64,12 +60,11 @@ public class EmployeeDetailsFragment extends Fragment {
     private List<DepartmentData> deptList = new ArrayList<>();
     private List<RoleData> roleList = new ArrayList<>();
     private List<EmpStatusData> statusList = new ArrayList<>();
-    private String[] genderList = {"Male", "Female"};
+    private final String[] genderList = {"Male", "Female"};
     private ArrayAdapter<DepartmentData> deptAdapter;
     private ArrayAdapter<JobData> jobAdapter;
     private ArrayAdapter<RoleData> roleAdapter;
     private ArrayAdapter<EmpStatusData> statusAdapter;
-    private ArrayAdapter<String> genderAdapter;
     private int empId, deptId, jobId, statusId, roleId;
     private String name, email, password, address, phone, joinDate, lastDate, gender;
     private Long jdTime, ldTime;
@@ -170,26 +165,26 @@ public class EmployeeDetailsFragment extends Fragment {
         Call<Department> deptdata = apiInterface.departmentRetrieveData();
         deptdata.enqueue(new Callback<Department>() {
             @Override
-            public void onResponse(Call<Department> call, Response<Department> response) {
-                if (response.isSuccessful()){
-                    deptList = response.body().getData();
-                    for (int i = 0; i < deptList.size(); i++){
-                        if (deptId == deptList.get(i).getId()){
-                            tvDept.setText(deptList.get(i).getName());
+            public void onResponse(@NotNull Call<Department> call, @NotNull Response<Department> response) {
+                if (response.body() != null){
+                    if (response.isSuccessful()){
+                        deptList = response.body().getData();
+                        for (int i = 0; i < deptList.size(); i++){
+                            if (deptId == deptList.get(i).getId()){
+                                tvDept.setText(deptList.get(i).getName());
+                            }
                         }
+                        deptAdapter = new ArrayAdapter<>(requireActivity(), R.layout.support_simple_spinner_dropdown_item, deptList);
+                        tvDept.setAdapter(deptAdapter);
+                        tvDept.setOnItemClickListener((parent, view, position, id) -> deptId = deptList.get(position).getId());
+                    }else {
+                        widget.errorToast(response.body().getMessage(), requireActivity());
                     }
-                    deptAdapter = new ArrayAdapter<>(requireActivity(), R.layout.support_simple_spinner_dropdown_item, deptList);
-                    tvDept.setAdapter(deptAdapter);
-                    tvDept.setOnItemClickListener((parent, view, position, id) -> {
-                        deptId = deptList.get(position).getId();
-                    });
-                }else {
-                    widget.errorToast(response.body().getMessage(), requireActivity());
                 }
             }
 
             @Override
-            public void onFailure(Call<Department> call, Throwable t) {
+            public void onFailure(@NotNull Call<Department> call, @NotNull Throwable t) {
                 widget.noConnectToast(t.getMessage(), requireActivity());
             }
         });
@@ -197,20 +192,19 @@ public class EmployeeDetailsFragment extends Fragment {
         Call<Job> jobData = apiInterface.jobRetrieveData();
         jobData.enqueue(new Callback<Job>() {
             @Override
-            public void onResponse(Call<Job> call, Response<Job> response) {
-                if (response.isSuccessful()){
-                    jobList = response.body().getData();
-                    for (int i = 0; i < jobList.size(); i++){
-                        if (jobId == jobList.get(i).getId()){
-                            tvJob.setText(jobList.get(i).getName());
+            public void onResponse(@NotNull Call<Job> call, @NotNull Response<Job> response) {
+                if (response.body() != null){
+                    if (response.isSuccessful()){
+                        jobList = response.body().getData();
+                        for (int i = 0; i < jobList.size(); i++){
+                            if (jobId == jobList.get(i).getId()){
+                                tvJob.setText(jobList.get(i).getName());
+                            }
                         }
-                    }
 
-                    jobAdapter = new ArrayAdapter<>(requireActivity(), R.layout.support_simple_spinner_dropdown_item, jobList);
-                    tvJob.setAdapter(jobAdapter);
-                    tvJob.setOnItemClickListener((parent, view, position, id) -> {
-                        jobId = jobList.get(position).getId();
-                    });
+                        jobAdapter = new ArrayAdapter<>(requireActivity(), R.layout.support_simple_spinner_dropdown_item, jobList);
+                        tvJob.setAdapter(jobAdapter);
+                        tvJob.setOnItemClickListener((parent, view, position, id) -> jobId = jobList.get(position).getId());
 //                    List<String> listJob = new ArrayList<>();
 //                    for (int i = 0; i < jobList.size(); i++){
 //                        listJob.add(jobList.get(i).getName());
@@ -222,13 +216,14 @@ public class EmployeeDetailsFragment extends Fragment {
 //                        jobName = parent.getItemAtPosition(position).toString();
 //                        jobId = jobList.get(position).getId();
 //                    });
-                }else {
-                    widget.errorToast(response.body().getMessage(), requireActivity());
+                    }else {
+                        widget.errorToast(response.body().getMessage(), requireActivity());
+                    }
                 }
             }
 
             @Override
-            public void onFailure(Call<Job> call, Throwable t) {
+            public void onFailure(@NotNull Call<Job> call, @NotNull Throwable t) {
                 widget.noConnectToast(t.getMessage(), requireActivity());
             }
         });
@@ -236,27 +231,27 @@ public class EmployeeDetailsFragment extends Fragment {
         Call<Role> roleData = apiInterface.roleRetrieveData();
         roleData.enqueue(new Callback<Role>() {
             @Override
-            public void onResponse(Call<Role> call, Response<Role> response) {
-                if (response.isSuccessful()){
-                    roleList = response.body().getData();
-                    for (int i = 0; i < roleList.size(); i++){
-                        if (roleId == roleList.get(i).getId()){
-                            tvRole.setText(roleList.get(i).getName());
+            public void onResponse(@NotNull Call<Role> call, @NotNull Response<Role> response) {
+                if (response.body() != null){
+                    if (response.isSuccessful()){
+                        roleList = response.body().getData();
+                        for (int i = 0; i < roleList.size(); i++){
+                            if (roleId == roleList.get(i).getId()){
+                                tvRole.setText(roleList.get(i).getName());
+                            }
                         }
-                    }
 
-                    roleAdapter = new ArrayAdapter<>(requireActivity(), R.layout.support_simple_spinner_dropdown_item, roleList);
-                    tvRole.setAdapter(roleAdapter);
-                    tvRole.setOnItemClickListener((parent, view, position, id) -> {
-                        roleId = roleList.get(position).getId();
-                    });
-                }else {
-                    widget.errorToast(response.body().getMessage(), requireActivity());
+                        roleAdapter = new ArrayAdapter<>(requireActivity(), R.layout.support_simple_spinner_dropdown_item, roleList);
+                        tvRole.setAdapter(roleAdapter);
+                        tvRole.setOnItemClickListener((parent, view, position, id) -> roleId = roleList.get(position).getId());
+                    }else {
+                        widget.errorToast(response.body().getMessage(), requireActivity());
+                    }
                 }
             }
 
             @Override
-            public void onFailure(Call<Role> call, Throwable t) {
+            public void onFailure(@NotNull Call<Role> call, @NotNull Throwable t) {
                 widget.noConnectToast(t.getMessage(), requireActivity());
             }
         });
@@ -264,32 +259,32 @@ public class EmployeeDetailsFragment extends Fragment {
         Call<EmpStatus> statusData = apiInterface.statusRetrieveData();
         statusData.enqueue(new Callback<EmpStatus>() {
             @Override
-            public void onResponse(Call<EmpStatus> call, Response<EmpStatus> response) {
-                if (response.isSuccessful()){
-                    statusList = response.body().getData();
-                    for (int i = 0; i < statusList.size(); i++){
-                        if (statusId == statusList.get(i).getId()){
-                            tvStatus.setText(statusList.get(i).getStatusName());
+            public void onResponse(@NotNull Call<EmpStatus> call, @NotNull Response<EmpStatus> response) {
+                if (response.body() != null){
+                    if (response.isSuccessful()){
+                        statusList = response.body().getData();
+                        for (int i = 0; i < statusList.size(); i++){
+                            if (statusId == statusList.get(i).getId()){
+                                tvStatus.setText(statusList.get(i).getStatusName());
+                            }
                         }
-                    }
 
-                    statusAdapter = new ArrayAdapter<>(requireActivity(), R.layout.support_simple_spinner_dropdown_item, statusList);
-                    tvStatus.setAdapter(statusAdapter);
-                    tvStatus.setOnItemClickListener((parent, view, position, id) -> {
-                        statusId = statusList.get(position).getId();
-                    });
-                } else {
-                    widget.errorToast(response.body().getMessage(), requireActivity());
+                        statusAdapter = new ArrayAdapter<>(requireActivity(), R.layout.support_simple_spinner_dropdown_item, statusList);
+                        tvStatus.setAdapter(statusAdapter);
+                        tvStatus.setOnItemClickListener((parent, view, position, id) -> statusId = statusList.get(position).getId());
+                    } else {
+                        widget.errorToast(response.body().getMessage(), requireActivity());
+                    }
                 }
             }
 
             @Override
-            public void onFailure(Call<EmpStatus> call, Throwable t) {
+            public void onFailure(@NotNull Call<EmpStatus> call, @NotNull Throwable t) {
                 widget.noConnectToast(t.getMessage(), requireActivity());
             }
         });
 
-        genderAdapter =  new ArrayAdapter<>(requireActivity(), R.layout.support_simple_spinner_dropdown_item, genderList);
+        ArrayAdapter<String> genderAdapter = new ArrayAdapter<>(requireActivity(), R.layout.support_simple_spinner_dropdown_item, genderList);
         tvGender.setAdapter(genderAdapter);
 
         MaterialDatePicker.Builder mDateBuilder = MaterialDatePicker.Builder.datePicker().setTitleText("Select a Date");
@@ -298,7 +293,7 @@ public class EmployeeDetailsFragment extends Fragment {
             if (joinDate != null){
                 try {
                     Date jd = dateFormat.parse(joinDate);
-                    jdTime = jd.getTime();
+                    jdTime = jd != null ? jd.getTime() : 0;
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -318,7 +313,7 @@ public class EmployeeDetailsFragment extends Fragment {
             if (lastDate != null){
                 try {
                     Date ld = dateFormat.parse(lastDate);
-                    ldTime = ld.getTime();
+                    ldTime = ld != null ? ld.getTime() : 0;
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -334,8 +329,8 @@ public class EmployeeDetailsFragment extends Fragment {
         });
         etLast.setFocusable(false);
 
-        for (int i = 0; i < actvList.length; i++){
-            widget.setActvFocusableFalse(actvList[i]);
+        for (AutoCompleteTextView autoCompleteTextView : actvList) {
+            widget.setActvFocusableFalse(autoCompleteTextView);
         }
     }
 
@@ -374,54 +369,49 @@ public class EmployeeDetailsFragment extends Fragment {
         address = etAddress.getText().toString();
         phone = etPhone.getText().toString();
         gender = tvGender.getText().toString();
-        Boolean allFieldsChecked = validation();
+        boolean allFieldsChecked = validation();
 
-        switch (item.getItemId()){
-            case R.id.menu_save:
-                if (allFieldsChecked){
-                    saveData();
-                }
-                return true;
-
-            case R.id.menu_edit:
-                editView();
-                setMenu(false, false, false, true, true);
-                return true;
-
-            case R.id.menu_cancel:
-                detailView();
-                setMenu(true, true, false, false, false);
-                return true;
-
-            case R.id.menu_update:
-                if (allFieldsChecked){
-                    updateData();
-                }
-                return true;
-
-            case R.id.menu_delete:
-                BottomSheetMaterialDialog mDialog = new BottomSheetMaterialDialog.Builder(requireActivity())
-                        .setTitle("Delete?")
-                        .setMessage("Are you sure want to delete this data?")
-                        .setCancelable(false)
-                        .setPositiveButton("Delete", R.drawable.ic_delete_, (dialogInterface, which) -> {
-                            deleteData();
-                            dialogInterface.dismiss();
-                        })
-                        .setNegativeButton("Cancel", R.drawable.ic_close, (dialogInterface, which) -> dialogInterface.dismiss())
-                        .build();
-                mDialog.show();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        int itemId = item.getItemId();
+        if (itemId == R.id.menu_save) {
+            if (allFieldsChecked) {
+                saveData();
+            }
+            return true;
+        } else if (itemId == R.id.menu_edit) {
+            editView();
+            setMenu(false, false, false, true, true);
+            return true;
+        } else if (itemId == R.id.menu_cancel) {
+            detailView();
+            setMenu(true, true, false, false, false);
+            return true;
+        } else if (itemId == R.id.menu_update) {
+            if (allFieldsChecked) {
+                updateData();
+            }
+            return true;
+        } else if (itemId == R.id.menu_delete) {
+            BottomSheetMaterialDialog mDialog = new BottomSheetMaterialDialog.Builder(requireActivity())
+                    .setTitle("Delete?")
+                    .setMessage("Are you sure want to delete this data?")
+                    .setCancelable(false)
+                    .setPositiveButton("Delete", R.drawable.ic_delete_, (dialogInterface, which) -> {
+                        deleteData();
+                        dialogInterface.dismiss();
+                    })
+                    .setNegativeButton("Cancel", R.drawable.ic_close, (dialogInterface, which) -> dialogInterface.dismiss())
+                    .build();
+            mDialog.show();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     private void deleteData() {
         Call<Employee> deleteData  = apiInterface.employeeDeleteData(empId);
         deleteData.enqueue(new Callback<Employee>() {
             @Override
-            public void onResponse(Call<Employee> call, Response<Employee> response) {
+            public void onResponse(@NotNull Call<Employee> call, @NotNull Response<Employee> response) {
                 if (response.body() != null){
                     if (response.isSuccessful() && response.body().isStatus()){
                         widget.successToast(response.body().getMessage(), requireActivity());
@@ -433,7 +423,7 @@ public class EmployeeDetailsFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<Employee> call, Throwable t) {
+            public void onFailure(@NotNull Call<Employee> call, @NotNull Throwable t) {
                 widget.noConnectToast(t.getMessage(), requireActivity());
             }
         });
@@ -443,38 +433,40 @@ public class EmployeeDetailsFragment extends Fragment {
         Call<EmpDetail> updateData = apiInterface.employeeUpdateData(empId, name, email, password, roleId, address, deptId, jobId, phone, gender, joinDate, lastDate, statusId);
         updateData.enqueue(new Callback<EmpDetail>() {
             @Override
-            public void onResponse(Call<EmpDetail> call, Response<EmpDetail> response) {
-                if (response.isSuccessful() && response.body().isStatus()){
-                    widget.successToast(response.body().getMessage(), requireActivity());
-                    fm.popBackStack();
-                } else {
-                    widget.errorToast(response.body().getMessage(), requireActivity());
+            public void onResponse(@NotNull Call<EmpDetail> call, @NotNull Response<EmpDetail> response) {
+                if (response.body() != null){
+                    if (response.isSuccessful() && response.body().isStatus()){
+                        widget.successToast(response.body().getMessage(), requireActivity());
+                        fm.popBackStack();
+                    } else {
+                        widget.errorToast(response.body().getMessage(), requireActivity());
+                    }
                 }
             }
 
             @Override
-            public void onFailure(Call<EmpDetail> call, Throwable t) {
+            public void onFailure(@NotNull Call<EmpDetail> call, @NotNull Throwable t) {
                 widget.noConnectToast(t.getMessage(), requireActivity());
             }
         });
     }
 
     private void detailView() {
-        for (int i = 0; i < etList.length; i++){
-            widget.disableEditText(etList[i]);
+        for (EditText editText : etList) {
+            widget.disableEditText(editText);
         }
-        for (int i = 0; i < actvList.length; i++){
-            widget.disableAutoCompleteTextView(actvList[i]);
+        for (AutoCompleteTextView autoCompleteTextView : actvList) {
+            widget.disableAutoCompleteTextView(autoCompleteTextView);
         }
         tlPassword.setHelperTextEnabled(false);
     }
 
     private void editView() {
-        for (int i = 0; i < etList.length; i++){
-            widget.enableEditText(etList[i]);
+        for (EditText editText : etList) {
+            widget.enableEditText(editText);
         }
-        for (int i = 0; i < actvList.length; i++){
-            widget.enableAutoCompleteTextView(actvList[i]);
+        for (AutoCompleteTextView autoCompleteTextView : actvList) {
+            widget.enableAutoCompleteTextView(autoCompleteTextView);
         }
         tlPassword.setHelperText(getString(R.string.helper_password));
     }
@@ -529,7 +521,7 @@ public class EmployeeDetailsFragment extends Fragment {
         Call<EmpDetail> createData = apiInterface.employeeCreateData(name, email, password, roleId, address, deptId, jobId, phone, gender, joinDate, lastDate, statusId);
         createData.enqueue(new Callback<EmpDetail>() {
             @Override
-            public void onResponse(Call<EmpDetail> call, Response<EmpDetail> response) {
+            public void onResponse(@NotNull Call<EmpDetail> call, @NotNull Response<EmpDetail> response) {
                 if (response.body() != null){
                     if (response.isSuccessful() && response.body().isStatus()){
                         widget.successToast(response.body().getMessage(), requireActivity());
@@ -541,7 +533,7 @@ public class EmployeeDetailsFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<EmpDetail> call, Throwable t) {
+            public void onFailure(@NotNull Call<EmpDetail> call, @NotNull Throwable t) {
                 widget.noConnectToast(t.getMessage(), requireActivity());
             }
         });

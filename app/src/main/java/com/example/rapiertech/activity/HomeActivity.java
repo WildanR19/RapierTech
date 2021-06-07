@@ -2,40 +2,34 @@ package com.example.rapiertech.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.rapiertech.R;
-import com.example.rapiertech.ui.admin.DepartmentFragment;
-import com.example.rapiertech.ui.admin.employee.EmployeeFragment;
-import com.example.rapiertech.ui.admin.HomeFragment;
-import com.example.rapiertech.ui.admin.JobFragment;
-import com.example.rapiertech.ui.leave.LeaveFragment;
-import com.example.rapiertech.ui.payslip.BasicSalaryFragment;
-import com.example.rapiertech.ui.payslip.PayslipFragment;
-import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.tabs.TabLayout;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.core.content.res.ResourcesCompat;
-import androidx.core.view.GravityCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.viewpager.widget.ViewPager;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
+import com.example.rapiertech.R;
+import com.example.rapiertech.ui.admin.DepartmentFragment;
+import com.example.rapiertech.ui.admin.HomeFragment;
+import com.example.rapiertech.ui.admin.JobFragment;
+import com.example.rapiertech.ui.employee.EmployeeFragment;
+import com.example.rapiertech.ui.holiday.EventFragment;
+import com.example.rapiertech.ui.leave.LeaveFragment;
+import com.example.rapiertech.ui.payslip.PayslipFragment;
+import com.google.android.material.navigation.NavigationView;
 
 import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import www.sanju.motiontoast.MotionToast;
 
@@ -70,6 +64,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        if (!sessionManager.getRoleId().equalsIgnoreCase("1")){
+            hideMenuItem();
+        }
 
         headerView = navigationView.getHeaderView(0);
         name = headerView.findViewById(R.id.nameNavHeader);
@@ -81,9 +78,16 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         //initial Fragment
 //        HomeFragment homeFragment = new HomeFragment();
-        PayslipFragment homeFragment = new PayslipFragment();
+        EventFragment homeFragment = new EventFragment();
         setMyFragment(homeFragment);
 
+    }
+
+    private void hideMenuItem() {
+        Menu nav_menu = navigationView.getMenu();
+        nav_menu.findItem(R.id.nav_employee).setVisible(false);
+        nav_menu.findItem(R.id.nav_department).setVisible(false);
+        nav_menu.findItem(R.id.nav_job).setVisible(false);
     }
 
     private void setMyFragment(Fragment fragment) {
@@ -157,6 +161,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_payslip:
                 PayslipFragment payslipFragment = new PayslipFragment();
                 setMyFragment(payslipFragment);
+                break;
+
+            case R.id.nav_event:
+                EventFragment eventFragment = new EventFragment();
+                setMyFragment(eventFragment);
                 break;
         }
         drawer.closeDrawer(GravityCompat.START);

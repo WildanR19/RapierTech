@@ -23,8 +23,6 @@
     <string name="add_title_dialog">Add Data</string>
     <string name="alert_delete">Yes, delete it!</string>
     <string name="enter_name">Enter Name</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="name">Name</string>
     <string name="profile_picture">Profile Picture</string>
     <string name="menu_item">Menu Item</string>
@@ -68,5 +66,17 @@
     <string name="deduction">Deduction</string>
     <string name="other">Other</string>
     <string name="action">Action</string>
+    <string name="holiday_calendar">Holiday Calendar</string>
+    <string name="holiday_list">Holiday List</string>
+    <string name="event">Event</string>
+    <string name="date">Date</string>
+    <string name="add_event">Add Event</string>
+    <string name="goal">Goal</string>
+    <string name="project">Project</string>
+    <string name="work">Work</string>
+    <string name="attendance">Attendance</string>
+    <string name="leave">Leave</string>
+    <string name="hr">HR</string>
+    <string name="profile">Profile</string>
 
 </resources>

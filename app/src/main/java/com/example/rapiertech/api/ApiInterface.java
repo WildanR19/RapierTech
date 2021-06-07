@@ -5,6 +5,7 @@ import com.example.rapiertech.model.department.Department;
 import com.example.rapiertech.model.empdetail.EmpDetail;
 import com.example.rapiertech.model.employee.Employee;
 import com.example.rapiertech.model.empstatus.EmpStatus;
+import com.example.rapiertech.model.event.Event;
 import com.example.rapiertech.model.job.Job;
 import com.example.rapiertech.model.leave.Leave;
 import com.example.rapiertech.model.leave.LeaveType;
@@ -212,4 +213,18 @@ public interface ApiInterface {
             @Field("job") int jobId,
             @Field("salary") int salary
     );
+
+    @GET("holiday/{month}")
+    Call<Event> eventList(@Path("month") int month);
+
+    @FormUrlEncoded
+    @POST("holiday/add")
+    Call<Event> eventCreateData(
+            @Field("start") String start,
+            @Field("end") String end,
+            @Field("title") String title
+    );
+
+    @DELETE("holiday/delete/{id}")
+    Call<Event> eventDeleteData(@Path("id") int id);
 }

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
@@ -11,68 +10,70 @@
             android:title="@string/menu_home" />
         <item
             android:id="@+id/nav_profile"
-            android:title="Profile"
+            android:title="@string/profile"
             android:icon="@drawable/ic_profile"/>
     </group>
 
     <item
-        android:title="HR">
+        android:title="@string/hr">
 
         <menu>
 
             <item
                 android:id="@+id/nav_employee"
                 android:icon="@drawable/ic_user"
-                android:title="Employee" />
+                android:title="@string/employee" />
             <item
                 android:id="@+id/nav_department"
                 android:icon="@drawable/ic_department"
-                android:title="Department" />
+                android:title="@string/department" />
             <item
                 android:id="@+id/nav_job"
                 android:icon="@drawable/ic_job"
-                android:title="Job" />
+                android:title="@string/job" />
             <item
                 android:id="@+id/nav_leave"
                 android:icon="@drawable/ic_leave"
-                android:title="Leave" />
+                android:title="@string/leave" />
             <item
                 android:id="@+id/nav_payslip"
                 android:icon="@drawable/ic_payslip"
-                android:title="Payslip" />
+                android:title="@string/payslip" />
             <item
                 android:id="@+id/nav_attendance"
                 android:icon="@drawable/ic_attendance"
-                android:title="Attendance" />
+                android:title="@string/attendance" />
 
         </menu>
     </item>
 
     <item
-        android:title="Work">
+        android:title="@string/work">
         <menu>
 
             <item
                 android:id="@+id/nav_project"
                 android:icon="@drawable/ic_project"
-                android:title="Project" />
+                android:title="@string/project" />
             <item
                 android:id="@+id/nav_goal"
                 android:icon="@drawable/ic_goal"
-                android:title="Goal" />
+                android:title="@string/goal" />
 
         </menu>
     </item>
 
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_holiday"
-            android:title="Holiday"
-            android:icon="@drawable/ic_holiday"/>
+    <item android:title="@string/other">
+        <menu>
+            <item
+                android:id="@+id/nav_event"
+                android:title="@string/event"
+                android:icon="@drawable/ic_calendar"/>
 
-        <item
-            android:id="@+id/nav_logout"
-            android:icon="@drawable/ic_logout"
-            android:title="@string/logout" />
-    </group>
+            <item
+                android:id="@+id/nav_logout"
+                android:icon="@drawable/ic_logout"
+                android:title="@string/logout" />
+        </menu>
+    </item>
 </menu>
