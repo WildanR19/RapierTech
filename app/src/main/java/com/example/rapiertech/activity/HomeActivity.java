@@ -24,7 +24,7 @@ import com.example.rapiertech.ui.admin.DepartmentFragment;
 import com.example.rapiertech.ui.admin.HomeFragment;
 import com.example.rapiertech.ui.admin.JobFragment;
 import com.example.rapiertech.ui.employee.EmployeeFragment;
-import com.example.rapiertech.ui.holiday.EventFragment;
+import com.example.rapiertech.ui.event.EventFragment;
 import com.example.rapiertech.ui.leave.LeaveFragment;
 import com.example.rapiertech.ui.payslip.PayslipFragment;
 import com.example.rapiertech.ui.project.ProjectFragment;

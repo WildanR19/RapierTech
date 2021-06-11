@@ -5,6 +5,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.MultiAutoCompleteTextView;
 
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.FragmentActivity;
@@ -54,7 +55,6 @@ public class Widget {
     }
 
     public void disableAutoCompleteTextView(AutoCompleteTextView actv) {
-        actv.setFocusable(false);
         actv.setEnabled(false);
         actv.setClickable(false);
     }
@@ -65,7 +65,6 @@ public class Widget {
     }
 
     public void enableAutoCompleteTextView(AutoCompleteTextView autoCompleteTextView) {
-        autoCompleteTextView.setFocusable(true);
         autoCompleteTextView.setEnabled(true);
         autoCompleteTextView.setClickable(true);
     }
@@ -75,6 +74,23 @@ public class Widget {
         editText.setFocusableInTouchMode(true);
         editText.setEnabled(true);
     }
+
+    public void setEnableEditText(EditText editText, boolean b) {
+        editText.setFocusable(b);
+        editText.setFocusableInTouchMode(b);
+        editText.setEnabled(b);
+    }
+
+    public void setEnableAutoCompleteTextView(AutoCompleteTextView actv, boolean b) {
+        actv.setEnabled(b);
+        actv.setClickable(b);
+    }
+
+    public void setEnableMultiAutoCompleteTextView(MultiAutoCompleteTextView mactv, boolean b) {
+        mactv.setEnabled(b);
+        mactv.setClickable(b);
+    }
+
 
     public void setActvFocusableFalse(AutoCompleteTextView actv) {
         actv.setFocusable(false);

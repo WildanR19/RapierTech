@@ -28,6 +28,8 @@ import com.example.rapiertech.model.employee.EmployeeData;
 import com.example.rapiertech.model.project.Project;
 import com.example.rapiertech.model.project.ProjectCategory;
 import com.example.rapiertech.model.project.ProjectCategoryData;
+import com.example.rapiertech.model.project.ProjectMember;
+import com.example.rapiertech.model.project.ProjectMemberData;
 import com.example.rapiertech.widget.Widget;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -71,8 +73,8 @@ public class ProjectEditorFragment extends Fragment {
     private List<EmployeeData> employeeDataList = new ArrayList<>();
     private final String[] statusList = {"Not Started","In Progress","On Hold","Canceled","Finished"};
     private ListView listView;
-    private List<Integer> memberId = new ArrayList<>();
-    private boolean isEditable = false;
+    private final List<Integer> memberId = new ArrayList<>();
+    private boolean isEditable = true;
 
     public ProjectEditorFragment() {
         // Required empty public constructor
@@ -110,11 +112,6 @@ public class ProjectEditorFragment extends Fragment {
         setHasOptionsMenu(true);
         findView();
         initUi();
-
-        if (projectId == 0){
-            tilStatus.setVisibility(View.GONE);
-        }
-
         return view;
     }
 
@@ -124,6 +121,26 @@ public class ProjectEditorFragment extends Fragment {
 
         for (AutoCompleteTextView autoCompleteTextView : actvList){
             autoCompleteTextView.setFocusable(false);
+            widget.setEnableAutoCompleteTextView(autoCompleteTextView, isEditable);
+        }
+        for (EditText editText : etList){
+            widget.setEnableEditText(editText, isEditable);
+        }
+        widget.setEnableMultiAutoCompleteTextView(macMember, isEditable);
+
+        if (projectId == 0){
+            tilStatus.setVisibility(View.GONE);
+        } else {
+            etName.setText(projectName);
+            etStartDate.setText(widget.changeDateFormat(startDate));
+            etDeadline.setText(widget.changeDateFormat(deadline));
+            acStatus.setText(widget.capitalizeText(status));
+            etSummary.setText(summary);
+            etNote.setText(note);
+            retrieveDataProjectMember();
+            if (!isEditable){
+                btnAddCategory.setVisibility(View.GONE);
+            }
         }
 
         retrieveDataCategory();
@@ -176,6 +193,30 @@ public class ProjectEditorFragment extends Fragment {
         btnAddCategory.setOnClickListener(v -> showDialog());
     }
 
+    private void retrieveDataProjectMember() {
+        Call<ProjectMember> getProjectMemberData = apiInterface.projectMemberRetrieveData(projectId);
+        getProjectMemberData.enqueue(new Callback<ProjectMember>() {
+            @Override
+            public void onResponse(Call<ProjectMember> call, Response<ProjectMember> response) {
+                if (response.body() != null) {
+                    if (response.isSuccessful() && response.body().isStatus()) {
+                        List<ProjectMemberData> memberIdList = response.body().getData();
+                        for (int i = 0; i < memberIdList.size(); i++){
+                            memberId.add(memberIdList.get(i).getUserId());
+                        }
+                    } else {
+                        widget.errorToast("Project Member "+response.body().getMessage(), requireActivity());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ProjectMember> call, Throwable t) {
+                widget.noConnectToast("Project Member "+t.getMessage(), requireActivity());
+            }
+        });
+    }
+
     private void retrieveDataMember() {
         Call<Employee> empData = apiInterface.employeeRetrieveData();
         empData.enqueue(new Callback<Employee>() {
@@ -185,15 +226,23 @@ public class ProjectEditorFragment extends Fragment {
                     if (response.isSuccessful() && response.body().isStatus()) {
                         employeeDataList = response.body().getData();
                         List<String> list = new ArrayList<>();
+                        MultiAutoCompleteTextView.CommaTokenizer tokenizer=new MultiAutoCompleteTextView.CommaTokenizer();
+
                         for (int i = 0; i < employeeDataList.size(); i++){
-//                            if (empId == employeeDataList.get(i).getId()){
-//                                macMember.setText(employeeDataList.get(i).getName());
-//                            }
+                            if (!memberId.isEmpty()){
+                                for (int m = 0; m < memberId.size(); m++){
+                                    if (memberId.get(m) == employeeDataList.get(i).getId()){
+                                        macMember.setText(macMember.getText().toString() + employeeDataList.get(i).getName()+ ", ");
+                                        tokenizer.terminateToken(employeeDataList.get(i).getName());
+                                    }
+                                }
+                            }
                             list.add(widget.capitalizeText(employeeDataList.get(i).getName()));
                         }
+
                         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireActivity(), R.layout.support_simple_spinner_dropdown_item, list);
                         macMember.setAdapter(adapter);
-                        macMember.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
+                        macMember.setTokenizer(tokenizer);
                         macMember.setOnItemClickListener((parent, view, position, id) -> {
 //                            String[] members = macMember.getText().toString().trim().split("\\s*,\\s*");
 //                            if (members[position].equalsIgnoreCase(employeeDataList.get(position).getName())){
@@ -209,7 +258,7 @@ public class ProjectEditorFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<Employee> call, Throwable t) {
+            public void onFailure(@NotNull Call<Employee> call, @NotNull Throwable t) {
                 widget.noConnectToast("Employee "+t.getMessage(), requireActivity());
             }
         });
@@ -295,7 +344,7 @@ public class ProjectEditorFragment extends Fragment {
                         List<String> list = new ArrayList<>();
                         for (int i = 0; i < projectCategoryDataList.size(); i++){
                             if (categoryId == projectCategoryDataList.get(i).getId()){
-                                acCategory.setText(projectCategoryDataList.get(i).getCategoryName());
+                                acCategory.setText(widget.capitalizeText(projectCategoryDataList.get(i).getCategoryName()));
                             }
                             list.add(widget.capitalizeText(projectCategoryDataList.get(i).getCategoryName()));
                         }
@@ -357,6 +406,7 @@ public class ProjectEditorFragment extends Fragment {
         int userId = Integer.parseInt(sessionManager.getUserDetail().get(SessionManager.USER_ID));
         summary = etSummary.getText().toString();
         note = etNote.getText().toString();
+        status = acStatus.getText().toString();
 
         int itemId = item.getItemId();
         if (itemId == R.id.menu_update) {
@@ -370,6 +420,26 @@ public class ProjectEditorFragment extends Fragment {
     }
 
     private void updateData() {
+        Call<Project> projectUpdateData = apiInterface.projectUpdateData(projectId, projectName,
+                categoryId, startDate, deadline, memberId, summary, note, status);
+        projectUpdateData.enqueue(new Callback<Project>() {
+            @Override
+            public void onResponse(Call<Project> call, Response<Project> response) {
+                if (response.body() != null) {
+                    if (response.isSuccessful() && response.body().isStatus()) {
+                        widget.successToast(response.body().getMessage(), requireActivity());
+                        fm.popBackStack();
+                    } else {
+                        widget.errorToast(response.body().getMessage(), requireActivity());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Project> call, Throwable t) {
+                widget.noConnectToast(t.getMessage(), requireActivity());
+            }
+        });
     }
 
     private void createData(int userId) {

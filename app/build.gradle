@@ -51,5 +51,4 @@ dependencies {
     implementation 'dev.shreyaspatil.MaterialDialog:MaterialDialog:2.2.2'
     implementation 'com.airbnb.android:lottie:3.7.0'
     implementation 'com.github.prolificinteractive:material-calendarview:2.0.1'
-    implementation 'com.splitwise:tokenautocomplete:3.0.1@aar'
 }

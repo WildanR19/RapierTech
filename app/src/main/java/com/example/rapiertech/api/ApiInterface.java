@@ -269,4 +269,18 @@ public interface ApiInterface {
 
     @DELETE("project/delete/{id}")
     Call<Project> projectDeleteData(@Path("id") int id);
+
+    @FormUrlEncoded
+    @POST("project/update/{id}")
+    Call<Project> projectUpdateData(
+            @Path("id") int id,
+            @Field("project_name") String name,
+            @Field("category") int catId,
+            @Field("start_date") String startData,
+            @Field("deadline") String deadline,
+            @Field("member[]") List<Integer> member,
+            @Field("summary") String summary,
+            @Field("note") String note,
+            @Field("status") String status
+    );
 }

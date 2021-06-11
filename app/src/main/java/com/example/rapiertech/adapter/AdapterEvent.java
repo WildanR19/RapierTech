@@ -14,7 +14,7 @@ import androidx.annotation.Nullable;
 
 import com.example.rapiertech.R;
 import com.example.rapiertech.model.event.EventData;
-import com.example.rapiertech.ui.holiday.EventFragment;
+import com.example.rapiertech.ui.event.EventFragment;
 import com.example.rapiertech.widget.Widget;
 
 import java.util.List;

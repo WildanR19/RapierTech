@@ -1,4 +1,4 @@
-package com.example.rapiertech.ui.holiday;
+package com.example.rapiertech.ui.event;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -146,6 +146,7 @@ public class EventFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        requireActivity().setTitle("Event");
 
         DateFormat dateFormat = new SimpleDateFormat("MM", Locale.ENGLISH);
         Date today = new Date();
