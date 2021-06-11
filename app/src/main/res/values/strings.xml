@@ -78,5 +78,19 @@
     <string name="leave">Leave</string>
     <string name="hr">HR</string>
     <string name="profile">Profile</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="due">Due</string>
+    <string name="created">Created</string>
+    <string name="more">more</string>
+    <string name="project_name">Project Name</string>
+    <string name="category">Category</string>
+    <string name="start_date">Start Date</string>
+    <string name="deadline">Deadline</string>
+    <string name="project_member">Project Member</string>
+    <string name="project_summary">Project Summary</string>
+    <string name="note">Note</string>
+    <string name="add_project_category">Add Project Category</string>
+    <string name="project_activity">Project Activity</string>
 
 </resources>

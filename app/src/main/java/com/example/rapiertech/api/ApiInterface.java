@@ -11,7 +11,12 @@ import com.example.rapiertech.model.leave.Leave;
 import com.example.rapiertech.model.leave.LeaveType;
 import com.example.rapiertech.model.login.Login;
 import com.example.rapiertech.model.payslip.Payslip;
+import com.example.rapiertech.model.project.Project;
+import com.example.rapiertech.model.project.ProjectCategory;
+import com.example.rapiertech.model.project.ProjectMember;
 import com.example.rapiertech.model.role.Role;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.DELETE;
@@ -214,17 +219,54 @@ public interface ApiInterface {
             @Field("salary") int salary
     );
 
-    @GET("holiday/{month}")
+    @GET("event/{month}")
     Call<Event> eventList(@Path("month") int month);
 
     @FormUrlEncoded
-    @POST("holiday/add")
+    @POST("event/add")
     Call<Event> eventCreateData(
             @Field("start") String start,
             @Field("end") String end,
             @Field("title") String title
     );
 
-    @DELETE("holiday/delete/{id}")
+    @DELETE("event/delete/{id}")
     Call<Event> eventDeleteData(@Path("id") int id);
+
+    // Project
+
+    @GET("project")
+    Call<Project> projectRetrieveData();
+
+    @GET("project/user/{id}")
+    Call<Project> projectUserRetrieveData(@Path("id") int id);
+
+    @GET("project/category")
+    Call<ProjectCategory> projectCategoryRetrieveData();
+
+    @GET("project/member/{id}")
+    Call<ProjectMember> projectMemberRetrieveData(@Path("id") int id);
+
+    @FormUrlEncoded
+    @POST("project/category/add")
+    Call<ProjectCategory> projectCategoryCreateData(@Field("category") String categoryName);
+
+    @DELETE("project/category/delete/{id}")
+    Call<ProjectCategory> projectCategoryDeleteData(@Path("id") int id);
+
+    @FormUrlEncoded
+    @POST("project/add/{userId}")
+    Call<Project> projectCreateData(
+            @Path("userId") int userId,
+            @Field("project_name") String name,
+            @Field("category") int catId,
+            @Field("start_date") String startData,
+            @Field("deadline") String deadline,
+            @Field("member[]") List<Integer> member,
+            @Field("summary") String summary,
+            @Field("note") String note
+    );
+
+    @DELETE("project/delete/{id}")
+    Call<Project> projectDeleteData(@Path("id") int id);
 }

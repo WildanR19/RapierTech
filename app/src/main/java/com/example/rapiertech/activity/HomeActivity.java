@@ -27,6 +27,7 @@ import com.example.rapiertech.ui.employee.EmployeeFragment;
 import com.example.rapiertech.ui.holiday.EventFragment;
 import com.example.rapiertech.ui.leave.LeaveFragment;
 import com.example.rapiertech.ui.payslip.PayslipFragment;
+import com.example.rapiertech.ui.project.ProjectFragment;
 import com.google.android.material.navigation.NavigationView;
 
 import org.jetbrains.annotations.NotNull;
@@ -42,6 +43,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     TextView name, email;
     ImageView image;
     View headerView;
+    ActionBarDrawerToggle toggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +59,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
 
         drawer = findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
@@ -78,7 +80,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         //initial Fragment
 //        HomeFragment homeFragment = new HomeFragment();
-        EventFragment homeFragment = new EventFragment();
+        ProjectFragment homeFragment = new ProjectFragment();
         setMyFragment(homeFragment);
 
     }
@@ -166,6 +168,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_event:
                 EventFragment eventFragment = new EventFragment();
                 setMyFragment(eventFragment);
+                break;
+
+            case R.id.nav_project:
+                ProjectFragment projectFragment = new ProjectFragment();
+                setMyFragment(projectFragment);
                 break;
         }
         drawer.closeDrawer(GravityCompat.START);

@@ -1,16 +1,15 @@
 package com.example.rapiertech.ui.leave;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ProgressBar;
 
 import com.example.rapiertech.R;
 import com.example.rapiertech.activity.SessionManager;
@@ -71,21 +70,11 @@ public class LeaveFragment extends Fragment {
         });
 
         sessionManager = new SessionManager(getContext());
-        if (sessionManager.getRoleId().equals("1")){
-            retrieveDataAdmin();
-            srlData.setOnRefreshListener(() -> {
-                srlData.setRefreshing(true);
-                retrieveDataAdmin();
-                srlData.setRefreshing(false);
-            });
-        } else {
-            retrieveDataUser();
-            srlData.setOnRefreshListener(() -> {
-                srlData.setRefreshing(true);
-                retrieveDataUser();
-                srlData.setRefreshing(false);
-            });
-        }
+        srlData.setOnRefreshListener(() -> {
+            srlData.setRefreshing(true);
+            retrieveData();
+            srlData.setRefreshing(false);
+        });
 
         return view;
     }
@@ -94,67 +83,61 @@ public class LeaveFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        if (sessionManager.getRoleId().equals("1")){
-            retrieveDataAdmin();
-        } else {
-            retrieveDataUser();
-        }
+        retrieveData();
         requireActivity().setTitle("Leaves");
     }
 
-    public void retrieveDataUser() {
+    public void retrieveData() {
         loadingData.setVisibility(View.VISIBLE);
 
-        Call<Leave> showLeaveDataByUserId = apiInterface.leaveRetrieveDataUser(Integer.parseInt(Objects.requireNonNull(sessionManager.getUserDetail().get(SessionManager.USER_ID))));
-        showLeaveDataByUserId.enqueue(new Callback<Leave>() {
-            @Override
-            public void onResponse(@NotNull Call<Leave> call, @NotNull Response<Leave> response) {
-                if (response.body() != null) {
-                    if (response.isSuccessful() && response.body().isStatus()) {
-                        leaveDataList = response.body().getData();
-                        adData = new AdapterDataLeave(requireActivity(), leaveDataList, LeaveFragment.this);
-                        rvData.setAdapter(adData);
-                        adData.notifyDataSetChanged();
-                    } else {
-                        widget.errorToast(response.body().getMessage(), requireActivity());
+        if (sessionManager.getRoleId().equals("1")){
+            Call<Leave> showLeaveData = apiInterface.leaveRetrieveData();
+            showLeaveData.enqueue(new Callback<Leave>() {
+                @Override
+                public void onResponse(@NotNull Call<Leave> call, @NotNull Response<Leave> response) {
+                    if (response.body() != null){
+                        if (response.isSuccessful() && response.body().isStatus()){
+                            leaveDataList = response.body().getData();
+                            adData = new AdapterDataLeave(requireActivity(), leaveDataList, LeaveFragment.this);
+                            rvData.setAdapter(adData);
+                            adData.notifyDataSetChanged();
+                        } else {
+                            widget.errorToast(response.body().getMessage(), requireActivity());
+                        }
                     }
+                    loadingData.setVisibility(View.INVISIBLE);
                 }
-                loadingData.setVisibility(View.INVISIBLE);
-            }
 
-            @Override
-            public void onFailure(@NotNull Call<Leave> call, @NotNull Throwable t) {
-                widget.noConnectToast(t.getMessage(), requireActivity());
-                loadingData.setVisibility(View.INVISIBLE);
-            }
-        });
-    }
-
-    public void retrieveDataAdmin() {
-        loadingData.setVisibility(View.VISIBLE);
-
-        Call<Leave> showLeaveData = apiInterface.leaveRetrieveData();
-        showLeaveData.enqueue(new Callback<Leave>() {
-            @Override
-            public void onResponse(@NotNull Call<Leave> call, @NotNull Response<Leave> response) {
-                if (response.body() != null){
-                    if (response.isSuccessful() && response.body().isStatus()){
-                        leaveDataList = response.body().getData();
-                        adData = new AdapterDataLeave(requireActivity(), leaveDataList, LeaveFragment.this);
-                        rvData.setAdapter(adData);
-                        adData.notifyDataSetChanged();
-                    } else {
-                        widget.errorToast(response.body().getMessage(), requireActivity());
+                @Override
+                public void onFailure(@NotNull Call<Leave> call, @NotNull Throwable t) {
+                    widget.noConnectToast(t.getMessage(), requireActivity());
+                    loadingData.setVisibility(View.INVISIBLE);
+                }
+            });
+        } else {
+            Call<Leave> showLeaveDataByUserId = apiInterface.leaveRetrieveDataUser(Integer.parseInt(Objects.requireNonNull(sessionManager.getUserDetail().get(SessionManager.USER_ID))));
+            showLeaveDataByUserId.enqueue(new Callback<Leave>() {
+                @Override
+                public void onResponse(@NotNull Call<Leave> call, @NotNull Response<Leave> response) {
+                    if (response.body() != null) {
+                        if (response.isSuccessful() && response.body().isStatus()) {
+                            leaveDataList = response.body().getData();
+                            adData = new AdapterDataLeave(requireActivity(), leaveDataList, LeaveFragment.this);
+                            rvData.setAdapter(adData);
+                            adData.notifyDataSetChanged();
+                        } else {
+                            widget.errorToast(response.body().getMessage(), requireActivity());
+                        }
                     }
+                    loadingData.setVisibility(View.INVISIBLE);
                 }
-                loadingData.setVisibility(View.INVISIBLE);
-            }
 
-            @Override
-            public void onFailure(@NotNull Call<Leave> call, @NotNull Throwable t) {
-                widget.noConnectToast(t.getMessage(), requireActivity());
-                loadingData.setVisibility(View.INVISIBLE);
-            }
-        });
+                @Override
+                public void onFailure(@NotNull Call<Leave> call, @NotNull Throwable t) {
+                    widget.noConnectToast(t.getMessage(), requireActivity());
+                    loadingData.setVisibility(View.INVISIBLE);
+                }
+            });
+        }
     }
 }

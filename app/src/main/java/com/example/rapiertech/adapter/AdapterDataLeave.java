@@ -178,11 +178,7 @@ public class AdapterDataLeave extends RecyclerView.Adapter<AdapterDataLeave.View
                 if (response.body() != null) {
                     if (response.isSuccessful() && response.body().isStatus()) {
                         widget.successToast(response.body().getMessage(), (FragmentActivity) context);
-                        if (sessionManager.getRoleId().equals("1")){
-                            leaveFragment.retrieveDataAdmin();
-                        } else {
-                            leaveFragment.retrieveDataUser();
-                        }
+                        leaveFragment.retrieveData();
                     } else {
                         widget.errorToast(response.body().getMessage(), (FragmentActivity) context);
                     }
@@ -205,11 +201,7 @@ public class AdapterDataLeave extends RecyclerView.Adapter<AdapterDataLeave.View
                 if (response.body() != null) {
                     if (response.isSuccessful() && response.body().isStatus()) {
                         widget.successToast(response.body().getMessage(), (FragmentActivity) context);
-                        if (sessionManager.getRoleId().equals("1")){
-                            leaveFragment.retrieveDataAdmin();
-                        } else {
-                            leaveFragment.retrieveDataUser();
-                        }
+                        leaveFragment.retrieveData();
                     } else {
                         widget.errorToast(response.body().getMessage(), (FragmentActivity) context);
                     }
