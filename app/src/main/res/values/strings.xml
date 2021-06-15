@@ -92,5 +92,14 @@
     <string name="note">Note</string>
     <string name="add_project_category">Add Project Category</string>
     <string name="project_activity">Project Activity</string>
+    <string name="submitted_by">Submitted by</string>
+    <string name="notes_detail">Notes :</string>
+    <string name="assigned_member_s">Assigned Member(s)</string>
+    <string name="total_update_s">Total Update(s)</string>
+    <string name="comment">Comment</string>
+    <string name="download">Download</string>
+    <string name="_1_attachment">1 Attachment</string>
+    <string name="submit_an_update">Submit an Update</string>
+    <string name="choose_file">Choose File</string>
 
 </resources>

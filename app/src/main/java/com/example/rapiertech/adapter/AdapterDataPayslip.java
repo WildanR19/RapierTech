@@ -3,7 +3,6 @@ package com.example.rapiertech.adapter;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
-import android.graphics.pdf.PdfDocument;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -38,7 +37,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 import dev.shreyaspatil.MaterialDialog.BottomSheetMaterialDialog;
-import okhttp3.HttpUrl;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -164,24 +162,6 @@ public class AdapterDataPayslip extends RecyclerView.Adapter<AdapterDataPayslip.
             });
 
             llPrint.setOnClickListener(vi -> {
-//                Call<Payslip> createPdf = apiInterface.payslipCreatePDF(payslipData.getId());
-//                createPdf.enqueue(new Callback<Payslip>() {
-//                    @Override
-//                    public void onResponse(Call<Payslip> call, Response<Payslip> response) {
-//                        if (response.body() != null) {
-//                            if (response.isSuccessful() && response.body().isStatus()) {
-//                                widget.successToast(response.body().getMessage(), payslipFragment.requireActivity());
-//                            } else {
-//                                widget.errorToast(response.body().getMessage(), payslipFragment.requireActivity());
-//                            }
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<Payslip> call, Throwable t) {
-//                        widget.noConnectToast(t.getMessage(), payslipFragment.requireActivity());
-//                    }
-//                });
                 createPDF(payslipData.getId());
                 bottomSheetDialog.dismiss();
             });
@@ -193,7 +173,6 @@ public class AdapterDataPayslip extends RecyclerView.Adapter<AdapterDataPayslip.
 
     private void createPDF(int id) {
         String url = ApiClient.getClient().baseUrl()+"payslip/pdf/"+id;
-//        widget.successToast("URL : "+url, payslipFragment.requireActivity());
 
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
         String title = URLUtil.guessFileName(url, null, null);

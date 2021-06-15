@@ -17,6 +17,7 @@ public class SessionManager {
     public static final String NAME = "name";
     public static final String EMAIL = "email";
     public static final String ROLE_ID = "role_id";
+    public static final String PHOTO_PATH = "photo";
 
     public SessionManager (Context context){
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -29,6 +30,7 @@ public class SessionManager {
         editor.putString(NAME, user.getName());
         editor.putString(EMAIL, user.getEmail());
         editor.putString(ROLE_ID, user.getRoleId());
+        editor.putString(PHOTO_PATH, user.getPpPath());
         editor.commit();
     }
 
@@ -38,6 +40,7 @@ public class SessionManager {
         user.put(NAME, sharedPreferences.getString(NAME, null));
         user.put(EMAIL, sharedPreferences.getString(EMAIL, null));
         user.put(ROLE_ID, sharedPreferences.getString(ROLE_ID, null));
+        user.put(PHOTO_PATH, sharedPreferences.getString(PHOTO_PATH, null));
         return user;
     }
 

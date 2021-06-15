@@ -16,6 +16,8 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.rapiertech.R;
 import com.example.rapiertech.activity.SessionManager;
 import com.example.rapiertech.api.ApiClient;
@@ -24,6 +26,7 @@ import com.example.rapiertech.model.project.Project;
 import com.example.rapiertech.model.project.ProjectData;
 import com.example.rapiertech.model.project.ProjectMember;
 import com.example.rapiertech.model.project.ProjectMemberData;
+import com.example.rapiertech.ui.project.ProjectDetailFragment;
 import com.example.rapiertech.ui.project.ProjectEditorFragment;
 import com.example.rapiertech.ui.project.ProjectFragment;
 import com.example.rapiertech.widget.Widget;
@@ -40,10 +43,10 @@ import retrofit2.Response;
 
 public class AdapterProject extends RecyclerView.Adapter<AdapterProject.ViewHolder> {
 
-    private Context context;
-    private List<ProjectData> projectDataList;
+    private final Context context;
+    private final List<ProjectData> projectDataList;
     private List<ProjectMemberData> projectMemberDataList;
-    private ProjectFragment projectFragment;
+    private final ProjectFragment projectFragment;
     private SessionManager sessionManager;
     private Widget widget;
     private ApiInterface apiInterface;
@@ -59,7 +62,7 @@ public class AdapterProject extends RecyclerView.Adapter<AdapterProject.ViewHold
     @Override
     public ViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_project,parent,false);
-        return new AdapterProject.ViewHolder(view);
+        return new ViewHolder(view);
     }
 
     @Override
@@ -89,11 +92,10 @@ public class AdapterProject extends RecyclerView.Adapter<AdapterProject.ViewHold
         holder.itemView.setOnClickListener(v -> {
             BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(context, R.style.BottomSheetDialogTheme);
             View view = LayoutInflater.from(context).inflate(R.layout.bottom_sheet_project, null);
-            LinearLayout llEdit, llDelete, llDetail, llActivity;
+            LinearLayout llEdit, llDelete, llDetail;
             llEdit = view.findViewById(R.id.ll_edit_project);
             llDelete = view.findViewById(R.id.ll_delete_project);
             llDetail = view.findViewById(R.id.ll_detail_project);
-            llActivity = view.findViewById(R.id.ll_activity_project);
 
             if (!sessionManager.getRoleId().equals("1")) {
                 llEdit.setVisibility(View.GONE);
@@ -132,12 +134,15 @@ public class AdapterProject extends RecyclerView.Adapter<AdapterProject.ViewHold
             });
 
             llDetail.setOnClickListener(vi -> {
-                bundle.putBoolean("isEditable", false);
-                moveFragment(v, bundle);
-                bottomSheetDialog.dismiss();
-            });
-
-            llActivity.setOnClickListener(vi -> {
+                bundle.putString("submittedName", projectData.getSubmittedByName());
+                Fragment fragment = new ProjectDetailFragment();
+                fragment.setArguments(bundle);
+                FragmentManager fragmentManager = ((FragmentActivity)v.getContext()).getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, fragment)
+                        .setReorderingAllowed(true)
+                        .addToBackStack(null)
+                        .commit();
                 bottomSheetDialog.dismiss();
             });
 
@@ -150,7 +155,7 @@ public class AdapterProject extends RecyclerView.Adapter<AdapterProject.ViewHold
         Call<Project> deleteData = apiInterface.projectDeleteData(id);
         deleteData.enqueue(new Callback<Project>() {
             @Override
-            public void onResponse(Call<Project> call, Response<Project> response) {
+            public void onResponse(@NotNull Call<Project> call, @NotNull Response<Project> response) {
                 if (response.body() != null) {
                     if (response.isSuccessful() && response.body().isStatus()) {
                         widget.successToast(response.body().getMessage(), projectFragment.requireActivity());
@@ -162,7 +167,7 @@ public class AdapterProject extends RecyclerView.Adapter<AdapterProject.ViewHold
             }
 
             @Override
-            public void onFailure(Call<Project> call, Throwable t) {
+            public void onFailure(@NotNull Call<Project> call, @NotNull Throwable t) {
                 widget.noConnectToast(t.getMessage(), projectFragment.requireActivity());
             }
         });
@@ -183,14 +188,14 @@ public class AdapterProject extends RecyclerView.Adapter<AdapterProject.ViewHold
         Call<ProjectMember> memberShowData = apiInterface.projectMemberRetrieveData(id);
         memberShowData.enqueue(new Callback<ProjectMember>() {
             @Override
-            public void onResponse(Call<ProjectMember> call, Response<ProjectMember> response) {
+            public void onResponse(@NotNull Call<ProjectMember> call, @NotNull Response<ProjectMember> response) {
                 if (response.body() != null) {
                     if (response.isSuccessful() && response.body().isStatus()) {
                         projectMemberDataList = response.body().getData();
                         if (projectMemberDataList.size() > 4){
                             int moreMember = projectMemberDataList.size()-4;
                             holder.tvMore.setVisibility(View.VISIBLE);
-                            holder.tvMore.setText("and "+moreMember+" more");
+                            holder.tvMore.setText(" and "+moreMember+" more");
                         }
                         for (int i = 0; i < projectMemberDataList.size(); i++){
                             if (i < 4){
@@ -198,7 +203,14 @@ public class AdapterProject extends RecyclerView.Adapter<AdapterProject.ViewHold
                                 imageView.setLayoutParams(new ViewGroup.LayoutParams(50,50));
                                 imageView.setMaxHeight(25);
                                 imageView.setMaxWidth(25);
-                                imageView.setImageDrawable(context.getDrawable(R.drawable.ic_account));
+                                if (projectMemberDataList.get(i).getProfilePhotoPath() != null){
+                                    String urlImage = ApiClient.getStorage() + projectMemberDataList.get(i).getProfilePhotoPath();
+                                    Glide.with(context).load(urlImage).diskCacheStrategy(DiskCacheStrategy.NONE).into(imageView);
+                                    imageView.setBackgroundResource(R.drawable.circle);
+                                    imageView.setClipToOutline(true);
+                                } else {
+                                    imageView.setImageDrawable(context.getDrawable(R.drawable.ic_account));
+                                }
 
                                 holder.llMember.addView(imageView);
                             }
@@ -221,7 +233,7 @@ public class AdapterProject extends RecyclerView.Adapter<AdapterProject.ViewHold
         return projectDataList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView tvStatus, tvDeadline, tvName, tvCreated, tvMore;
         LinearLayout llMember;

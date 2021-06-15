@@ -22,4 +22,5 @@
     <color name="light_yellow">#FFC107</color>
     <color name="danger">#C21856</color>
     <color name="light_red">#D81B60</color>
+    <color name="line">#d7d7d7</color>
 </resources>

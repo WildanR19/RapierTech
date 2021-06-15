@@ -19,7 +19,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.rapiertech.R;
+import com.example.rapiertech.api.ApiClient;
 import com.example.rapiertech.ui.admin.DepartmentFragment;
 import com.example.rapiertech.ui.admin.HomeFragment;
 import com.example.rapiertech.ui.admin.JobFragment;
@@ -77,7 +80,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         name.setText(sessionManager.getUserDetail().get(SessionManager.NAME));
         email.setText(sessionManager.getUserDetail().get(SessionManager.EMAIL));
-
+        String urlImage = ApiClient.getStorage() + sessionManager.getUserDetail().get(SessionManager.PHOTO_PATH);
+        Glide.with(HomeActivity.this).load(urlImage).diskCacheStrategy(DiskCacheStrategy.NONE).into(image);
         //initial Fragment
 //        HomeFragment homeFragment = new HomeFragment();
         ProjectFragment homeFragment = new ProjectFragment();

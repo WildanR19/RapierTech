@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="@dimen/dimen_8"
+    android:layout_marginBottom="@dimen/dimen_8">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/dimen_8">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingVertical="8dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="@dimen/dimen_8"
+                android:gravity="center_vertical">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/dimen_8"
+                    app:cardCornerRadius="50dp">
+
+                    <ImageView
+                        android:id="@+id/imageProjectUpdate"
+                        android:layout_width="@dimen/dimen_32"
+                        android:layout_height="@dimen/dimen_32"
+                        android:contentDescription="@string/profile_picture"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/avatar"/>
+                </androidx.cardview.widget.CardView>
+
+                <TextView
+                    android:id="@+id/nameProjectUpdate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/name"
+                    android:textColor="@color/light_blue" />
+                <TextView
+                    android:id="@+id/updatedProjectUpdate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/date"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/commentProjectUpdate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/comment"/>
+
+            <LinearLayout
+                android:id="@+id/ll_fileDownloadProjectUpdate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_8"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/dimen_8"
+                    android:background="@color/line" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimen_8"
+                    android:text="@string/_1_attachment"/>
+
+                <TextView
+                    android:id="@+id/downloadFileProjectUpdate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimen_4"
+                    android:text="@string/download"
+                    android:textColor="@color/light_blue"/>
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</com.google.android.material.card.MaterialCardView>

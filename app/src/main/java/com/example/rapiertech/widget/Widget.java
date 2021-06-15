@@ -132,6 +132,23 @@ public class Widget {
         return newDate;
     }
 
+    public String changeDateFormatToDateTime(String date){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date parseDate;
+        String newDate = null;
+
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC+7"));
+        try {
+            parseDate = dateFormat.parse(date);
+            dateFormat.applyPattern("HH:mm | dd MMM yyyy");
+            newDate = dateFormat.format(Objects.requireNonNull(parseDate));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return newDate;
+    }
+
     public String formatRupiah(Double amount) {
         Locale localeID = new Locale("in", "ID");
         NumberFormat formatRupiah = NumberFormat.getCurrencyInstance(localeID);

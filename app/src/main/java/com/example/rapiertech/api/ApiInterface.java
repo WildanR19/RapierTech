@@ -12,18 +12,23 @@ import com.example.rapiertech.model.leave.LeaveType;
 import com.example.rapiertech.model.login.Login;
 import com.example.rapiertech.model.payslip.Payslip;
 import com.example.rapiertech.model.project.Project;
+import com.example.rapiertech.model.project.ProjectActivity;
 import com.example.rapiertech.model.project.ProjectCategory;
 import com.example.rapiertech.model.project.ProjectMember;
 import com.example.rapiertech.model.role.Role;
 
 import java.util.List;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 
 public interface ApiInterface {
@@ -282,5 +287,20 @@ public interface ApiInterface {
             @Field("summary") String summary,
             @Field("note") String note,
             @Field("status") String status
+    );
+
+    @GET("project/activity/{id}")
+    Call<ProjectActivity> projectActivityRetrieveData(@Path("id") int id);
+
+    @DELETE("project/activity/delete/{id}")
+    Call<ProjectActivity> projectActivityDeleteData(@Path("id") int id);
+
+    @Multipart
+    @POST("project/activity/submit")
+    Call<ProjectActivity> projectActivitySubmitData(
+            @Part("user_id") RequestBody id,
+            @Part("project_id") RequestBody projectId,
+            @Part("comment") RequestBody comment,
+            @Part MultipartBody.Part file
     );
 }

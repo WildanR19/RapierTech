@@ -4,6 +4,9 @@ import com.google.gson.annotations.SerializedName;
 
 public class ProjectData {
 
+	@SerializedName("submitted_by_name")
+	private String submittedByName;
+
 	@SerializedName("notes")
 	private String notes;
 
@@ -112,5 +115,13 @@ public class ProjectData {
 
 	public String getStatus(){
 		return status;
+	}
+
+	public String getSubmittedByName() {
+		return submittedByName;
+	}
+
+	public void setSubmittedByName(String submittedByName) {
+		this.submittedByName = submittedByName;
 	}
 }

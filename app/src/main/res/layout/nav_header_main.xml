@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/nav_header_height"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/primary"
     android:gravity="bottom|center_horizontal"
     android:orientation="horizontal"
@@ -11,36 +12,48 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-    <ImageView
-        android:id="@+id/imageNavHeader"
-        android:layout_width="55dp"
-        android:layout_height="55dp"
-        android:contentDescription="@string/profile_picture"
-        android:src="@drawable/avatar" />
-
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:orientation="vertical" >
+        android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/nameNavHeader"
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/name"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textAlignment="center"
-            android:textColor="@color/white" />
+            app:cardCornerRadius="50dp">
 
-        <TextView
-            android:id="@+id/emailNavHeader"
+            <ImageView
+                android:id="@+id/imageNavHeader"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:contentDescription="@string/profile_picture"
+                android:scaleType="centerCrop"
+                android:src="@drawable/avatar" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/email"
-            android:textSize="20sp"
-            android:textAlignment="center"
-            android:textColor="@color/white" />
+            android:layout_marginStart="16dp"
+            android:orientation="vertical"
+            android:layout_gravity="center">
+
+            <TextView
+                android:id="@+id/nameNavHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/name"
+                android:textAppearance="?attr/textAppearanceHeadline6"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/emailNavHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/email"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:textColor="@color/white" />
+        </LinearLayout>
     </LinearLayout>
+
 </LinearLayout>

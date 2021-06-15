@@ -4,6 +4,9 @@ import com.google.gson.annotations.SerializedName;
 
 public class LoginData {
 
+	@SerializedName("pp_path")
+	private String ppPath;
+
 	@SerializedName("user_id")
 	private String userId;
 
@@ -44,4 +47,11 @@ public class LoginData {
 
 	public String getRoleId() { return roleId; }
 
+	public String getPpPath() {
+		return ppPath;
+	}
+
+	public void setPpPath(String ppPath) {
+		this.ppPath = ppPath;
+	}
 }

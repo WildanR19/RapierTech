@@ -89,31 +89,4 @@
             android:textSize="@dimen/dimen_16"/>
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/ll_activity_project"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="?android:attr/selectableItemBackground"
-        android:clickable="true"
-        android:focusable="true"
-        android:gravity="center_vertical"
-        android:padding="@dimen/dimen_12">
-
-        <ImageView
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_marginStart="10dp"
-            android:contentDescription="@string/project_activity"
-            android:src="@drawable/ic_update"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="25dp"
-            android:layout_marginEnd="25dp"
-            android:text="@string/project_activity"
-            android:textSize="@dimen/dimen_16"/>
-    </LinearLayout>
-
 </LinearLayout>

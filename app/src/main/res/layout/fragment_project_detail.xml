@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.project.ProjectDetailFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginHorizontal="@dimen/dimen_8"
+        android:layout_marginTop="@dimen/dimen_8">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="@dimen/dimen_8">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/dimen_8">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingVertical="8dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="@dimen/dimen_8">
+
+                        <TextView
+                            android:id="@+id/statusProjectDetail"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/status"
+                            android:textSize="12sp"
+                            android:textColor="@color/light_blue"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="end"
+                            android:layout_marginEnd="@dimen/dimen_4"
+                            android:text="@string/due"
+                            android:textSize="12sp"
+                            android:textColor="?android:attr/textColorSecondary"
+                            />
+                        <TextView
+                            android:id="@+id/deadlineProjectDetail"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/date"
+                            android:textSize="12sp"
+                            android:textColor="@color/light_blue"
+                            />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:cardCornerRadius="50dp">
+
+                            <ImageView
+                                android:id="@+id/imageProjectDetail"
+                                android:layout_width="55dp"
+                                android:layout_height="55dp"
+                                android:contentDescription="@string/profile_picture"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/avatar" />
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_marginStart="@dimen/dimen_16">
+
+                            <TextView
+                                android:id="@+id/nameProjectDetail"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/name"
+                                android:textAppearance="?attr/textAppearanceHeadline6"
+                                />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/submitted_by"/>
+                                <TextView
+                                    android:id="@+id/submittedProjectDetail"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="@dimen/dimen_4"
+                                    android:text="@string/name"
+                                    android:textColor="@color/light_blue"/>
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/summaryProjectDetail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimen_8"
+                        android:text="@string/project_summary"
+                        android:textSize="12sp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimen_4"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/notes_detail"
+                            android:textSize="12sp"
+                            android:textColor="?android:attr/textColorSecondary"
+                            />
+                        <TextView
+                            android:id="@+id/noteProjectDetail"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/dimen_4"
+                            android:text="@string/note"
+                            android:textSize="12sp"
+                            />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="@dimen/dimen_8">
+
+                        <TextView
+                            android:id="@+id/totalMemberProjectDetail"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="@color/light_blue"
+                            android:textSize="12sp"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/dimen_4"
+                            android:text="@string/assigned_member_s"
+                            android:textStyle="italic|bold"
+                            android:textSize="12sp"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:id="@+id/llImageMemberProjectDetail"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"/>
+
+                        <TextView
+                            android:id="@+id/moreMemberProjectDetail"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/light_blue"
+                            android:text="@string/more"
+                            android:textSize="12sp"
+                            android:layout_gravity="center_vertical"
+                            android:visibility="gone"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+            </RelativeLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginVertical="@dimen/dimen_16">
+
+            <TextView
+                android:id="@+id/totalUpdateProjectDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/light_blue"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/total_update_s"
+                android:layout_marginStart="@dimen/dimen_4"/>
+        </LinearLayout>
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/srlDataProjectDetail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvDataProjectDetail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="100dp"
+                android:clipToPadding="false"
+                tools:listitem="@layout/card_project_detail" />
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/loadingProjectDetail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="invisible"/>
+
+<!--    <Button-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:minHeight="@dimen/dimen_0"-->
+<!--        android:minWidth="@dimen/dimen_0"-->
+<!--        -->
+<!--        android:layout_alignParentBottom="true"-->
+<!--        android:text="@string/submit_an_update"/>-->
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSubmitUpdateProject"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:insetBottom="@dimen/dimen_0"
+        android:insetTop="@dimen/dimen_0"
+        app:cornerRadius="@dimen/dimen_0"
+        android:text="@string/submit_an_update"/>
+
+</RelativeLayout>
