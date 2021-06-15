@@ -12,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -24,18 +23,17 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.rapiertech.R;
 import com.example.rapiertech.api.ApiClient;
 import com.example.rapiertech.ui.admin.DepartmentFragment;
-import com.example.rapiertech.ui.home.HomeFragment;
 import com.example.rapiertech.ui.admin.JobFragment;
 import com.example.rapiertech.ui.employee.EmployeeFragment;
 import com.example.rapiertech.ui.event.EventFragment;
+import com.example.rapiertech.ui.home.HomeFragment;
 import com.example.rapiertech.ui.leave.LeaveFragment;
 import com.example.rapiertech.ui.payslip.PayslipFragment;
+import com.example.rapiertech.ui.profile.ProfileFragment;
 import com.example.rapiertech.ui.project.ProjectFragment;
 import com.google.android.material.navigation.NavigationView;
 
 import org.jetbrains.annotations.NotNull;
-
-import www.sanju.motiontoast.MotionToast;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -115,18 +113,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         finish();
     }
 
-    private void logout() {
-        sessionManager.logoutSession();
-        moveToLogin();
-        MotionToast.Companion.createColorToast(HomeActivity.this, "Success",
-                "Logout Success",
-                MotionToast.TOAST_SUCCESS,
-                MotionToast.GRAVITY_BOTTOM,
-                MotionToast.LONG_DURATION,
-                ResourcesCompat.getFont(HomeActivity.this,R.font.helvetica_regular)
-        );
-    }
-
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -136,7 +122,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 break;
 
             case R.id.nav_profile:
-
+                ProfileFragment profileFragment = new ProfileFragment();
+                setMyFragment(profileFragment);
                 break;
 
             case R.id.nav_employee:
@@ -157,10 +144,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_leave:
                 LeaveFragment leaveFragment = new LeaveFragment();
                 setMyFragment(leaveFragment);
-                break;
-
-            case R.id.nav_logout:
-                logout();
                 break;
 
             case R.id.nav_payslip:

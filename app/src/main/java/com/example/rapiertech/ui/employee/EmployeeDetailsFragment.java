@@ -76,6 +76,7 @@ public class EmployeeDetailsFragment extends Fragment {
     private TextInputLayout tlPassword;
     private FragmentManager fm;
     private Widget widget;
+    private boolean isFromAdapter = false;
 
     public EmployeeDetailsFragment() {
     }
@@ -98,6 +99,7 @@ public class EmployeeDetailsFragment extends Fragment {
             statusId = bundle.getInt("empStatusId");
             joinDate = bundle.getString("joinDate");
             lastDate = bundle.getString("lastDate");
+            isFromAdapter = bundle.getBoolean("isFromAdapter");
         }
     }
 
@@ -125,6 +127,10 @@ public class EmployeeDetailsFragment extends Fragment {
             tlPassword.setHelperTextEnabled(false);
         } else {
             requireActivity().setTitle("New Employee");
+        }
+
+        if (!isFromAdapter){
+            tlPassword.setVisibility(View.GONE);
         }
 
         initUi();
@@ -346,7 +352,7 @@ public class EmployeeDetailsFragment extends Fragment {
         actionMenu = menu;
 
         if (empId != 0){
-            setMenu(true, true, false, false, false);
+            setMenu(true, isFromAdapter, false, false, false);
         } else {
             setMenu(false, false, true, false, false);
         }
@@ -383,7 +389,7 @@ public class EmployeeDetailsFragment extends Fragment {
             return true;
         } else if (itemId == R.id.menu_cancel) {
             detailView();
-            setMenu(true, true, false, false, false);
+            setMenu(true, isFromAdapter, false, false, false);
             return true;
         } else if (itemId == R.id.menu_update) {
             if (allFieldsChecked) {

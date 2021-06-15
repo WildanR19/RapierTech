@@ -86,6 +86,7 @@ public class AdapterDataEmployee extends RecyclerView.Adapter<AdapterDataEmploye
                             bundle.putInt("empStatusId", response.body().getData().getStatusId());
                             bundle.putInt("departmentId", response.body().getData().getDepartmentId());
                             bundle.putInt("jobId", response.body().getData().getJobId());
+                            bundle.putBoolean("isFromAdapter", true);
 
                             Fragment fragment = new EmployeeDetailsFragment();
                             fragment.setArguments(bundle);

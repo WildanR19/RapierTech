@@ -111,5 +111,13 @@
     <string name="view_all">View All</string>
     <string name="pending_leaves">Pending Leaves</string>
     <string name="type">Type</string>
+    <string name="about_me">About Me</string>
+    <string name="location">Location</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="change_password">Change Password</string>
+    <string name="notifications">Notifications</string>
+    <string name="current_password">Current Password</string>
+    <string name="new_password">New Password</string>
+    <string name="confirm_password">Confirm Password</string>
 
 </resources>

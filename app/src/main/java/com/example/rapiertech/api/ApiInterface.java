@@ -47,6 +47,15 @@ public interface ApiInterface {
     @GET("user")
     Call<Employee> employeeRetrieveData();
 
+    @FormUrlEncoded
+    @POST("user/updatepassword/{id}")
+    Call<Employee> employeeChangePassword(
+            @Path("id") int id,
+            @Field("current_password") String currentPassword,
+            @Field("password") String password,
+            @Field("password_confirmation") String passwordConfirmation
+    );
+
     @GET("emp_status")
     Call<EmpStatus> statusRetrieveData();
 
