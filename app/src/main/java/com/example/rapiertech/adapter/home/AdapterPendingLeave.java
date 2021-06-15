@@ -1,8 +1,7 @@
-package com.example.rapiertech.adapter;
+package com.example.rapiertech.adapter.home;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +13,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.rapiertech.R;
@@ -29,8 +26,7 @@ import com.example.rapiertech.model.leave.Leave;
 import com.example.rapiertech.model.leave.LeaveData;
 import com.example.rapiertech.model.leave.LeaveType;
 import com.example.rapiertech.model.leave.LeaveTypeData;
-import com.example.rapiertech.ui.leave.LeaveEditorFragment;
-import com.example.rapiertech.ui.leave.LeaveFragment;
+import com.example.rapiertech.ui.home.HomeFragment;
 import com.example.rapiertech.widget.Widget;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputLayout;
@@ -44,20 +40,20 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AdapterDataLeave extends RecyclerView.Adapter<AdapterDataLeave.ViewHolder> {
+public class AdapterPendingLeave extends RecyclerView.Adapter<AdapterPendingLeave.ViewHolder> {
 
     private final Context context;
     private final List<LeaveData> leaveDataList;
     private List<EmployeeData> employeeDataList;
     private List<LeaveTypeData> leaveTypeDataList;
-    private final LeaveFragment leaveFragment;
+    private final HomeFragment homeFragment;
     private ApiInterface apiInterface;
     private Widget widget;
 
-    public AdapterDataLeave(Context context, List<LeaveData> leaveDataList, LeaveFragment leaveFragment) {
+    public AdapterPendingLeave(Context context, List<LeaveData> leaveDataList, HomeFragment homeFragment) {
         this.context = context;
         this.leaveDataList = leaveDataList;
-        this.leaveFragment = leaveFragment;
+        this.homeFragment = homeFragment;
     }
 
     @NonNull
@@ -92,45 +88,15 @@ public class AdapterDataLeave extends RecyclerView.Adapter<AdapterDataLeave.View
         String status = leaveData.getStatus();
         holder.tvStatus.setText(widget.capitalizeText(status));
 
-        if (status.equalsIgnoreCase("approved")){
-            holder.tvStatus.setBackgroundTintList(context.getColorStateList(R.color.success));
-            holder.vBorder.setBackgroundResource(R.color.success);
-            holder.llConfirm.setVisibility(View.GONE);
-        } else if (status.equalsIgnoreCase("pending") && sessionManager.getRoleId().equals("1")) {
+        if (status.equalsIgnoreCase("pending") && sessionManager.getRoleId().equals("1")) {
             holder.tvStatus.setBackgroundTintList(context.getColorStateList(R.color.warning));
             holder.vBorder.setBackgroundResource(R.color.warning);
             holder.llConfirm.setVisibility(View.VISIBLE);
-        } else if (status.equalsIgnoreCase("pending") && !sessionManager.getRoleId().equals("1")) {
+        } else {
             holder.tvStatus.setBackgroundTintList(context.getColorStateList(R.color.warning));
             holder.vBorder.setBackgroundResource(R.color.warning);
             holder.llConfirm.setVisibility(View.GONE);
-        } else {
-            holder.tvStatus.setBackgroundTintList(context.getColorStateList(R.color.danger));
-            holder.vBorder.setBackgroundResource(R.color.danger);
-            holder.llConfirm.setVisibility(View.GONE);
         }
-
-        holder.itemView.setOnClickListener(v -> {
-            Bundle bundle = new Bundle();
-            bundle.putInt("id", leaveData.getId());
-            bundle.putInt("empId", leaveData.getUserId());
-            bundle.putInt("typeId", leaveData.getLeaveTypeId());
-            bundle.putString("duration", leaveData.getDuration());
-            bundle.putString("fromDate", leaveData.getFromDate());
-            bundle.putString("toDate", leaveData.getToDate());
-            bundle.putString("reason", leaveData.getReason());
-            bundle.putString("status", leaveData.getStatus());
-            bundle.putString("rejectReason", leaveData.getRejectReason());
-
-            Fragment fragment = new LeaveEditorFragment();
-            fragment.setArguments(bundle);
-            FragmentManager fragmentManager = ((FragmentActivity)v.getContext()).getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, fragment)
-                    .setReorderingAllowed(true)
-                    .addToBackStack(null)
-                    .commit();
-        });
 
         holder.btnApproved.setOnClickListener(v -> {
             MaterialDialog approveDialog = new MaterialDialog.Builder((Activity) context)
@@ -177,7 +143,7 @@ public class AdapterDataLeave extends RecyclerView.Adapter<AdapterDataLeave.View
                 if (response.body() != null) {
                     if (response.isSuccessful() && response.body().isStatus()) {
                         widget.successToast(response.body().getMessage(), (FragmentActivity) context);
-                        leaveFragment.retrieveData();
+                        homeFragment.retrieveData();
                     } else {
                         widget.errorToast(response.body().getMessage(), (FragmentActivity) context);
                     }
@@ -200,7 +166,7 @@ public class AdapterDataLeave extends RecyclerView.Adapter<AdapterDataLeave.View
                 if (response.body() != null) {
                     if (response.isSuccessful() && response.body().isStatus()) {
                         widget.successToast(response.body().getMessage(), (FragmentActivity) context);
-                        leaveFragment.retrieveData();
+                        homeFragment.retrieveData();
                     } else {
                         widget.errorToast(response.body().getMessage(), (FragmentActivity) context);
                     }
@@ -214,7 +180,7 @@ public class AdapterDataLeave extends RecyclerView.Adapter<AdapterDataLeave.View
         });
     }
 
-    private void getLeaveTypeById(ViewHolder holder, int leaveTypeId) {
+    private void getLeaveTypeById(AdapterPendingLeave.ViewHolder holder, int leaveTypeId) {
         holder.loadingData.setVisibility(View.VISIBLE);
 
         Call<LeaveType> showData = apiInterface.leaveTypeRetrieveData();
@@ -230,7 +196,7 @@ public class AdapterDataLeave extends RecyclerView.Adapter<AdapterDataLeave.View
                             }
                         }
                     } else {
-                        widget.errorToast("LeaveType" + response.body().getMessage(), leaveFragment.requireActivity());
+                        widget.errorToast("LeaveType" + response.body().getMessage(), homeFragment.requireActivity());
                     }
                 }
                 holder.loadingData.setVisibility(View.INVISIBLE);
@@ -238,13 +204,13 @@ public class AdapterDataLeave extends RecyclerView.Adapter<AdapterDataLeave.View
 
             @Override
             public void onFailure(@NotNull Call<LeaveType> call, @NotNull Throwable t) {
-                widget.noConnectToast("LeaveType" + t.getMessage(), leaveFragment.requireActivity());
+                widget.noConnectToast("LeaveType" + t.getMessage(), homeFragment.requireActivity());
                 holder.loadingData.setVisibility(View.INVISIBLE);
             }
         });
     }
 
-    private void getUserById(ViewHolder holder, int userId) {
+    private void getUserById(AdapterPendingLeave.ViewHolder holder, int userId) {
         holder.loadingData.setVisibility(View.VISIBLE);
 
         Call<Employee> showData = apiInterface.employeeRetrieveData();
@@ -260,7 +226,7 @@ public class AdapterDataLeave extends RecyclerView.Adapter<AdapterDataLeave.View
                             }
                         }
                     } else {
-                        widget.errorToast("User" + response.body().getMessage(), leaveFragment.requireActivity());
+                        widget.errorToast("User" + response.body().getMessage(), homeFragment.requireActivity());
                     }
                 }
                 holder.loadingData.setVisibility(View.INVISIBLE);
@@ -268,15 +234,16 @@ public class AdapterDataLeave extends RecyclerView.Adapter<AdapterDataLeave.View
 
             @Override
             public void onFailure(@NotNull Call<Employee> call, @NotNull Throwable t) {
-                widget.noConnectToast("User" + t.getMessage(), leaveFragment.requireActivity());
+                widget.noConnectToast("User" + t.getMessage(), homeFragment.requireActivity());
                 holder.loadingData.setVisibility(View.INVISIBLE);
             }
         });
     }
-
+    
     @Override
     public int getItemCount() {
-        return leaveDataList.size();
+        int limit = 3;
+        return Math.min(leaveDataList.size(), limit);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

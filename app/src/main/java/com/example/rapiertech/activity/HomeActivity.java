@@ -24,7 +24,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.rapiertech.R;
 import com.example.rapiertech.api.ApiClient;
 import com.example.rapiertech.ui.admin.DepartmentFragment;
-import com.example.rapiertech.ui.admin.HomeFragment;
+import com.example.rapiertech.ui.home.HomeFragment;
 import com.example.rapiertech.ui.admin.JobFragment;
 import com.example.rapiertech.ui.employee.EmployeeFragment;
 import com.example.rapiertech.ui.event.EventFragment;
@@ -83,8 +83,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         String urlImage = ApiClient.getStorage() + sessionManager.getUserDetail().get(SessionManager.PHOTO_PATH);
         Glide.with(HomeActivity.this).load(urlImage).diskCacheStrategy(DiskCacheStrategy.NONE).into(image);
         //initial Fragment
-//        HomeFragment homeFragment = new HomeFragment();
-        ProjectFragment homeFragment = new ProjectFragment();
+        HomeFragment homeFragment = new HomeFragment();
         setMyFragment(homeFragment);
 
     }

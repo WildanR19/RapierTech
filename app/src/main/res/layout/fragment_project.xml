@@ -16,6 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingBottom="80dp"
+            android:paddingHorizontal="@dimen/dimen_8"
             android:clipToPadding="false"
             tools:listitem="@layout/card_project" />
 

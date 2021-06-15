@@ -222,7 +222,7 @@ public class AdapterProject extends RecyclerView.Adapter<AdapterProject.ViewHold
             }
 
             @Override
-            public void onFailure(Call<ProjectMember> call, Throwable t) {
+            public void onFailure(@NotNull Call<ProjectMember> call, @NotNull Throwable t) {
                 widget.noConnectToast("Project Member " + t.getMessage(), projectFragment.requireActivity());
             }
         });

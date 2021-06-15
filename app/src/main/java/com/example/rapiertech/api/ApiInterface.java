@@ -6,6 +6,7 @@ import com.example.rapiertech.model.empdetail.EmpDetail;
 import com.example.rapiertech.model.employee.Employee;
 import com.example.rapiertech.model.empstatus.EmpStatus;
 import com.example.rapiertech.model.event.Event;
+import com.example.rapiertech.model.home.Home;
 import com.example.rapiertech.model.job.Job;
 import com.example.rapiertech.model.leave.Leave;
 import com.example.rapiertech.model.leave.LeaveType;
@@ -38,6 +39,9 @@ public interface ApiInterface {
             @Field("email") String email,
             @Field("password") String password
     );
+
+    @GET("home")
+    Call<Home> homeRetrieveData();
 
     // Employee
     @GET("user")
@@ -141,6 +145,12 @@ public interface ApiInterface {
     @GET("leave/user/{id}")
     Call<Leave> leaveRetrieveDataUser(@Path("id") int id);
 
+    @GET("leave/pending")
+    Call<Leave> leavePendingRetrieveData();
+
+    @GET("leave/pending/{id}")
+    Call<Leave> leavePendingRetrieveDataUser(@Path("id") int id);
+
     @FormUrlEncoded
     @POST("leave/add/store")
     Call<Leave> leaveCreateData(
@@ -239,12 +249,17 @@ public interface ApiInterface {
     Call<Event> eventDeleteData(@Path("id") int id);
 
     // Project
-
     @GET("project")
     Call<Project> projectRetrieveData();
 
     @GET("project/user/{id}")
     Call<Project> projectUserRetrieveData(@Path("id") int id);
+
+    @GET("project/ongoing")
+    Call<Project> projectOngoingRetrieveData();
+
+    @GET("project/ongoing/{id}")
+    Call<Project> projectOngoingUserRetrieveData(@Path("id") int id);
 
     @GET("project/category")
     Call<ProjectCategory> projectCategoryRetrieveData();
