@@ -6,6 +6,7 @@ import com.example.rapiertech.model.empdetail.EmpDetail;
 import com.example.rapiertech.model.employee.Employee;
 import com.example.rapiertech.model.empstatus.EmpStatus;
 import com.example.rapiertech.model.event.Event;
+import com.example.rapiertech.model.goal.Goal;
 import com.example.rapiertech.model.home.Home;
 import com.example.rapiertech.model.job.Job;
 import com.example.rapiertech.model.leave.Leave;
@@ -327,4 +328,10 @@ public interface ApiInterface {
             @Part("comment") RequestBody comment,
             @Part MultipartBody.Part file
     );
+
+    @GET("goal")
+    Call<Goal> goalRetrieveData();
+
+    @GET("goal/user/{id}")
+    Call<Goal> goalRetrieveDataUser(@Path("id") int id);
 }

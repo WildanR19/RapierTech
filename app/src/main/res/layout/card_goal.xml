@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginTop="@dimen/dimen_8"
+    app:cardCornerRadius="@dimen/dimen_8">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="@dimen/dimen_8"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/imageGoal"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:contentDescription="@string/profile_picture"
+                android:scaleType="centerCrop"
+                android:background="@drawable/circle"
+                android:src="@drawable/avatar"/>
+
+            <TextView
+                android:id="@+id/nameEmpGoal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="@dimen/dimen_4"
+                android:text="@string/name"
+                android:textColor="@color/primary" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:layout_marginEnd="@dimen/dimen_4"
+                android:text="@string/due"
+                android:textSize="12sp"
+                android:textColor="?android:attr/textColorSecondary"
+                />
+            <TextView
+                android:id="@+id/deadlineGoal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/date"
+                android:textSize="12sp"
+                android:textColor="@color/light_blue"
+                />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/nameGoal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/name"
+            android:textAppearance="?attr/textAppearanceHeadline6"
+            />
+
+        <ProgressBar
+            android:id="@+id/progressGoal"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_8"
+            android:max="100"
+            android:progress="45"
+            android:progressTint="@color/primary"/>
+
+        <TextView
+            android:id="@+id/tvProgressGoal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/_100_complete"/>
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

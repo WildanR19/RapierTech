@@ -26,6 +26,7 @@ import com.example.rapiertech.ui.admin.DepartmentFragment;
 import com.example.rapiertech.ui.admin.JobFragment;
 import com.example.rapiertech.ui.employee.EmployeeFragment;
 import com.example.rapiertech.ui.event.EventFragment;
+import com.example.rapiertech.ui.goal.GoalFragment;
 import com.example.rapiertech.ui.home.HomeFragment;
 import com.example.rapiertech.ui.leave.LeaveFragment;
 import com.example.rapiertech.ui.payslip.PayslipFragment;
@@ -160,6 +161,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 ProjectFragment projectFragment = new ProjectFragment();
                 setMyFragment(projectFragment);
                 break;
+
+            case R.id.nav_goal:
+                GoalFragment goalFragment = new GoalFragment();
+                setMyFragment(goalFragment);
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;

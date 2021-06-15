@@ -20,6 +20,7 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         android:background="@color/navbar_second"
+        android:paddingBottom="@dimen/dimen_16"
         app:itemTextColor="@color/white"
         app:itemIconTint="@color/white"
         app:headerLayout="@layout/nav_header_main"
