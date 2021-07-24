@@ -16,7 +16,5 @@ Menu Payslip
 ![Menu Payslip](https://github.com/WildanR19/RapierTech/blob/master/screenshots/menu%20payslip.png)
 Menu Project
 ![Menu Project](https://github.com/WildanR19/RapierTech/blob/master/screenshots/menu%20project.png)
-Menu Project Employee
-![Menu Project Employee](https://github.com/WildanR19/RapierTech/blob/master/screenshots/menu%20project%20employee.png)
 Menu Task
 ![Menu Task](https://github.com/WildanR19/RapierTech/blob/master/screenshots/menu%20task.png)
